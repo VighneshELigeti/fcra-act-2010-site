@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FCRA Overview & Objectives — FCRA 2010</title>
+<style>
+  :root {
+    --bg:#0a0e1a; --card:#111827; --border:#1e2d47;
+    --accent:#3b82f6; --text:#e2e8f0; --muted:#94a3b8;
+    --green:#10b981; --yellow:#f59e0b; --red:#ef4444; --purple:#8b5cf6;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.7;}
+
+  /* nav */
+  nav{
+    position:sticky;top:0;z-index:100;
+    background:rgba(10,14,26,0.95);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+    display:flex;align-items:center;gap:1rem;padding:0.8rem 2rem;
+  }
+  nav a{color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.3rem 0.6rem;border-radius:6px;transition:all 0.2s;}
+  nav a:hover,nav a.active{color:var(--text);background:rgba(255,255,255,0.06);}
+  nav .home{font-weight:700;color:var(--accent);}
+  .nav-sep{color:var(--border);}
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--purple));z-index:999;transition:width 0.1s;}
+
+  /* layout */
+  .container{max-width:860px;margin:0 auto;padding:4rem 2rem;}
+  .chapter-label{color:var(--muted);font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.8rem;}
+  h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:800;line-height:1.1;margin-bottom:1rem;}
+  .lead{font-size:1.2rem;color:var(--muted);line-height:1.7;margin-bottom:3rem;border-left:3px solid var(--accent);padding-left:1.2rem;}
+
+  h2{font-size:1.6rem;font-weight:700;margin:3rem 0 1rem;padding-top:1rem;}
+  h3{font-size:1.2rem;font-weight:700;margin:2rem 0 0.8rem;color:var(--accent);}
+  p{margin-bottom:1rem;color:#cbd5e1;}
+
+  /* reveal on scroll */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease,transform 0.7s ease;}
+  .reveal.visible{opacity:1;transform:none;}
+
+  /* callout */
+  .callout{
+    background:var(--card);border-left:4px solid var(--accent);
+    border-radius:0 12px 12px 0;padding:1.3rem 1.5rem;margin:1.5rem 0;
+  }
+  .callout.warn{border-color:var(--yellow);}
+  .callout.danger{border-color:var(--red);}
+  .callout.success{border-color:var(--green);}
+  .callout-title{font-weight:700;margin-bottom:0.4rem;font-size:0.9rem;text-transform:uppercase;letter-spacing:0.05em;}
+  .callout .callout-title{color:var(--accent);}
+  .callout.warn .callout-title{color:var(--yellow);}
+  .callout.danger .callout-title{color:var(--red);}
+  .callout.success .callout-title{color:var(--green);}
+
+  /* animated timeline */
+  .timeline{position:relative;padding-left:2.5rem;margin:2rem 0;}
+  .timeline::before{content:'';position:absolute;left:0.7rem;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--accent),var(--purple));}
+  .tl-item{position:relative;margin-bottom:2rem;}
+  .tl-dot{
+    position:absolute;left:-2.5rem;top:0.3rem;
+    width:16px;height:16px;border-radius:50%;border:3px solid var(--accent);
+    background:var(--bg);z-index:1;
+    animation:pulse 2s infinite;
+  }
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(59,130,246,0.4)}50%{box-shadow:0 0 0 8px rgba(59,130,246,0)}}
+  .tl-year{font-size:0.8rem;color:var(--accent);font-weight:700;letter-spacing:0.05em;margin-bottom:0.3rem;}
+  .tl-content h4{font-size:1rem;font-weight:700;margin-bottom:0.3rem;}
+  .tl-content p{color:var(--muted);font-size:0.9rem;margin-bottom:0;}
+
+  /* interactive pillars */
+  .pillars{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;margin:2rem 0;}
+  .pillar{
+    background:var(--card);border:1px solid var(--border);border-radius:14px;
+    padding:1.5rem 1rem;text-align:center;cursor:pointer;
+    transition:all 0.3s;position:relative;overflow:hidden;
+  }
+  .pillar:hover{border-color:var(--pillar-color,var(--accent));transform:translateY(-4px);box-shadow:0 8px 25px rgba(0,0,0,0.3);}
+  .pillar:hover .pillar-detail{max-height:200px;opacity:1;margin-top:0.8rem;}
+  .pillar-icon{font-size:2rem;margin-bottom:0.8rem;display:block;}
+  .pillar-title{font-weight:700;font-size:0.9rem;margin-bottom:0.3rem;}
+  .pillar-short{color:var(--muted);font-size:0.8rem;}
+  .pillar-detail{max-height:0;opacity:0;overflow:hidden;transition:all 0.4s ease;font-size:0.8rem;color:var(--muted);border-top:1px solid var(--border);padding-top:0;}
+
+  /* comparison table */
+  .compare-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.9rem;}
+  .compare-table th{background:var(--card);border:1px solid var(--border);padding:0.8rem 1rem;text-align:left;font-weight:700;}
+  .compare-table td{border:1px solid var(--border);padding:0.8rem 1rem;color:var(--muted);}
+  .compare-table tr:hover td{background:rgba(255,255,255,0.02);}
+  .badge-yes{color:var(--green);font-weight:700;}
+  .badge-no{color:var(--red);font-weight:700;}
+
+  /* accordion */
+  .accordion{margin:1rem 0;}
+  .acc-item{border:1px solid var(--border);border-radius:10px;margin-bottom:0.5rem;overflow:hidden;}
+  .acc-header{
+    background:var(--card);padding:1rem 1.2rem;cursor:pointer;display:flex;
+    justify-content:space-between;align-items:center;font-weight:600;
+    transition:background 0.2s;user-select:none;
+  }
+  .acc-header:hover{background:rgba(255,255,255,0.03);}
+  .acc-arrow{transition:transform 0.3s;font-size:0.75rem;color:var(--muted);}
+  .acc-item.open .acc-arrow{transform:rotate(180deg);}
+  .acc-body{max-height:0;overflow:hidden;transition:max-height 0.4s ease;}
+  .acc-item.open .acc-body{max-height:600px;}
+  .acc-content{padding:1rem 1.2rem;color:var(--muted);font-size:0.92rem;border-top:1px solid var(--border);}
+
+  /* info boxes */
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0;}
+  @media(max-width:600px){.info-grid{grid-template-columns:1fr;}}
+  .info-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.3rem;}
+  .info-box h4{font-size:0.9rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.6rem;}
+  .info-box .value{font-size:1.5rem;font-weight:800;color:var(--text);}
+  .info-box .sub{font-size:0.82rem;color:var(--muted);margin-top:0.2rem;}
+
+  /* analogy box */
+  .analogy{
+    background:linear-gradient(135deg,rgba(59,130,246,0.08),rgba(139,92,246,0.08));
+    border:1px solid rgba(139,92,246,0.2);border-radius:14px;padding:1.5rem;margin:2rem 0;
+  }
+  .analogy-label{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--purple);font-weight:700;margin-bottom:0.5rem;}
+  .analogy p{color:var(--text);margin-bottom:0;}
+
+  /* quote */
+  blockquote{border-left:3px solid var(--purple);padding:1rem 1.5rem;margin:1.5rem 0;background:rgba(139,92,246,0.05);border-radius:0 10px 10px 0;}
+  blockquote p{color:#c4b5fd;font-style:italic;margin-bottom:0;}
+
+  /* bottom nav */
+  .bottom-nav{display:flex;justify-content:space-between;margin-top:5rem;padding-top:2rem;border-top:1px solid var(--border);}
+  .nav-btn{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.5rem;text-decoration:none;color:var(--text);transition:all 0.2s;font-size:0.9rem;}
+  .nav-btn:hover{border-color:var(--accent);}
+  .nav-btn .direction{font-size:0.75rem;color:var(--muted);display:block;margin-bottom:0.2rem;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progress"></div>
+<nav>
+  <a href="index.html" class="home">FCRA 2010</a>
+  <span class="nav-sep">›</span>
+  <a href="01_overview.html" class="active">Overview</a>
+</nav>
+
+<div class="container">
+
+  <p class="chapter-label">Module 01</p>
+  <h1>Overview &amp; Objectives of FCRA 2010</h1>
+  <p class="lead">
+    FCRA is India's gatekeeper for foreign money. Before any foreign funds can enter Indian civil society,
+    they must pass through a legal checkpoint. This module explains <em>why</em> that checkpoint exists
+    and what it's trying to protect.
+  </p>
+
+  <!-- Big picture visual -->
+  <div class="reveal">
+    <svg viewBox="0 0 800 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;border-radius:16px;background:#0d1421;margin-bottom:2rem;">
+      <defs>
+        <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#3b82f6"/>
+        </marker>
+        <marker id="arrR" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#ef4444"/>
+        </marker>
+      </defs>
+      <!-- Foreign world -->
+      <rect x="20" y="60" width="160" height="100" rx="12" fill="#1a2d3d" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="100" y="103" text-anchor="middle" fill="#60a5fa" font-size="13" font-weight="bold">Foreign</text>
+      <text x="100" y="120" text-anchor="middle" fill="#94a3b8" font-size="11">Donor / Source</text>
+      <text x="100" y="140" text-anchor="middle" fill="#64748b" font-size="10">Govt / Company / Trust / NGO</text>
+
+      <!-- Arrow 1 - normal flow -->
+      <line x1="185" y1="110" x2="300" y2="110" stroke="#3b82f6" stroke-width="2" marker-end="url(#arr)"/>
+      <text x="242" y="100" text-anchor="middle" fill="#3b82f6" font-size="10">FC funds</text>
+
+      <!-- FCRA Gate -->
+      <rect x="300" y="50" width="200" height="120" rx="12" fill="#0d1f3c" stroke="#f59e0b" stroke-width="2"/>
+      <text x="400" y="88" text-anchor="middle" fill="#fbbf24" font-size="13" font-weight="bold">FCRA GATE</text>
+      <text x="400" y="108" text-anchor="middle" fill="#94a3b8" font-size="10">Ministry of Home Affairs</text>
+      <text x="400" y="126" text-anchor="middle" fill="#64748b" font-size="9">Registration / Prior Permission</text>
+      <text x="400" y="143" text-anchor="middle" fill="#64748b" font-size="9">SBI FCRA Account</text>
+
+      <!-- Arrow 2 - approved -->
+      <line x1="505" y1="95" x2="620" y2="80" stroke="#10b981" stroke-width="2" marker-end="url(#arr)" stroke-dasharray="none"/>
+      <text x="565" y="78" text-anchor="middle" fill="#34d399" font-size="10">✓ Approved</text>
+
+      <!-- Arrow 3 - rejected -->
+      <line x1="505" y1="130" x2="620" y2="150" stroke="#ef4444" stroke-width="2" marker-end="url(#arrR)" stroke-dasharray="4 3"/>
+      <text x="565" y="155" text-anchor="middle" fill="#f87171" font-size="10">✗ Blocked</text>
+
+      <!-- Indian civil society -->
+      <rect x="620" y="45" width="145" height="60" rx="10" fill="#1a2d1a" stroke="#10b981" stroke-width="1.5"/>
+      <text x="692" y="72" text-anchor="middle" fill="#34d399" font-size="11" font-weight="bold">Eligible NGO</text>
+      <text x="692" y="88" text-anchor="middle" fill="#94a3b8" font-size="9">Registered / PP holder</text>
+
+      <!-- Blocked entity -->
+      <rect x="620" y="130" width="145" height="50" rx="10" fill="#2d1a1a" stroke="#ef4444" stroke-width="1.5"/>
+      <text x="692" y="152" text-anchor="middle" fill="#f87171" font-size="11" font-weight="bold">Prohibited</text>
+      <text x="692" y="168" text-anchor="middle" fill="#94a3b8" font-size="9">Politician / Govt servant</text>
+
+      <!-- Labels -->
+      <text x="400" y="192" text-anchor="middle" fill="#475569" font-size="9">The FCRA gate ensures foreign money serves legitimate social purposes — not politics or national security threats</text>
+    </svg>
+  </div>
+
+  <h2>Why does FCRA exist?</h2>
+  <p>
+    Imagine a foreign government wanting to influence an Indian election by quietly funding a political party.
+    Or a foreign foundation pumping money into media organisations to shape narratives.
+    Or foreign intelligence services bankrolling groups that destabilise border states.
+    FCRA was enacted to <strong>prevent exactly these scenarios</strong>.
+  </p>
+
+  <div class="analogy reveal">
+    <div class="analogy-label">💡 Simple Analogy</div>
+    <p>
+      Think of FCRA as a <strong>customs checkpoint for money</strong>. Just like you can't bring certain
+      items into India without declaring them or getting permission, organisations can't bring foreign
+      funds into India without first obtaining FCRA clearance. The checkpoint exists to protect India's
+      internal affairs from external influence.
+    </p>
+  </div>
+
+  <h2>The Six Pillars FCRA Protects</h2>
+  <p>The statement of objects and reasons in FCRA 2010 identifies six key areas the law aims to safeguard. Click each pillar to learn more:</p>
+
+  <div class="pillars reveal">
+    <div class="pillar" style="--pillar-color:#ef4444">
+      <span class="pillar-icon">🇮🇳</span>
+      <div class="pillar-title">Sovereignty &amp; Integrity</div>
+      <div class="pillar-short">No foreign destabilisation</div>
+      <div class="pillar-detail">Foreign funds must not be used to challenge India's territorial integrity, undermine the constitution, or foment secessionism in any region.</div>
+    </div>
+    <div class="pillar" style="--pillar-color:#8b5cf6">
+      <span class="pillar-icon">🛡️</span>
+      <div class="pillar-title">Security &amp; Defence</div>
+      <div class="pillar-short">Strategic interests protected</div>
+      <div class="pillar-detail">Funds cannot support activities that harm India's defence establishment, military interests, or strategic partnerships.</div>
+    </div>
+    <div class="pillar" style="--pillar-color:#3b82f6">
+      <span class="pillar-icon">⚖️</span>
+      <div class="pillar-title">Public Interest</div>
+      <div class="pillar-short">General welfare first</div>
+      <div class="pillar-detail">Foreign money must serve legitimate public welfare objectives — education, health, environment, culture — not covert or harmful purposes.</div>
+    </div>
+    <div class="pillar" style="--pillar-color:#f59e0b">
+      <span class="pillar-icon">🗳️</span>
+      <div class="pillar-title">Electoral Politics</div>
+      <div class="pillar-short">Clean elections mandate</div>
+      <div class="pillar-detail">Political parties, election candidates, and closely allied organisations are prohibited from receiving foreign funds to keep elections free from foreign influence.</div>
+    </div>
+    <div class="pillar" style="--pillar-color:#10b981">
+      <span class="pillar-icon">🕌</span>
+      <div class="pillar-title">Communal Harmony</div>
+      <div class="pillar-short">Unity protection</div>
+      <div class="pillar-detail">Foreign funds cannot be used to stoke religious or communal tensions, fund hate groups, or undermine India's pluralistic social fabric.</div>
+    </div>
+    <div class="pillar" style="--pillar-color:#06b6d4">
+      <span class="pillar-icon">🏗️</span>
+      <div class="pillar-title">Sensitive Domains</div>
+      <div class="pillar-short">Media, judiciary, etc.</div>
+      <div class="pillar-detail">Certain sensitive domains like journalism, the judiciary, and the civil services are ring-fenced from foreign funding to preserve institutional independence.</div>
+    </div>
+  </div>
+
+  <h2>A Brief History: From 1976 to 2010</h2>
+  <div class="timeline reveal">
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:#f59e0b"></div>
+      <div class="tl-year">1976</div>
+      <div class="tl-content">
+        <h4>FCRA 1976 enacted</h4>
+        <p>The original FCRA was passed during India's Emergency period amid concerns about foreign funding influencing domestic politics. It laid the foundation for the current framework.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:#f59e0b"></div>
+      <div class="tl-year">1984–2000s</div>
+      <div class="tl-content">
+        <h4>Growing civil society + liberalisation</h4>
+        <p>India's opening economy and booming NGO sector meant more foreign funds flowing in. The 1976 Act began showing its age — it lacked provisions for online filing, account-specific banking, etc.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:#3b82f6"></div>
+      <div class="tl-year">2010</div>
+      <div class="tl-content">
+        <h4>FCRA 2010 replaces FCRA 1976</h4>
+        <p>A comprehensive overhaul. FCRA 2010 introduced designated banking architecture, stricter eligibility norms, electronic filing, and clearer enforcement provisions. The 1976 Act was repealed.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:#8b5cf6"></div>
+      <div class="tl-year">2016</div>
+      <div class="tl-content">
+        <h4>First major amendment</h4>
+        <p>Retrospectively changed the definition of "foreign source" to bring SBI and other nationalised banks into conformity. Also addressed political party funding concerns after a Delhi HC ruling.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:#ef4444"></div>
+      <div class="tl-year">2020</div>
+      <div class="tl-content">
+        <h4>FCRA Amendment Act 2020 — major tightening</h4>
+        <p>Introduced: mandatory SBI New Delhi Main Branch as the single designated receipt account, Aadhaar-based KYC for office bearers, ban on sub-granting to other organisations, and reduced admin cap from 50% to 20%.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Who Administers FCRA?</h2>
+  <div class="info-grid reveal">
+    <div class="info-box">
+      <h4>Primary Regulator</h4>
+      <div class="value">MHA</div>
+      <div class="sub">Ministry of Home Affairs, FCRA Division, New Delhi</div>
+    </div>
+    <div class="info-box">
+      <h4>Online Portal</h4>
+      <div class="value">fcraonline.nic.in</div>
+      <div class="sub">All registrations, prior permissions, and annual returns filed here</div>
+    </div>
+    <div class="info-box">
+      <h4>Banking Route</h4>
+      <div class="value">SBI NDMB</div>
+      <div class="sub">State Bank of India, New Delhi Main Branch — sole designated receipt bank (post-2020)</div>
+    </div>
+    <div class="info-box">
+      <h4>Oversight</h4>
+      <div class="value">Intelligence Bureau</div>
+      <div class="sub">IB provides security clearances and adverse inputs on FCRA applicants</div>
+    </div>
+  </div>
+
+  <h2>What does FCRA actually regulate?</h2>
+  <div class="accordion reveal">
+    <div class="acc-item open">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        📥 Acceptance of Foreign Contribution
+        <span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="acc-content">
+          FCRA regulates the act of <strong>receiving</strong> foreign contribution into India. It mandates that any eligible entity
+          must only receive FC via the prescribed SBI FCRA account. Even if all other conditions are met, bypassing the
+          designated bank route is a violation. The focus is on controlling the entry point.
+        </div>
+      </div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        💰 Utilisation of Foreign Contribution
+        <span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="acc-content">
+          FCRA regulates not just receipt, but also <strong>how the money is spent</strong>. It must be used only for the
+          purposes stated in the registration/prior permission application. Administrative expenses are capped at 20%.
+          Spending on speculative investments or prohibited activities is banned.
+        </div>
+      </div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        🔄 Transfer of Foreign Contribution
+        <span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="acc-content">
+          Post-2020, FCRA registered organisations can no longer transfer FC funds to other persons or organisations
+          (whether FCRA registered or not). This was one of the most significant changes — it ended the practice of
+          "sub-granting" where large NGOs distributed FC to smaller grassroots organisations.
+        </div>
+      </div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        📋 Reporting and Accountability
+        <span class="acc-arrow">▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="acc-content">
+          Every FCRA-registered entity must file an annual return (FC-4) online by 31st December, disclosing all
+          receipts and utilisation for the preceding financial year. Changes in office bearers, bank accounts,
+          and registered addresses must be reported via intimations on the FCRA portal.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>FCRA vs Other Laws</h2>
+  <p>FCRA sits alongside other laws that govern foreign investments and dealings:</p>
+  <table class="compare-table reveal">
+    <thead>
+      <tr>
+        <th>Law</th>
+        <th>What it covers</th>
+        <th>Regulator</th>
+        <th>Applies to NGOs?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>FCRA 2010</strong></td>
+        <td>Foreign contributions (donations/grants) to civil society</td>
+        <td>MHA</td>
+        <td class="badge-yes">YES (primary)</td>
+      </tr>
+      <tr>
+        <td>FEMA 1999</td>
+        <td>Foreign exchange transactions — trade, investment, capital</td>
+        <td>RBI / ED</td>
+        <td>Partially</td>
+      </tr>
+      <tr>
+        <td>PMLA 2002</td>
+        <td>Money laundering — tracking suspicious funds</td>
+        <td>ED / FIU</td>
+        <td>If violations involve laundering</td>
+      </tr>
+      <tr>
+        <td>Income Tax Act</td>
+        <td>Taxation of all receipts including FC (unless exempt)</td>
+        <td>CBDT</td>
+        <td>Yes (sec 11/12 exemptions)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn reveal">
+    <div class="callout-title">⚠️ Common Confusion</div>
+    <p>FCRA and FEMA are often confused. <strong>FEMA</strong> covers commercial transactions and capital flows.
+    <strong>FCRA</strong> covers donations and grants. A foreign company paying you for services (at arm's length)
+    is generally governed by FEMA, not FCRA. But the boundary can be tricky — always check the specific transaction against FC definitions.</p>
+  </div>
+
+  <h2>The Three Questions FCRA Forces You to Ask</h2>
+  <div class="pillars reveal" style="grid-template-columns:repeat(3,1fr)">
+    <div class="pillar" style="--pillar-color:#3b82f6">
+      <span class="pillar-icon">❓</span>
+      <div class="pillar-title">Is this "Foreign Contribution"?</div>
+      <div class="pillar-short">Donation? Gift? Grant? Or commercial?</div>
+      <div class="pillar-detail">The first question is always: does the payment/receipt constitute "foreign contribution" under the FCRA definition? If yes, FCRA applies. If it's an arm's-length commercial payment, FEMA applies instead.</div>
+    </div>
+    <div class="pillar" style="--pillar-color:#10b981">
+      <span class="pillar-icon">❓</span>
+      <div class="pillar-title">Is the recipient eligible?</div>
+      <div class="pillar-short">Prohibited person? Or eligible entity?</div>
+      <div class="pillar-detail">Even if the payment is FC, some recipients are absolutely prohibited. Others need registration or prior permission. Eligibility is the second key question.</div>
+    </div>
+    <div class="pillar" style="--pillar-color:#f59e0b">
+      <span class="pillar-icon">❓</span>
+      <div class="pillar-title">Are all procedures followed?</div>
+      <div class="pillar-short">Banking, reporting, utilisation?</div>
+      <div class="pillar-detail">Even eligible entities can violate FCRA by using wrong bank accounts, exceeding admin caps, missing annual returns, or sub-granting funds.</div>
+    </div>
+  </div>
+
+  <blockquote class="reveal">
+    <p>"FCRA is essentially India's sovereignty firewall for the non-profit sector. It doesn't ban foreign philanthropy — it channels and monitors it."</p>
+  </blockquote>
+
+  <div class="bottom-nav">
+    <a href="index.html" class="nav-btn">
+      <span class="direction">← Back to</span>
+      Home / Concept Map
+    </a>
+    <a href="02_definitions.html" class="nav-btn">
+      <span class="direction">Next →</span>
+      Key Definitions
+    </a>
+  </div>
+</div>
+
+<script>
+// Progress bar
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement,b=document.body;
+  const st=h.scrollTop||b.scrollTop,sh=h.scrollHeight-h.clientHeight;
+  document.getElementById('progress').style.width=(st/sh*100)+'%';
+});
+
+// Reveal
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}}),{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// Accordion
+function toggleAcc(header){
+  const item=header.parentElement;
+  item.classList.toggle('open');
+}
+// Close others
+document.querySelectorAll('.acc-header').forEach(h=>h.addEventListener('click',function(){
+  const me=this.parentElement;
+  document.querySelectorAll('.acc-item').forEach(i=>{if(i!==me)i.classList.remove('open');});
+}));
+</script>
+</body>
+</html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Utilisation Rules — FCRA 2010</title>
+<style>
+  :root{--bg:#0a0e1a;--card:#111827;--border:#1e2d47;--accent:#10b981;--text:#e2e8f0;--muted:#94a3b8;--blue:#3b82f6;--red:#ef4444;--amber:#f59e0b;--cyan:#06b6d4;--purple:#8b5cf6;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.7;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(10,14,26,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;padding:0.8rem 2rem;}
+  nav a{color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.3rem 0.6rem;border-radius:6px;transition:all 0.2s;}
+  nav a:hover,nav a.active{color:var(--text);background:rgba(255,255,255,0.06);}
+  nav .home{font-weight:700;color:var(--accent);}
+  .nav-sep{color:var(--border);}
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--cyan));z-index:999;transition:width 0.1s;}
+  .container{max-width:900px;margin:0 auto;padding:4rem 2rem;}
+  .chapter-label{color:var(--muted);font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.8rem;}
+  h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;line-height:1.1;margin-bottom:1rem;}
+  .lead{font-size:1.15rem;color:var(--muted);line-height:1.7;margin-bottom:3rem;border-left:3px solid var(--accent);padding-left:1.2rem;}
+  h2{font-size:1.5rem;font-weight:700;margin:3rem 0 1rem;}
+  h3{font-size:1.1rem;font-weight:700;margin:1.5rem 0 0.7rem;}
+  p{margin-bottom:1rem;color:#cbd5e1;}
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s,transform 0.7s;}
+  .reveal.visible{opacity:1;transform:none;}
+
+  /* 20% RULE VISUAL */
+  .cap-visual{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;margin:2rem 0;}
+  .budget-bar-wrap{background:rgba(255,255,255,0.04);border-radius:100px;height:48px;overflow:hidden;position:relative;margin:1.5rem 0;}
+  .budget-bar-admin{height:100%;background:linear-gradient(90deg,var(--red),#f97316);border-radius:100px 0 0 100px;transition:width 1s ease;display:flex;align-items:center;justify-content:center;color:white;font-size:0.75rem;font-weight:700;}
+  .budget-bar-prog{position:absolute;top:0;height:100%;background:linear-gradient(90deg,var(--accent),var(--cyan));right:0;border-radius:0 100px 100px 0;transition:width 1s ease;display:flex;align-items:center;justify-content:center;color:white;font-size:0.75rem;font-weight:700;}
+  .budget-labels{display:flex;justify-content:space-between;margin-top:0.5rem;font-size:0.78rem;color:var(--muted);}
+  .slider-wrap{margin:1.5rem 0;}
+  .slider-label{font-size:0.85rem;color:var(--muted);margin-bottom:0.5rem;}
+  input[type=range]{width:100%;accent-color:var(--accent);}
+  .slider-output{font-size:1.1rem;font-weight:700;color:var(--text);margin-top:0.3rem;}
+  .cap-status{padding:0.8rem 1.2rem;border-radius:10px;font-size:0.88rem;font-weight:600;margin-top:1rem;transition:all 0.3s;}
+
+  /* Permitted vs Prohibited table */
+  .two-list{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:2rem 0;}
+  @media(max-width:640px){.two-list{grid-template-columns:1fr;}}
+  .list-box{background:var(--card);border:1px solid;border-radius:14px;padding:1.5rem;}
+  .list-box.good{border-color:rgba(16,185,129,0.3);}
+  .list-box.bad{border-color:rgba(239,68,68,0.3);}
+  .list-box h3{font-size:0.95rem;font-weight:700;margin-bottom:1rem;padding-bottom:0.6rem;border-bottom:1px solid var(--border);}
+  .list-box.good h3{color:var(--accent);}
+  .list-box.bad h3{color:var(--red);}
+  .list-item{display:flex;align-items:flex-start;gap:0.6rem;margin-bottom:0.6rem;font-size:0.85rem;color:var(--muted);}
+  .list-mark{flex-shrink:0;margin-top:0.1rem;}
+
+  /* Purpose alignment */
+  .purpose-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:1rem;margin:1.5rem 0;}
+  .purpose-tile{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;text-align:center;transition:all 0.3s;}
+  .purpose-tile:hover{border-color:var(--accent);transform:translateY(-2px);}
+  .purpose-tile .pt-icon{font-size:2rem;margin-bottom:0.5rem;}
+  .purpose-tile .pt-name{font-size:0.82rem;font-weight:700;}
+  .purpose-tile .pt-eg{font-size:0.72rem;color:var(--muted);margin-top:0.3rem;}
+
+  /* accordion */
+  .acc{margin:0.5rem 0;}
+  .acc-head{
+    display:flex;align-items:center;gap:0.8rem;cursor:pointer;
+    padding:1rem 1.2rem;background:var(--card);border:1px solid var(--border);border-radius:10px;
+    transition:all 0.2s;user-select:none;
+  }
+  .acc-head:hover{border-color:var(--accent);}
+  .acc-head-text{flex:1;font-weight:600;font-size:0.9rem;}
+  .acc-chev{transition:transform 0.3s;color:var(--muted);}
+  .acc.open .acc-chev{transform:rotate(180deg);}
+  .acc.open .acc-head{border-radius:10px 10px 0 0;}
+  .acc-body{
+    display:none;padding:1.2rem;
+    border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;
+    background:rgba(255,255,255,0.01);font-size:0.85rem;color:var(--muted);
+  }
+  .acc.open .acc-body{display:block;}
+
+  /* callout */
+  .callout{background:var(--card);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;}
+  .callout.danger{border-color:var(--red);}
+  .callout.warn{border-color:var(--amber);}
+  .callout-title{font-weight:700;font-size:0.85rem;text-transform:uppercase;margin-bottom:0.4rem;color:var(--accent);}
+  .callout.danger .callout-title{color:var(--red);}
+  .callout.warn .callout-title{color:var(--amber);}
+
+  table.tb{width:100%;border-collapse:collapse;font-size:0.87rem;margin:1.5rem 0;}
+  table.tb th{background:var(--card);border:1px solid var(--border);padding:0.8rem 1rem;text-align:left;font-weight:700;}
+  table.tb td{border:1px solid var(--border);padding:0.8rem 1rem;color:var(--muted);}
+
+  .bottom-nav{display:flex;justify-content:space-between;margin-top:5rem;padding-top:2rem;border-top:1px solid var(--border);}
+  .nav-btn{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.5rem;text-decoration:none;color:var(--text);transition:all 0.2s;font-size:0.9rem;}
+  .nav-btn:hover{border-color:var(--accent);}
+  .nav-btn .direction{font-size:0.75rem;color:var(--muted);display:block;margin-bottom:0.2rem;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progress"></div>
+<nav>
+  <a href="index.html" class="home">FCRA 2010</a>
+  <span class="nav-sep">›</span>
+  <a href="06_utilisation.html" class="active">Utilisation Rules</a>
+</nav>
+
+<div class="container">
+  <p class="chapter-label">Module 06</p>
+  <h1>Utilisation Rules</h1>
+  <p class="lead">
+    Receiving FC is just the beginning. How you <em>spend</em> it is equally regulated.
+    FCRA mandates that FC be used only for the purposes it was received, aligns spending with stated objectives,
+    and caps administrative overhead at 20% — a rule with real teeth.
+  </p>
+
+  <h2>The 20% Administrative Expense Cap</h2>
+  <p>This is the most numerically precise rule in FCRA. Use the slider to see how the cap works:</p>
+
+  <div class="cap-visual reveal">
+    <div class="slider-wrap">
+      <div class="slider-label">Total FC received this year: <span id="fc-total-label">₹1,00,00,000</span> (₹1 Crore)</div>
+      <input type="range" min="1000000" max="100000000" step="500000" value="10000000" id="fc-slider" oninput="updateCap()">
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-label">Admin expenses proposed: <span id="admin-label">₹20,00,000 (20%)</span></div>
+      <input type="range" min="0" max="100" step="1" value="20" id="admin-pct" oninput="updateCap()">
+    </div>
+    <div class="budget-bar-wrap" id="bb-wrap">
+      <div class="budget-bar-admin" id="bb-admin" style="width:20%">Admin 20%</div>
+      <div class="budget-bar-prog" id="bb-prog" style="width:80%">Programme 80%</div>
+    </div>
+    <div class="budget-labels">
+      <span id="admin-rupees" style="color:var(--red)">Admin: ₹20,00,000</span>
+      <span id="prog-rupees" style="color:var(--accent)">Programme: ₹80,00,000</span>
+    </div>
+    <div class="cap-status" id="cap-status" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:var(--accent);">
+      ✓ Within the 20% admin cap
+    </div>
+    <p style="font-size:0.78rem;color:var(--muted);margin-top:0.8rem;margin-bottom:0;">
+      Admin expenses include: salaries of administrative staff, office rent, utilities, accounting, legal, travel for admin purposes, capital expenditure on office assets.
+      Programme expenses: project staff salaries, beneficiary payments, field materials, programme travel — all directly tied to the stated FCRA purpose.
+    </p>
+  </div>
+
+  <div class="callout danger reveal">
+    <div class="callout-title">🚨 What Exactly Is "Administrative Expense"?</div>
+    <p style="margin:0 0 0.6rem;font-size:0.9rem;">This is the most litigated question in FCRA. The FCRA Rules specify items that count as admin:</p>
+    <ul style="font-size:0.85rem;color:var(--muted);padding-left:1.2rem;">
+      <li>Salaries, allowances, payment to persons managing the organisation (management staff)</li>
+      <li>Rent, mortgage, utility costs for administrative premises</li>
+      <li>Purchase and maintenance of transport vehicles used for administration</li>
+      <li>Travel expenses for administrative purposes</li>
+      <li>Capital expenditure on objects of an administrative nature</li>
+    </ul>
+    <p style="margin:0.6rem 0 0;font-size:0.9rem;">Programme staff salaries are <strong>NOT</strong> admin expenses. The challenge: many salaries are split — the same person does both programme and admin work. Must be carefully documented and allocated.</p>
+  </div>
+
+  <h2>Purpose Alignment — Use It Only for What It Was Given</h2>
+  <p>FC can only be used for the purpose for which it was received. FCRA §11(2) specifies the allowed categories:</p>
+
+  <div class="purpose-grid reveal">
+    <div class="purpose-tile">
+      <div class="pt-icon">🎓</div>
+      <div class="pt-name">Educational</div>
+      <div class="pt-eg">Schools, scholarships, training, vocational education</div>
+    </div>
+    <div class="purpose-tile">
+      <div class="pt-icon">🏥</div>
+      <div class="pt-name">Healthcare / Medical</div>
+      <div class="pt-eg">Hospitals, clinics, health camps, medical research</div>
+    </div>
+    <div class="purpose-tile">
+      <div class="pt-icon">🤲</div>
+      <div class="pt-name">Social</div>
+      <div class="pt-eg">Welfare programmes, women empowerment, disability support</div>
+    </div>
+    <div class="purpose-tile">
+      <div class="pt-icon">🌾</div>
+      <div class="pt-name">Economic</div>
+      <div class="pt-eg">Rural development, microfinance, livelihood programmes</div>
+    </div>
+    <div class="purpose-tile">
+      <div class="pt-icon">🕌</div>
+      <div class="pt-name">Religious</div>
+      <div class="pt-eg">Maintenance of places of worship, religious education (non-conversion activities)</div>
+    </div>
+    <div class="purpose-tile">
+      <div class="pt-icon">🎨</div>
+      <div class="pt-name">Cultural</div>
+      <div class="pt-eg">Arts, music, heritage preservation, cultural exchange</div>
+    </div>
+    <div class="purpose-tile">
+      <div class="pt-icon">🌿</div>
+      <div class="pt-name">Environmental</div>
+      <div class="pt-eg">Conservation, ecological restoration, environmental education</div>
+    </div>
+    <div class="purpose-tile">
+      <div class="pt-icon">⚖️</div>
+      <div class="pt-name">Rights / Legal Aid</div>
+      <div class="pt-eg">Legal aid to underprivileged, human rights documentation</div>
+    </div>
+  </div>
+
+  <div class="callout warn reveal">
+    <div class="callout-title">⚠️ The "Purpose Deviation" Trap</div>
+    <p style="margin:0;font-size:0.9rem;">FC received for "education" CANNOT be spent on healthcare — even if both are noble goals. If a donor gives money for a school building and the organisation uses some of it for a medical camp, that's a purpose deviation. The fix: either return the excess to the donor, get the donor's written consent to change purpose, or maintain absolutely strict project-wise accounting. MHA can demand refund of diverted FC.</p>
+  </div>
+
+  <h2>Permitted vs Prohibited — Spending Categories</h2>
+  <div class="two-list reveal">
+    <div class="list-box good">
+      <h3>✅ Permitted Uses</h3>
+      <div class="list-item"><span class="list-mark" style="color:var(--accent)">✓</span>Programme staff salaries and benefits</div>
+      <div class="list-item"><span class="list-mark" style="color:var(--accent)">✓</span>Purchase of project materials, equipment</div>
+      <div class="list-item"><span class="list-mark" style="color:var(--accent)">✓</span>Construction / renovation of programme facilities (schools, clinics)</div>
+      <div class="list-item"><span class="list-mark" style="color:var(--accent)">✓</span>Travel for field work / programme activities</div>
+      <div class="list-item"><span class="list-mark" style="color:var(--accent)">✓</span>Subcontracting to service providers (vendors)</div>
+      <div class="list-item"><span class="list-mark" style="color:var(--accent)">✓</span>Bank fixed deposits (to earn interest on idle FC)</div>
+      <div class="list-item"><span class="list-mark" style="color:var(--accent)">✓</span>Admin expenses up to 20% of FC received</div>
+      <div class="list-item"><span class="list-mark" style="color:var(--accent)">✓</span>Refund to donor with prior intimation to MHA</div>
+    </div>
+    <div class="list-box bad">
+      <h3>🚫 Prohibited Uses</h3>
+      <div class="list-item"><span class="list-mark" style="color:var(--red)">✗</span>Transfer to another organisation (post-2020)</div>
+      <div class="list-item"><span class="list-mark" style="color:var(--red)">✗</span>Investment in stocks, mutual funds, speculative assets</div>
+      <div class="list-item"><span class="list-mark" style="color:var(--red)">✗</span>Use for purposes different from stated FCRA purpose</div>
+      <div class="list-item"><span class="list-mark" style="color:var(--red)">✗</span>Admin expenses exceeding 20% of FC received</div>
+      <div class="list-item"><span class="list-mark" style="color:var(--red)">✗</span>Mixing with domestic funds in same accounts</div>
+      <div class="list-item"><span class="list-mark" style="color:var(--red)">✗</span>Paying bribes, illegal gratification</div>
+      <div class="list-item"><span class="list-mark" style="color:var(--red)">✗</span>Creating unused reserves without planned purpose</div>
+      <div class="list-item"><span class="list-mark" style="color:var(--red)">✗</span>Converting FC to bearer instruments/cash for others</div>
+    </div>
+  </div>
+
+  <h2>Frequently Confused Spending Categories</h2>
+  <div class="acc reveal" onclick="toggleAcc(this)">
+    <div class="acc-head">
+      <span>💻</span>
+      <span class="acc-head-text">Computers / Laptops — Programme or Admin?</span>
+      <span class="acc-chev">▼</span>
+    </div>
+    <div class="acc-body">
+      <strong>It depends on who uses them.</strong><br><br>
+      A laptop used exclusively by a field social worker for recording beneficiary data = <strong>programme expense</strong>.<br>
+      A laptop used by the CEO / finance manager = <strong>admin expense</strong>.<br>
+      A laptop shared between both = must be allocated proportionally (e.g., 60% admin, 40% programme based on usage logs).<br><br>
+      Maintain an asset register with usage classification. Auditors will look at this closely.
+    </div>
+  </div>
+
+  <div class="acc reveal" onclick="toggleAcc(this)">
+    <div class="acc-head">
+      <span>🚗</span>
+      <span class="acc-head-text">Vehicle expenses — Programme or Admin?</span>
+      <span class="acc-chev">▼</span>
+    </div>
+    <div class="acc-body">
+      <strong>Field programme vehicle (e.g., ambulance, community outreach van):</strong> Programme expense.<br>
+      <strong>Office/admin vehicle used by management for city travel:</strong> Admin expense.<br>
+      <strong>Multi-purpose vehicle:</strong> Must be log-booked and split by usage — programme km vs admin km.<br><br>
+      Best practice: maintain a vehicle log book showing date, driver, destination, purpose (programme/admin), and kilometres.
+    </div>
+  </div>
+
+  <div class="acc reveal" onclick="toggleAcc(this)">
+    <div class="acc-head">
+      <span>🏠</span>
+      <span class="acc-head-text">Rent for NGO office — Programme or Admin?</span>
+      <span class="acc-chev">▼</span>
+    </div>
+    <div class="acc-body">
+      <strong>Admin office rent (for management, accounting, HR):</strong> Admin expense — counts toward the 20% cap.<br>
+      <strong>Rent for field office / programme centre:</strong> Programme expense if it's exclusively for programme implementation.<br>
+      <strong>Combined use office:</strong> Must be allocated based on area or usage ratio.<br><br>
+      Many small NGOs try to classify all rent as "programme expense" to avoid hitting the admin cap — this is risky. MHA auditors are trained to look for this.
+    </div>
+  </div>
+
+  <div class="acc reveal" onclick="toggleAcc(this)">
+    <div class="acc-head">
+      <span>👤</span>
+      <span class="acc-head-text">Director / CEO salary — Programme or Admin?</span>
+      <span class="acc-chev">▼</span>
+    </div>
+    <div class="acc-body">
+      The salary of the <strong>Executive Director / CEO / Managing Trustee</strong> is generally classified as an <strong>administrative expense</strong> since their primary role is organisational leadership and management.<br><br>
+      However, if the ED also directly implements programmes (e.g., a doctor who is also the MD of a health NGO and sees patients), that portion can be split.<br><br>
+      <strong>Safe approach:</strong> Classify the full ED salary as admin unless supported by time-sheet records showing clear programme delivery time.
+    </div>
+  </div>
+
+  <div class="acc reveal" onclick="toggleAcc(this)">
+    <div class="acc-head">
+      <span>📊</span>
+      <span class="acc-head-text">Audit / accounting fees — Programme or Admin?</span>
+      <span class="acc-chev">▼</span>
+    </div>
+    <div class="acc-body">
+      <strong>Statutory audit fees, FCRA compliance costs, annual return filing:</strong> Admin expense — counts toward the 20% cap.<br><br>
+      <strong>Impact evaluation / programme assessment costs:</strong> Could be classified as programme expense if it's evaluating programme outcomes — keep supporting documentation.<br><br>
+      FCRA compliance costs themselves are often 5-10% of the admin budget. For small organisations receiving modest FC, the 20% cap can be genuinely constraining when audit + compliance + management is factored in.
+    </div>
+  </div>
+
+  <h2>The Sub-Granting Collapse (2020)</h2>
+  <p>This is one of the most impactful changes in modern FCRA and affects almost every major NGO:</p>
+
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:2rem 0;" class="reveal">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+      <div>
+        <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent);font-weight:700;margin-bottom:0.8rem;">PRE-2020: Sub-Granting Permitted</div>
+        <div style="font-size:0.83rem;color:var(--muted);">
+          Large "apex" FCRA-registered NGOs could receive FC and distribute it to smaller field-level NGOs with prior MHA approval.<br><br>
+          Model: International NGO → Large Indian NGO → 50 small village-level NGOs<br><br>
+          This enabled scale, reach, and grassroots implementation through a network model.
+        </div>
+      </div>
+      <div>
+        <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--red);font-weight:700;margin-bottom:0.8rem;">POST-2020: Transfer Completely Prohibited</div>
+        <div style="font-size:0.83rem;color:var(--muted);">
+          Section 7 was amended to prohibit transfer of FC to ANY person/organisation — even another FCRA-registered entity.<br><br>
+          Impact: Large NGOs that operated as "fund distributors" had to either become direct implementers or stop operations. Many village-level NGOs lost access to foreign funding entirely because they lacked the capacity to independently apply for FCRA.<br><br>
+          <strong style="color:var(--red);">Result:</strong> Severe disruption of the Indian civil society ecosystem.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout warn reveal">
+    <div class="callout-title">⚠️ The 2022 SC Clarification on Sub-Granting</div>
+    <p style="margin:0;font-size:0.9rem;">In <em>Noel Harper vs. Union of India</em> (2022), the Supreme Court upheld the 2020 Amendment's ban on sub-granting as constitutional, noting that the government has the right to regulate how foreign money flows through civil society. Several civil society petitions challenged this. The court held the national security rationale sufficient. The ban stands.</p>
+  </div>
+
+  <table class="tb reveal">
+    <thead><tr><th>Utilisation Parameter</th><th>Rule</th><th>Common Violation</th></tr></thead>
+    <tbody>
+      <tr><td>Admin cap</td><td>Max 20% of total FC received in the year</td><td>Misclassifying admin costs as programme</td></tr>
+      <tr><td>Purpose alignment</td><td>FC must be used only for stated FCRA purpose</td><td>Temporary "borrowing" for other purposes</td></tr>
+      <tr><td>Transfer</td><td>No transfer to any other entity (post-2020)</td><td>Sub-granting to partner organisations</td></tr>
+      <tr><td>Investment</td><td>Only FDs/savings — no speculation</td><td>Putting FC in mutual fund SIPs</td></tr>
+      <tr><td>Interest earned</td><td>Treated as FC — stays in FCRA accounts</td><td>Transferring interest to domestic account</td></tr>
+      <tr><td>Unspent FC</td><td>Carry forward allowed for same purpose</td><td>No violation for carry-forward itself</td></tr>
+    </tbody>
+  </table>
+
+  <div class="bottom-nav">
+    <a href="05_banking.html" class="nav-btn">
+      <span class="direction">← Back to</span>
+      Banking Architecture
+    </a>
+    <a href="07_reporting.html" class="nav-btn">
+      <span class="direction">Next →</span>
+      Reporting & Compliance
+    </a>
+  </div>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement,b=document.body;
+  const st=h.scrollTop||b.scrollTop,sh=h.scrollHeight-h.clientHeight;
+  document.getElementById('progress').style.width=(st/sh*100)+'%';
+});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}}),{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+function toggleAcc(el){el.classList.toggle('open');}
+
+function updateCap(){
+  const fc=parseInt(document.getElementById('fc-slider').value);
+  const pct=parseInt(document.getElementById('admin-pct').value);
+  const admin=Math.round(fc*pct/100);
+  const prog=fc-admin;
+  const maxAdmin=Math.round(fc*0.20);
+  document.getElementById('fc-total-label').textContent='₹'+fc.toLocaleString('en-IN');
+  document.getElementById('admin-label').textContent='₹'+admin.toLocaleString('en-IN')+' ('+pct+'%)';
+  document.getElementById('bb-admin').style.width=Math.min(pct,100)+'%';
+  document.getElementById('bb-admin').textContent='Admin '+pct+'%';
+  document.getElementById('bb-prog').style.width=(100-Math.min(pct,100))+'%';
+  document.getElementById('bb-prog').textContent='Programme '+(100-pct)+'%';
+  document.getElementById('admin-rupees').textContent='Admin: ₹'+admin.toLocaleString('en-IN');
+  document.getElementById('prog-rupees').textContent='Programme: ₹'+prog.toLocaleString('en-IN');
+  const status=document.getElementById('cap-status');
+  if(pct<=20){
+    status.style.background='rgba(16,185,129,0.1)';status.style.border='1px solid rgba(16,185,129,0.3)';status.style.color='#10b981';
+    status.textContent='✓ Within the 20% admin cap — compliant. Max permissible admin: ₹'+maxAdmin.toLocaleString('en-IN');
+  } else {
+    status.style.background='rgba(239,68,68,0.1)';status.style.border='1px solid rgba(239,68,68,0.3)';status.style.color='#ef4444';
+    const excess=admin-maxAdmin;
+    status.textContent='✗ BREACH! Admin exceeds 20% cap by ₹'+excess.toLocaleString('en-IN')+'. Max allowed: ₹'+maxAdmin.toLocaleString('en-IN');
+  }
+}
+updateCap();
+</script>
+</body>
+</html>

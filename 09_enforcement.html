@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enforcement & Penalties — FCRA 2010</title>
+<style>
+  :root{--bg:#0a0e1a;--card:#111827;--border:#1e2d47;--accent:#ef4444;--text:#e2e8f0;--muted:#94a3b8;--blue:#3b82f6;--amber:#f59e0b;--green:#10b981;--cyan:#06b6d4;--purple:#8b5cf6;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.7;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(10,14,26,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;padding:0.8rem 2rem;}
+  nav a{color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.3rem 0.6rem;border-radius:6px;transition:all 0.2s;}
+  nav a:hover,nav a.active{color:var(--text);background:rgba(255,255,255,0.06);}
+  nav .home{font-weight:700;color:var(--accent);}
+  .nav-sep{color:var(--border);}
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--amber));z-index:999;transition:width 0.1s;}
+  .container{max-width:900px;margin:0 auto;padding:4rem 2rem;}
+  .chapter-label{color:var(--muted);font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.8rem;}
+  h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;line-height:1.1;margin-bottom:1rem;}
+  .lead{font-size:1.15rem;color:var(--muted);line-height:1.7;margin-bottom:3rem;border-left:3px solid var(--accent);padding-left:1.2rem;}
+  h2{font-size:1.5rem;font-weight:700;margin:3rem 0 1rem;}
+  p{margin-bottom:1rem;color:#cbd5e1;}
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s,transform 0.7s;}
+  .reveal.visible{opacity:1;transform:none;}
+
+  /* offence cards */
+  .offence-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin:2rem 0;}
+  .offence-card{background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.2);border-radius:14px;padding:1.3rem;transition:all 0.3s;}
+  .offence-card:hover{background:rgba(239,68,68,0.09);border-color:rgba(239,68,68,0.4);transform:translateY(-2px);}
+  .offence-section{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);font-weight:700;margin-bottom:0.4rem;}
+  .offence-title{font-weight:700;font-size:0.92rem;margin-bottom:0.5rem;}
+  .offence-penalty{background:rgba(239,68,68,0.12);border-radius:8px;padding:0.6rem 0.8rem;font-size:0.82rem;color:var(--text);}
+  .offence-sub{font-size:0.74rem;color:var(--muted);margin-top:0.5rem;}
+
+  /* enforcement mechanism flow */
+  .enforce-steps{margin:2rem 0;}
+  .e-step{display:flex;gap:1rem;margin-bottom:1rem;padding:1.1rem;background:var(--card);border:1px solid var(--border);border-radius:12px;align-items:flex-start;transition:all 0.2s;}
+  .e-step:hover{border-color:var(--accent);}
+  .e-step-icon{font-size:1.5rem;flex-shrink:0;}
+  .e-step-body .e-step-title{font-weight:700;font-size:0.9rem;margin-bottom:0.3rem;}
+  .e-step-body .e-step-desc{font-size:0.82rem;color:var(--muted);}
+  .e-step-body .e-step-section{font-size:0.72rem;color:var(--accent);font-weight:700;margin-bottom:0.2rem;}
+
+  /* compounding table */
+  table.tb{width:100%;border-collapse:collapse;font-size:0.87rem;margin:1.5rem 0;}
+  table.tb th{background:var(--card);border:1px solid var(--border);padding:0.8rem 1rem;text-align:left;font-weight:700;}
+  table.tb td{border:1px solid var(--border);padding:0.8rem 1rem;color:var(--muted);}
+  table.tb .highlight{color:var(--amber);font-weight:600;}
+
+  /* section 28 visual */
+  .seizure-box{background:rgba(239,68,68,0.05);border:2px solid rgba(239,68,68,0.25);border-radius:14px;padding:1.5rem;margin:2rem 0;}
+  .seizure-title{font-size:1rem;font-weight:700;color:var(--accent);margin-bottom:1rem;}
+  .seizure-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.8rem;}
+  .seizure-item{background:rgba(239,68,68,0.08);border-radius:8px;padding:0.7rem 0.9rem;font-size:0.82rem;color:var(--text);}
+
+  .callout{background:var(--card);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;}
+  .callout.warn{border-color:var(--amber);}
+  .callout.info{border-color:var(--blue);}
+  .callout-title{font-weight:700;font-size:0.85rem;text-transform:uppercase;margin-bottom:0.4rem;color:var(--accent);}
+  .callout.warn .callout-title{color:var(--amber);}
+  .callout.info .callout-title{color:var(--blue);}
+
+  .bottom-nav{display:flex;justify-content:space-between;margin-top:5rem;padding-top:2rem;border-top:1px solid var(--border);}
+  .nav-btn{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.5rem;text-decoration:none;color:var(--text);transition:all 0.2s;font-size:0.9rem;}
+  .nav-btn:hover{border-color:var(--accent);}
+  .nav-btn .direction{font-size:0.75rem;color:var(--muted);display:block;margin-bottom:0.2rem;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progress"></div>
+<nav>
+  <a href="index.html" class="home">FCRA 2010</a>
+  <span class="nav-sep">›</span>
+  <a href="09_enforcement.html" class="active">Enforcement & Penalties</a>
+</nav>
+
+<div class="container">
+  <p class="chapter-label">Module 09</p>
+  <h1>Enforcement &amp; Penalties</h1>
+  <p class="lead">
+    FCRA is a criminal statute — violations can result in seizure of assets, heavy fines, 
+    and imprisonment up to 5 years. The Ministry of Home Affairs has wide investigative 
+    and enforcement powers, and individuals (not just organisations) face personal liability.
+  </p>
+
+  <h2>Enforcement Machinery</h2>
+  <div class="enforce-steps reveal">
+    <div class="e-step">
+      <span class="e-step-icon">🔍</span>
+      <div class="e-step-body">
+        <div class="e-step-section">§22 — Inspection</div>
+        <div class="e-step-title">MHA-Authorised Inspector Powers</div>
+        <div class="e-step-desc">MHA can authorise an "authorised officer" to inspect books of accounts, documents, assets and property of any registered or formerly registered entity. Officers have broad access rights — inspection can be unannounced. You cannot obstruct an inspection (that itself is an offence).</div>
+      </div>
+    </div>
+    <div class="e-step">
+      <span class="e-step-icon">📂</span>
+      <div class="e-step-body">
+        <div class="e-step-section">§23 — Search &amp; Seizure</div>
+        <div class="e-step-title">Search of Premises &amp; Seizure of Documents</div>
+        <div class="e-step-desc">Authorised officers can enter, search, and seize any document, book of accounts, or property where there is reasonable belief that evidence of violation exists. A panchnama must be prepared. Seized material can be retained for investigation. No court warrant is required for this.</div>
+      </div>
+    </div>
+    <div class="e-step">
+      <span class="e-step-icon">💰</span>
+      <div class="e-step-body">
+        <div class="e-step-section">§25 — Freezing of Bank Accounts</div>
+        <div class="e-step-title">Account Freeze During Investigation</div>
+        <div class="e-step-desc">MHA can direct any bank to freeze FCRA accounts pending investigation. No notice to the organisation is required before freezing. Organisation must then apply to MHA for permission to withdraw even for essential operating expenses. This can be devastating for day-to-day operations.</div>
+      </div>
+    </div>
+    <div class="e-step">
+      <span class="e-step-icon">⚖️</span>
+      <div class="e-step-body">
+        <div class="e-step-section">§26 — Confiscation</div>
+        <div class="e-step-title">FC or Assets May Be Confiscated</div>
+        <div class="e-step-desc">Any FC received in violation, or any property acquired from such FC, can be confiscated. The confiscation order is made by an "adjudicating authority" — not a court. This can include cash balances, bank deposits, vehicles, real estate.</div>
+      </div>
+    </div>
+    <div class="e-step">
+      <span class="e-step-icon">🚨</span>
+      <div class="e-step-body">
+        <div class="e-step-section">§28 — Vesting in Government</div>
+        <div class="e-step-title">Assets Vest in Central Government</div>
+        <div class="e-step-desc">Post-cancellation, any FC and property acquired therefrom may be ordered to vest in the Central Government. This is separate from confiscation and is the ultimate financial consequence of cancellation.</div>
+      </div>
+    </div>
+    <div class="e-step">
+      <span class="e-step-icon">🏛️</span>
+      <div class="e-step-body">
+        <div class="e-step-section">§34 — Prosecution &amp; Courts</div>
+        <div class="e-step-title">Criminal Trial Before Sessions Court</div>
+        <div class="e-step-desc">FCRA offences are triable by a Sessions Court. The complaint must be filed by, or on the written authorisation of, MHA (or an officer not below Joint Secretary). The offences are non-bailable where imprisonment exceeds 3 years.</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Offences &amp; Penalties — Chapter VII</h2>
+  <div class="offence-grid reveal">
+    <div class="offence-card">
+      <div class="offence-section">§35</div>
+      <div class="offence-title">General FCRA Violations</div>
+      <div class="offence-penalty">Fine + Imprisonment up to 5 years + Forfeiture of FC</div>
+      <div class="offence-sub">The catch-all provision. Covers: accepting FC without registration/PP, using FC for wrong purpose, violating any FCRA provision.</div>
+    </div>
+    <div class="offence-card">
+      <div class="offence-section">§35(3)</div>
+      <div class="offence-title">Operating After Cancellation</div>
+      <div class="offence-penalty">Fine + Imprisonment up to 5 years</div>
+      <div class="offence-sub">Continuing to receive or use FC after registration is cancelled. One of the most serious offences — often treated as wilful defiance.</div>
+    </div>
+    <div class="offence-card">
+      <div class="offence-section">§36</div>
+      <div class="offence-title">Obstructing Inspection/Search</div>
+      <div class="offence-penalty">Fine up to ₹1 lakh + Imprisonment up to 6 months</div>
+      <div class="offence-sub">Refusing entry to authorised inspectors, hiding records, tampering with evidence during search. Adds to underlying offence.</div>
+    </div>
+    <div class="offence-card">
+      <div class="offence-section">§35 read with §37</div>
+      <div class="offence-title">Offences by Companies / Associations</div>
+      <div class="offence-penalty">Each person in charge (directors, trustees, key functionaries) is personally liable</div>
+      <div class="offence-sub">The "directing mind" of the organisation cannot hide behind corporate veil. This is the rule that makes trustees personally criminally liable.</div>
+    </div>
+    <div class="offence-card">
+      <div class="offence-section">§38</div>
+      <div class="offence-title">False Statements in Applications / Returns</div>
+      <div class="offence-penalty">Fine + Imprisonment up to 6 months (in addition to cancellation)</div>
+      <div class="offence-sub">Any false information in FC-4 annual return, registration application, prior permission application — even if the FC itself was used correctly.</div>
+    </div>
+    <div class="offence-card">
+      <div class="offence-section">§33</div>
+      <div class="offence-title">Failure to Maintain Records / Accounts</div>
+      <div class="offence-penalty">Fine up to ₹1 lakh</div>
+      <div class="offence-sub">Not maintaining separate FC accounts, not keeping vouchers, not having audited accounts. Often an early trigger for deeper investigation.</div>
+    </div>
+  </div>
+
+  <div class="callout warn reveal">
+    <div class="callout-title">⚠️ Personal Criminal Liability of Trustees / Directors</div>
+    <p style="margin:0;font-size:0.9rem;">Section 37 of FCRA is its sharpest weapon against individuals. When an organisation (company, trust, society) commits an offence, <strong>every person who at the time was in charge of, and responsible for, the conduct of the organisation</strong> is personally guilty. The only defence is proving the offence was committed without that person's knowledge and with all due diligence. In practice, this means all trustees, directors, and office bearers face personal arrest and trial for FCRA violations of their organisation.</p>
+  </div>
+
+  <h2>Compounding of Offences — Section 40A</h2>
+  <p>Minor technical violations can be "compounded" (settled by payment) to avoid prosecution:</p>
+  <table class="tb reveal">
+    <thead>
+      <tr><th>Compoundable Offence</th><th>Maximum Compounding Amount</th><th>Who Compounds</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Failure to intimate change of address / officer / account within 15 days</td><td class="highlight">5x annual fee or ₹1 lakh whichever is less</td><td>Authorised Officer designated by Central Government</td></tr>
+      <tr><td>Delay in filing annual return (FC-4)</td><td class="highlight">₹1 lakh</td><td>Authorised Officer</td></tr>
+      <tr><td>Technical violations (minor administrative defaults)</td><td class="highlight">Up to ₹5 lakh (for substantive violations)</td><td>MHA's designated authority</td></tr>
+      <tr><td>Non-compoundable offences</td><td>Cannot be compounded — must go to trial</td><td>Sessions Court</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout info reveal">
+    <div class="callout-title">ℹ️ What Compounding Means</div>
+    <p style="margin:0;font-size:0.9rem;">Compounding is essentially a settlement mechanism. The violating organisation pays a penalty amount to MHA, and in return, no criminal prosecution is launched for that specific violation. Compounding does NOT erase the violation from records — it still appears as a compliance default and can affect renewal. Major substantive violations (receiving FC illegally, using FC for wrong purpose) are typically NOT compoundable.</p>
+  </div>
+
+  <div class="seizure-box reveal">
+    <div class="seizure-title">🔒 Assets That Can Be Seized / Confiscated Under FCRA</div>
+    <div class="seizure-items">
+      <div class="seizure-item">💰 Cash balances in FCRA accounts</div>
+      <div class="seizure-item">🏦 Bank deposits (FDs, savings)</div>
+      <div class="seizure-item">🚗 Vehicles purchased from FC</div>
+      <div class="seizure-item">🏢 Real estate acquired from FC</div>
+      <div class="seizure-item">💻 Equipment purchased from FC</div>
+      <div class="seizure-item">📦 Inventory / materials</div>
+      <div class="seizure-item">📄 Books of accounts (for evidence)</div>
+      <div class="seizure-item">💎 Articles received as FC in-kind</div>
+    </div>
+  </div>
+
+  <h2>The Prosecution Process Under FCRA</h2>
+  <div class="enforce-steps reveal">
+    <div class="e-step">
+      <span class="e-step-icon">1️⃣</span>
+      <div class="e-step-body">
+        <div class="e-step-title">Intelligence Input / Complaint / Inspection</div>
+        <div class="e-step-desc">Enforcement begins with an IB input, a citizen complaint, a media report, or a routine inspection finding a red flag. MHA initiates internal inquiry.</div>
+      </div>
+    </div>
+    <div class="e-step">
+      <span class="e-step-icon">2️⃣</span>
+      <div class="e-step-body">
+        <div class="e-step-title">Show Cause Notice (SCN)</div>
+        <div class="e-step-desc">MHA issues an SCN to the organisation and key functionaries stating the alleged violation and asking them to explain. The organisation has a specified time (usually 30-60 days) to respond in writing.</div>
+      </div>
+    </div>
+    <div class="e-step">
+      <span class="e-step-icon">3️⃣</span>
+      <div class="e-step-body">
+        <div class="e-step-title">Suspension (if warranted)</div>
+        <div class="e-step-desc">MHA may simultaneously suspend the registration to freeze the situation pending inquiry. FC accounts may be frozen by directions to the bank.</div>
+      </div>
+    </div>
+    <div class="e-step">
+      <span class="e-step-icon">4️⃣</span>
+      <div class="e-step-body">
+        <div class="e-step-title">Personal Hearing &amp; Inquiry</div>
+        <div class="e-step-desc">Organisation can request (and should always request) a personal hearing. Present documents, explanations, witnesses. The inquiry officer must give genuine opportunity to be heard.</div>
+      </div>
+    </div>
+    <div class="e-step">
+      <span class="e-step-icon">5️⃣</span>
+      <div class="e-step-body">
+        <div class="e-step-title">Cancellation Order / Compounding / Revocation</div>
+        <div class="e-step-desc">After inquiry: (a) Revocation of suspension + warning, (b) Compounding for minor violations, or (c) Cancellation + referral for criminal prosecution.</div>
+      </div>
+    </div>
+    <div class="e-step">
+      <span class="e-step-icon">6️⃣</span>
+      <div class="e-step-body">
+        <div class="e-step-title">Appellate Remedy — High Court Writ</div>
+        <div class="e-step-desc">There is no statutory appeal against cancellation within FCRA itself. The remedy is a writ petition before the jurisdictional High Court challenging the order on grounds of perversity, procedural irregularity, or constitutional violation.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="08_lifecycle.html" class="nav-btn">
+      <span class="direction">← Back to</span>
+      Registration Lifecycle
+    </a>
+    <a href="10_amendments.html" class="nav-btn">
+      <span class="direction">Next →</span>
+      Key Amendments
+    </a>
+  </div>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement,b=document.body;
+  const st=h.scrollTop||b.scrollTop,sh=h.scrollHeight-h.clientHeight;
+  document.getElementById('progress').style.width=(st/sh*100)+'%';
+});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}}),{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

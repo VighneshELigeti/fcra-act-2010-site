@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registration Lifecycle — FCRA 2010</title>
+<style>
+  :root{--bg:#0a0e1a;--card:#111827;--border:#1e2d47;--accent:#f59e0b;--text:#e2e8f0;--muted:#94a3b8;--blue:#3b82f6;--red:#ef4444;--green:#10b981;--cyan:#06b6d4;--purple:#8b5cf6;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.7;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(10,14,26,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;padding:0.8rem 2rem;}
+  nav a{color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.3rem 0.6rem;border-radius:6px;transition:all 0.2s;}
+  nav a:hover,nav a.active{color:var(--text);background:rgba(255,255,255,0.06);}
+  nav .home{font-weight:700;color:var(--accent);}
+  .nav-sep{color:var(--border);}
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--red));z-index:999;transition:width 0.1s;}
+  .container{max-width:900px;margin:0 auto;padding:4rem 2rem;}
+  .chapter-label{color:var(--muted);font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.8rem;}
+  h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;line-height:1.1;margin-bottom:1rem;}
+  .lead{font-size:1.15rem;color:var(--muted);line-height:1.7;margin-bottom:3rem;border-left:3px solid var(--accent);padding-left:1.2rem;}
+  h2{font-size:1.5rem;font-weight:700;margin:3rem 0 1rem;}
+  p{margin-bottom:1rem;color:#cbd5e1;}
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s,transform 0.7s;}
+  .reveal.visible{opacity:1;transform:none;}
+
+  /* lifecycle SVG timeline */
+  .lifecycle-visual{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;margin:2rem 0;overflow-x:auto;}
+
+  /* State cards */
+  .states-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.2rem;margin:2rem 0;}
+  .state-card{
+    border-radius:14px;padding:1.3rem;border:1px solid;
+    transition:all 0.3s;cursor:pointer;
+  }
+  .state-card:hover{transform:translateY(-3px);}
+  .state-card.apply{border-color:rgba(59,130,246,0.3);background:rgba(59,130,246,0.05);}
+  .state-card.active-state{border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.05);}
+  .state-card.suspended{border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.05);}
+  .state-card.cancelled{border-color:rgba(239,68,68,0.3);background:rgba(239,68,68,0.05);}
+  .state-card.renewal{border-color:rgba(139,92,246,0.3);background:rgba(139,92,246,0.05);}
+  .state-icon{font-size:2rem;margin-bottom:0.5rem;}
+  .state-name{font-weight:800;font-size:1rem;margin-bottom:0.3rem;}
+  .state-card.apply .state-name{color:var(--blue);}
+  .state-card.active-state .state-name{color:var(--green);}
+  .state-card.suspended .state-name{color:var(--accent);}
+  .state-card.cancelled .state-name{color:var(--red);}
+  .state-card.renewal .state-name{color:var(--purple);}
+  .state-desc{font-size:0.8rem;color:var(--muted);}
+  .state-detail{
+    max-height:0;overflow:hidden;transition:max-height 0.4s ease,margin-top 0.4s;
+    font-size:0.78rem;color:var(--muted);border-top:0 solid var(--border);
+  }
+  .state-card.open .state-detail{max-height:500px;margin-top:0.8rem;padding-top:0.8rem;border-top-width:1px;}
+
+  /* suspension comparison */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:2rem 0;}
+  @media(max-width:640px){.two-col{grid-template-columns:1fr;}}
+  .info-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem;}
+  .info-card h3{font-size:0.95rem;font-weight:700;margin-bottom:1rem;padding-bottom:0.6rem;border-bottom:1px solid var(--border);}
+
+  /* grounds list */
+  .grounds{counter-reset:g;margin:1rem 0;}
+  .ground-item{
+    display:flex;gap:1rem;padding:0.8rem 1rem;background:var(--card);
+    border:1px solid var(--border);border-radius:8px;margin-bottom:0.4rem;
+    font-size:0.85rem;transition:all 0.2s;
+  }
+  .ground-item:hover{border-color:var(--red);}
+  .ground-num{
+    min-width:28px;height:28px;border-radius:50%;background:rgba(239,68,68,0.15);
+    color:var(--red);font-weight:700;font-size:0.78rem;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .ground-text{color:var(--muted);}
+  .ground-text strong{color:var(--text);}
+
+  /* remedies */
+  .remedy-step{margin-bottom:1.5rem;}
+  .remedy-step-header{
+    display:flex;align-items:center;gap:0.8rem;padding:0.8rem 1rem;
+    background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent);
+    border-radius:0 10px 10px 0;font-weight:600;font-size:0.9rem;
+  }
+  .remedy-body{padding:0.8rem 1rem 0.8rem 1.6rem;font-size:0.83rem;color:var(--muted);}
+
+  /* callout */
+  .callout{background:var(--card);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;}
+  .callout.danger{border-color:var(--red);}
+  .callout.warn{border-color:var(--accent);}
+  .callout.info{border-color:var(--blue);}
+  .callout-title{font-weight:700;font-size:0.85rem;text-transform:uppercase;margin-bottom:0.4rem;color:var(--accent);}
+  .callout.danger .callout-title{color:var(--red);}
+  .callout.info .callout-title{color:var(--blue);}
+
+  table.tb{width:100%;border-collapse:collapse;font-size:0.87rem;margin:1.5rem 0;}
+  table.tb th{background:var(--card);border:1px solid var(--border);padding:0.8rem 1rem;text-align:left;font-weight:700;}
+  table.tb td{border:1px solid var(--border);padding:0.8rem 1rem;color:var(--muted);}
+
+  .bottom-nav{display:flex;justify-content:space-between;margin-top:5rem;padding-top:2rem;border-top:1px solid var(--border);}
+  .nav-btn{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.5rem;text-decoration:none;color:var(--text);transition:all 0.2s;font-size:0.9rem;}
+  .nav-btn:hover{border-color:var(--accent);}
+  .nav-btn .direction{font-size:0.75rem;color:var(--muted);display:block;margin-bottom:0.2rem;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progress"></div>
+<nav>
+  <a href="index.html" class="home">FCRA 2010</a>
+  <span class="nav-sep">›</span>
+  <a href="08_lifecycle.html" class="active">Registration Lifecycle</a>
+</nav>
+
+<div class="container">
+  <p class="chapter-label">Module 08</p>
+  <h1>FCRA Registration Lifecycle</h1>
+  <p class="lead">
+    An FCRA registration isn't permanent — it's a living authorisation that can be suspended or cancelled 
+    at any point, and expires every 5 years. Understanding the complete lifecycle is essential for 
+    maintaining uninterrupted foreign contribution access.
+  </p>
+
+  <!-- Visual lifecycle SVG -->
+  <div class="lifecycle-visual reveal">
+    <svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:600px;">
+      <!-- Main flow line -->
+      <line x1="60" y1="100" x2="740" y2="100" stroke="#1e2d47" stroke-width="2" stroke-dasharray="4,3"/>
+      <!-- Nodes -->
+      <!-- Apply -->
+      <circle cx="80" cy="100" r="30" fill="rgba(59,130,246,0.15)" stroke="#3b82f6" stroke-width="2"/>
+      <text x="80" y="95" text-anchor="middle" fill="#3b82f6" font-size="18">📋</text>
+      <text x="80" y="112" text-anchor="middle" fill="#3b82f6" font-size="9" font-weight="bold">APPLY</text>
+      <!-- Arrow -->
+      <text x="140" y="103" text-anchor="middle" fill="#1e2d47" font-size="16">→</text>
+      <text x="140" y="118" text-anchor="middle" fill="#94a3b8" font-size="8">IB check</text>
+      <!-- Granted -->
+      <circle cx="200" cy="100" r="30" fill="rgba(16,185,129,0.15)" stroke="#10b981" stroke-width="2"/>
+      <text x="200" y="95" text-anchor="middle" fill="#10b981" font-size="18">✅</text>
+      <text x="200" y="112" text-anchor="middle" fill="#10b981" font-size="9" font-weight="bold">GRANTED</text>
+      <!-- Arrow -->
+      <text x="270" y="103" text-anchor="middle" fill="#1e2d47" font-size="16">→</text>
+      <text x="270" y="118" text-anchor="middle" fill="#94a3b8" font-size="8">5 years</text>
+      <!-- Active -->
+      <circle cx="340" cy="100" r="30" fill="rgba(16,185,129,0.15)" stroke="#10b981" stroke-width="2.5"/>
+      <text x="340" y="95" text-anchor="middle" fill="#10b981" font-size="18">🟢</text>
+      <text x="340" y="112" text-anchor="middle" fill="#10b981" font-size="9" font-weight="bold">ACTIVE</text>
+      <!-- Branches: Suspended, Renewal, Cancelled -->
+      <!-- Suspended branch (up) -->
+      <line x1="340" y1="70" x2="460" y2="40" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <circle cx="500" cy="40" r="24" fill="rgba(245,158,11,0.1)" stroke="#f59e0b" stroke-width="1.5"/>
+      <text x="500" y="35" text-anchor="middle" fill="#f59e0b" font-size="14">⏸️</text>
+      <text x="500" y="50" text-anchor="middle" fill="#f59e0b" font-size="8" font-weight="bold">SUSPENDED</text>
+      <!-- Cancelled branch (up from suspended) -->
+      <line x1="524" y1="40" x2="620" y2="40" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <circle cx="660" cy="40" r="24" fill="rgba(239,68,68,0.1)" stroke="#ef4444" stroke-width="1.5"/>
+      <text x="660" y="35" text-anchor="middle" fill="#ef4444" font-size="14">🚫</text>
+      <text x="660" y="50" text-anchor="middle" fill="#ef4444" font-size="8" font-weight="bold">CANCELLED</text>
+      <!-- Renewal branch (below) -->
+      <line x1="340" y1="130" x2="460" y2="155" stroke="#8b5cf6" stroke-width="1.5"/>
+      <circle cx="500" cy="165" r="24" fill="rgba(139,92,246,0.1)" stroke="#8b5cf6" stroke-width="1.5"/>
+      <text x="500" y="160" text-anchor="middle" fill="#8b5cf6" font-size="14">🔄</text>
+      <text x="500" y="176" text-anchor="middle" fill="#8b5cf6" font-size="8" font-weight="bold">RENEWAL</text>
+      <!-- Arrow back to Active from Renewal -->
+      <line x1="524" y1="165" x2="620" y2="120" stroke="#8b5cf6" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <circle cx="660" cy="100" r="30" fill="rgba(16,185,129,0.15)" stroke="#10b981" stroke-width="2.5"/>
+      <text x="660" y="95" text-anchor="middle" fill="#10b981" font-size="18">🟢</text>
+      <text x="660" y="112" text-anchor="middle" fill="#10b981" font-size="8" font-weight="bold">ACTIVE+5yr</text>
+      <!-- Expired -->
+      <line x1="340" y1="100" x2="740" y2="100" stroke="#1e2d47" stroke-width="1"/>
+      <circle cx="760" cy="100" r="20" fill="rgba(148,163,184,0.1)" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="760" y="95" text-anchor="middle" fill="#94a3b8" font-size="11">⌛</text>
+      <text x="760" y="110" text-anchor="middle" fill="#94a3b8" font-size="8">LAPSED</text>
+      <!-- Labels -->
+      <text x="80" y="140" text-anchor="middle" fill="#94a3b8" font-size="8">~3-12 months</text>
+    </svg>
+    <p style="font-size:0.75rem;color:var(--muted);text-align:center;margin:0.5rem 0 0;">Click on the state cards below to understand each phase in detail</p>
+  </div>
+
+  <h2>Click Each State to Understand</h2>
+  <div class="states-grid reveal">
+    <div class="state-card apply" onclick="toggleState(this)">
+      <div class="state-icon">📋</div>
+      <div class="state-name">Pending Application</div>
+      <div class="state-desc">Application filed, under MHA review</div>
+      <div class="state-detail">
+        <strong>Duration:</strong> 3 to 12+ months (no statutory time limit for MHA to decide)<br><br>
+        <strong>What you can do:</strong> Nothing — wait. Can receive FC only after grant.<br><br>
+        <strong>What to monitor:</strong> Application status on fcraonline.nic.in. Respond promptly to any queries raised by MHA (they can seek additional documents).<br><br>
+        <strong>Risk:</strong> IB clearance denial results in application rejection. No appeal mechanism before the High Court except writ petition. Keep your track record clean during this period.
+      </div>
+    </div>
+
+    <div class="state-card active-state" onclick="toggleState(this)">
+      <div class="state-icon">🟢</div>
+      <div class="state-name">Active Registration</div>
+      <div class="state-desc">Can receive and utilise FC freely within rules</div>
+      <div class="state-detail">
+        <strong>Duration:</strong> 5 years from date of grant<br><br>
+        <strong>Rights:</strong> Can receive FC from any eligible foreign source, maintain FC accounts, utilise per stated purposes.<br><br>
+        <strong>Obligations:</strong> Annual FC-4 by 31 Dec, 15-day change intimations, 20% admin cap, maintain separate accounts, no mixing, no sub-granting.<br><br>
+        <strong>Watch out:</strong> Active status can be suspended or cancelled at any point for violations — don't let compliance slip during "quiet" years.
+      </div>
+    </div>
+
+    <div class="state-card suspended" onclick="toggleState(this)">
+      <div class="state-icon">⏸️</div>
+      <div class="state-name">Suspended</div>
+      <div class="state-desc">Temporary halt — cannot receive FC</div>
+      <div class="state-detail">
+        <strong>Duration:</strong> Up to 180 days (6 months) — can be extended in some circumstances<br><br>
+        <strong>Effect:</strong> Cannot receive any new FC. Cannot utilise existing FC without MHA permission. Foreign donors are notified by MHA.<br><br>
+        <strong>What to do:</strong> Respond to MHA show cause notice with full facts. Seek legal counsel. File detailed response within stipulated time.<br><br>
+        <strong>Outcome:</strong> Either revoked (back to active) or converted to cancellation after inquiry.
+      </div>
+    </div>
+
+    <div class="state-card cancelled" onclick="toggleState(this)">
+      <div class="state-icon">🚫</div>
+      <div class="state-name">Cancelled</div>
+      <div class="state-desc">Permanent disqualification (5-year bar)</div>
+      <div class="state-detail">
+        <strong>Effect:</strong> Registration is void. Cannot receive any FC. Existing FC balance is vested in the government or may be seized.<br><br>
+        <strong>Bar on re-registration:</strong> The cancelled organisation AND its office bearers cannot apply for fresh FCRA registration for <strong>3 years</strong> from cancellation date.<br><br>
+        <strong>Criminal consequences:</strong> Cancellation often precedes prosecution under §35 of FCRA. Individual office bearers face criminal liability.<br><br>
+        <strong>Asset consequences:</strong> FC-funded assets may be seized and vested in Central Government under §28.
+      </div>
+    </div>
+
+    <div class="state-card renewal" onclick="toggleState(this)">
+      <div class="state-icon">🔄</div>
+      <div class="state-name">Renewal</div>
+      <div class="state-desc">Must apply 6 months before expiry</div>
+      <div class="state-detail">
+        <strong>Deadline to apply:</strong> At least 6 months before the expiry date.<br><br>
+        <strong>Continuation during renewal:</strong> If renewal application is filed before expiry, registration continues until MHA decides — it does NOT lapse while the renewal application is pending.<br><br>
+        <strong>What MHA evaluates on renewal:</strong> Compliance track record (FC-4 filing history), any violations, IB clearance refresh, activity reports, Aadhaar update for current office bearers.<br><br>
+        <strong>Missed renewal:</strong> If even 1 day late, registration lapses. FC received after lapse = illegal receipt even if the renewal application is pending.
+      </div>
+    </div>
+  </div>
+
+  <h2>Grounds for Suspension — Section 13</h2>
+  <p>MHA can suspend a registration by order, without prior hearing, when:</p>
+  <div class="grounds reveal">
+    <div class="ground-item">
+      <div class="ground-num">1</div>
+      <div class="ground-text"><strong>Prima facie violation:</strong> There appears to be a violation of any provision of FCRA, and it is necessary to suspend pending inquiry</div>
+    </div>
+    <div class="ground-item">
+      <div class="ground-num">2</div>
+      <div class="ground-text"><strong>Pending inquiry:</strong> An inquiry is ordered under §22 and MHA is satisfied that suspension is necessary to prevent further prejudice to national interest</div>
+    </div>
+    <div class="ground-item">
+      <div class="ground-num">3</div>
+      <div class="ground-text"><strong>Public interest:</strong> It is expedient in the public interest to suspend the registration during investigation</div>
+    </div>
+  </div>
+
+  <div class="callout info reveal">
+    <div class="callout-title">ℹ️ Natural Justice During Suspension</div>
+    <p style="margin:0;font-size:0.9rem;">MHA must issue a Show Cause Notice (SCN) within 30 days of suspension. The organisation must be given a reasonable opportunity to reply. MHA must then decide whether to (a) revoke suspension, (b) continue for another period, or (c) initiate cancellation. Any order must give reasons in writing.</p>
+  </div>
+
+  <h2>Grounds for Cancellation — Section 14</h2>
+  <p>Cancellation is the most severe consequence. These are the grounds:</p>
+  <div class="grounds reveal">
+    <div class="ground-item" style="border-color:rgba(239,68,68,0.2);">
+      <div class="ground-num">A</div>
+      <div class="ground-text"><strong>FC used for wrong purpose:</strong> FC was used for a purpose other than for which it was accepted</div>
+    </div>
+    <div class="ground-item" style="border-color:rgba(239,68,68,0.2);">
+      <div class="ground-num">B</div>
+      <div class="ground-text"><strong>Functioning against national interest:</strong> The association has become fictitious (ceased activities) or is acting against national security/sovereignty/integrity</div>
+    </div>
+    <div class="ground-item" style="border-color:rgba(239,68,68,0.2);">
+      <div class="ground-num">C</div>
+      <div class="ground-text"><strong>False information:</strong> Registration was obtained by making a false statement or misrepresentation in the application</div>
+    </div>
+    <div class="ground-item" style="border-color:rgba(239,68,68,0.2);">
+      <div class="ground-num">D</div>
+      <div class="ground-text"><strong>Non-compliance:</strong> The organisation has defaulted in complying with any condition subject to which registration was granted</div>
+    </div>
+    <div class="ground-item" style="border-color:rgba(239,68,68,0.2);">
+      <div class="ground-num">E</div>
+      <div class="ground-text"><strong>Post-registration prohibition:</strong> Organisation/key functionary becomes a prohibited person (e.g., office bearer joins politics, becomes a government servant)</div>
+    </div>
+    <div class="ground-item" style="border-color:rgba(239,68,68,0.2);">
+      <div class="ground-num">F</div>
+      <div class="ground-text"><strong>Ceasing activities:</strong> Has not carried on any activity in its stated objectives for 2 consecutive years</div>
+    </div>
+  </div>
+
+  <h2>What Happens to FC Funds After Cancellation?</h2>
+  <div class="two-col reveal">
+    <div class="info-card">
+      <h3 style="color:var(--red);">🏦 FC Account Balance</h3>
+      <p style="font-size:0.85rem;color:var(--muted);margin:0;">
+        The FC balance remaining in accounts at time of cancellation may be:<br><br>
+        ✗ Frozen immediately on suspension<br>
+        ✗ MHA can direct specific utilisation<br>
+        ✗ Remaining balance may be vested in Central Government under §28<br>
+        ✗ Funds cannot be withdrawn or transferred without MHA permission post-suspension
+      </p>
+    </div>
+    <div class="info-card">
+      <h3 style="color:var(--amber);">🏢 FC-Funded Assets</h3>
+      <p style="font-size:0.85rem;color:var(--muted);margin:0;">
+        Immovable property and assets acquired from FC funds:<br><br>
+        ✗ Can be seized and vested in Central Government under §28<br>
+        ✗ Government may use such assets for public purpose<br>
+        ✗ Organisation has no right to sell or encumber FC assets after cancellation<br>
+        ✗ Ongoing legal challenges to cancellation do not automatically stay seizure
+      </p>
+    </div>
+  </div>
+
+  <div class="callout danger reveal">
+    <div class="callout-title">🚨 3-Year Bar on Re-Registration After Cancellation</div>
+    <p style="margin:0;font-size:0.9rem;">Post-cancellation, the association AND its office bearers cannot apply for FCRA registration for <strong>3 years</strong>. This effectively blacklists the organisation and the individuals associated with it from the FCRA ecosystem. If a key functionary of a cancelled NGO becomes an official of a new NGO, that new NGO's registration application will be adversely affected. Due diligence on key functionaries before bringing them on board is critical.</p>
+  </div>
+
+  <table class="tb reveal">
+    <thead><tr><th>Phase</th><th>Can Receive FC?</th><th>Can Use Existing FC?</th><th>Reversal Possible?</th></tr></thead>
+    <tbody>
+      <tr><td>Pending Application</td><td>❌ No</td><td>N/A (no FC yet)</td><td>N/A</td></tr>
+      <tr><td>Active</td><td>✅ Yes</td><td>✅ Yes</td><td>N/A</td></tr>
+      <tr><td>Suspended</td><td>❌ No</td><td>⚠️ Only with MHA permission</td><td>✅ Yes if inquiry resolves favourably</td></tr>
+      <tr><td>Cancelled</td><td>❌ No</td><td>❌ No</td><td>⚠️ Only via court order (writ)</td></tr>
+      <tr><td>Lapsed (missed renewal)</td><td>❌ No</td><td>⚠️ Technically no</td><td>⚠️ Fresh application needed</td></tr>
+      <tr><td>Renewal Pending (applied timely)</td><td>✅ Yes (continues)</td><td>✅ Yes</td><td>N/A</td></tr>
+    </tbody>
+  </table>
+
+  <div class="bottom-nav">
+    <a href="07_reporting.html" class="nav-btn">
+      <span class="direction">← Back to</span>
+      Reporting & Compliance
+    </a>
+    <a href="09_enforcement.html" class="nav-btn">
+      <span class="direction">Next →</span>
+      Enforcement & Penalties
+    </a>
+  </div>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement,b=document.body;
+  const st=h.scrollTop||b.scrollTop,sh=h.scrollHeight-h.clientHeight;
+  document.getElementById('progress').style.width=(st/sh*100)+'%';
+});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}}),{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+function toggleState(el){el.classList.toggle('open');}
+</script>
+</body>
+</html>

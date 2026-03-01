@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Common Pitfalls — FCRA 2010</title>
+<style>
+  :root{--bg:#0a0e1a;--card:#111827;--border:#1e2d47;--accent:#ef4444;--text:#e2e8f0;--muted:#94a3b8;--blue:#3b82f6;--amber:#f59e0b;--green:#10b981;--cyan:#06b6d4;--purple:#8b5cf6;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.7;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(10,14,26,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;padding:0.8rem 2rem;}
+  nav a{color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.3rem 0.6rem;border-radius:6px;transition:all 0.2s;}
+  nav a:hover,nav a.active{color:var(--text);background:rgba(255,255,255,0.06);}
+  nav .home{font-weight:700;color:var(--accent);}
+  .nav-sep{color:var(--border);}
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--amber));z-index:999;transition:width 0.1s;}
+  .container{max-width:900px;margin:0 auto;padding:4rem 2rem;}
+  .chapter-label{color:var(--muted);font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.8rem;}
+  h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;line-height:1.1;margin-bottom:1rem;}
+  .lead{font-size:1.15rem;color:var(--muted);line-height:1.7;margin-bottom:3rem;border-left:3px solid var(--accent);padding-left:1.2rem;}
+  h2{font-size:1.5rem;font-weight:700;margin:3rem 0 1rem;}
+  p{margin-bottom:1rem;color:#cbd5e1;}
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s,transform 0.7s;}
+  .reveal.visible{opacity:1;transform:none;}
+
+  /* pitfall cards */
+  .pitfall{background:var(--card);border:1px solid rgba(239,68,68,0.2);border-radius:16px;margin-bottom:1.5rem;overflow:hidden;transition:all 0.2s;}
+  .pitfall:hover{border-color:rgba(239,68,68,0.4);}
+  .pitfall-header{display:flex;align-items:flex-start;gap:1rem;padding:1.5rem;cursor:pointer;user-select:none;}
+  .pitfall-num{
+    min-width:36px;height:36px;border-radius:10px;background:rgba(239,68,68,0.15);
+    color:var(--red,#ef4444);font-weight:800;font-size:1rem;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .pitfall-meta{flex:1;}
+  .pitfall-title{font-weight:800;font-size:1rem;margin-bottom:0.2rem;}
+  .pitfall-teaser{font-size:0.82rem;color:var(--muted);}
+  .pitfall-severity{
+    font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;font-weight:700;
+    padding:0.2rem 0.5rem;border-radius:100px;flex-shrink:0;margin-top:0.2rem;
+  }
+  .pitfall-severity.fatal{background:rgba(239,68,68,0.2);color:#ef4444;}
+  .pitfall-severity.serious{background:rgba(245,158,11,0.2);color:var(--amber);}
+  .pitfall-severity.common{background:rgba(59,130,246,0.2);color:var(--blue);}
+  .pitfall-chevron{transition:transform 0.3s;color:var(--muted);flex-shrink:0;}
+  .pitfall.open .pitfall-chevron{transform:rotate(180deg);}
+  .pitfall.open .pitfall-header{border-bottom:1px solid var(--border);}
+  .pitfall-body{display:none;padding:1.5rem;}
+  .pitfall.open .pitfall-body{display:block;}
+  .pitfall-scenario{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-left:3px solid rgba(239,68,68,0.5);border-radius:0 10px 10px 0;padding:1rem;margin-bottom:1rem;font-size:0.85rem;color:var(--muted);}
+  .pitfall-scenario .ps-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:#ef4444;font-weight:700;margin-bottom:0.4rem;}
+  .pitfall-fix{background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);border-radius:10px;padding:1rem;font-size:0.85rem;color:var(--muted);}
+  .pitfall-fix .pf-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--green);font-weight:700;margin-bottom:0.4rem;}
+
+  /* quiz */
+  .quiz{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;margin:2rem 0;}
+  .q-item{margin-bottom:1.5rem;padding:1rem;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid var(--border);}
+  .q-text{font-size:0.9rem;font-weight:600;margin-bottom:0.8rem;}
+  .q-opts{display:flex;flex-direction:column;gap:0.4rem;}
+  .q-opt{display:flex;align-items:center;gap:0.8rem;cursor:pointer;padding:0.5rem 0.8rem;border-radius:8px;border:1px solid var(--border);font-size:0.85rem;background:rgba(255,255,255,0.01);transition:all 0.2s;}
+  .q-opt:hover{background:rgba(255,255,255,0.04);}
+  .q-opt.correct{background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.4);color:var(--green);}
+  .q-opt.wrong{background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.4);color:var(--red,#ef4444);}
+  .q-opt.show-correct{background:rgba(16,185,129,0.05);border-color:rgba(16,185,129,0.3);color:var(--green);}
+  .q-exp{font-size:0.82rem;color:var(--muted);margin-top:0.6rem;padding:0.6rem 0.8rem;background:rgba(255,255,255,0.02);border-radius:6px;display:none;}
+  .q-exp.show{display:block;}
+
+  .callout{background:var(--card);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;}
+  .callout-title{font-weight:700;font-size:0.85rem;text-transform:uppercase;margin-bottom:0.4rem;color:var(--accent);}
+
+  .bottom-nav{display:flex;justify-content:space-between;margin-top:5rem;padding-top:2rem;border-top:1px solid var(--border);}
+  .nav-btn{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.5rem;text-decoration:none;color:var(--text);transition:all 0.2s;font-size:0.9rem;}
+  .nav-btn:hover{border-color:var(--accent);}
+  .nav-btn .direction{font-size:0.75rem;color:var(--muted);display:block;margin-bottom:0.2rem;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progress"></div>
+<nav>
+  <a href="index.html" class="home">FCRA 2010</a>
+  <span class="nav-sep">›</span>
+  <a href="11_pitfalls.html" class="active">Common Pitfalls</a>
+</nav>
+
+<div class="container">
+  <p class="chapter-label">Module 11 — HIGH PRIORITY</p>
+  <h1>Common Pitfalls &amp; Traps</h1>
+  <p class="lead">
+    These are the real-world scenarios that catch even experienced NGO managers and FCRA practitioners off guard.
+    Each one has resulted in actual enforcement actions, suspensions, or cancellations.
+    Know them well — they are the most exam-relevant and practically critical part of FCRA.
+  </p>
+
+  <!-- Pitfalls -->
+  <div class="pitfall reveal" onclick="togglePitfall(this)">
+    <div class="pitfall-header">
+      <div class="pitfall-num">1</div>
+      <div class="pitfall-meta">
+        <div class="pitfall-title">The NRI Trap — "It's Indian Money" Fallacy</div>
+        <div class="pitfall-teaser">NRI sends money "as a gift" to their favourite Indian NGO — seems domestic, is actually FC</div>
+      </div>
+      <span class="pitfall-severity fatal">FATAL</span>
+      <span class="pitfall-chevron">▼</span>
+    </div>
+    <div class="pitfall-body">
+      <div class="pitfall-scenario">
+        <div class="ps-label">⚠️ The Pitfall</div>
+        An NRI living in the USA wants to support a small NGO in his home village. He sends ₹5 lakh from his US bank account (NRE account) or via wire transfer, calling it a "personal gift." The NGO treasurer deposits it in their regular current account thinking "this is Indian money from a desi person."
+      </div>
+      <div style="margin-bottom:1rem;font-size:0.85rem;color:var(--muted);">
+        <strong style="color:var(--text);">Why it's a violation:</strong> Under §2(1)(j), an NRI (Indian citizen abroad) is explicitly a "foreign source." Any amount sent by an NRI to an Indian association (not to a relative) constitutes a foreign contribution under §2(1)(h). The fact that the person is ethnically Indian, has an Indian passport, or sent money "from love" makes no difference whatsoever.<br><br>
+        <strong style="color:var(--text);">What makes it worse:</strong> The NGO doesn't have FCRA registration. Now they're facing illegal receipt of FC. Even if they have registration, they received it in the wrong account (not SBI NDMB).
+      </div>
+      <div class="pitfall-fix">
+        <div class="pf-label">✅ The Fix</div>
+        <strong>For NGOs:</strong> Always trace the source of funds — not the ethnicity of the sender, but where they live and what their status is. Any amount from an overseas bank account to your Indian bank account must be evaluated as potential FC. If the sender is a foreign source, route it through your FCRA SBI NDMB account.<br><br>
+        <strong>Exception:</strong> An NRI sending money to a blood relative (not to an NGO) for personal use is excluded from FC — §4(d). But NGOs are not "relatives."
+      </div>
+    </div>
+  </div>
+
+  <div class="pitfall reveal" onclick="togglePitfall(this)">
+    <div class="pitfall-header">
+      <div class="pitfall-num">2</div>
+      <div class="pitfall-meta">
+        <div class="pitfall-title">Political Nature Trap — Advocacy NGO Becomes Prohibited</div>
+        <div class="pitfall-teaser">An environmental/rights NGO's activities cause it to be suddenly notified as "political nature"</div>
+      </div>
+      <span class="pitfall-severity fatal">FATAL</span>
+      <span class="pitfall-chevron">▼</span>
+    </div>
+    <div class="pitfall-body">
+      <div class="pitfall-scenario">
+        <div class="ps-label">⚠️ The Pitfall</div>
+        An NGO working on tribal land rights files PILs against government mining projects, organises protests, and issues public statements opposing government infrastructure policies. Even though they are registered and receive FC legitimately, they are notified under §5 as an organisation of "political nature."
+      </div>
+      <div style="margin-bottom:1rem;font-size:0.85rem;color:var(--muted);">
+        <strong style="color:var(--text);">The mechanism:</strong> §5 gives MHA the power to notify any organisation as "political nature" based on its actual activities. Once notified, the organisation falls under §3's absolute prohibition — its existing FCRA registration becomes invalid. All subsequent FC receipt is illegal from the date of notification.<br><br>
+        <strong style="color:var(--text);">The insidious part:</strong> There is no advance warning. The notification may retroactively invalidate recent FC receipts. The organisation cannot "undo" work that led to the notification.
+      </div>
+      <div class="pitfall-fix">
+        <div class="pf-label">✅ Risk Mitigation</div>
+        Advocacy organisations should regularly review their public communications, activities, and campaigns. Avoid direct opposition to specific government election candidates. Distinguish between "policy advocacy" (allowed) and "electoral influence" (risky). Document evidence of programme activities to show non-political character. Maintain clear separation between programme work and any political commentary from trustees in their personal capacity.
+      </div>
+    </div>
+  </div>
+
+  <div class="pitfall reveal" onclick="togglePitfall(this)">
+    <div class="pitfall-header">
+      <div class="pitfall-num">3</div>
+      <div class="pitfall-meta">
+        <div class="pitfall-title">Fund Mixing — "Just This Once" becomes a Violation</div>
+        <div class="pitfall-teaser">Domestic funds accidentally deposited into FCRA account, or FC used for domestic programme</div>
+      </div>
+      <span class="pitfall-severity serious">SERIOUS</span>
+      <span class="pitfall-chevron">▼</span>
+    </div>
+    <div class="pitfall-body">
+      <div class="pitfall-scenario">
+        <div class="ps-label">⚠️ The Pitfall</div>
+        NGO receives a domestic CSR grant via NEFT. The accountant, overwhelmed with workload, deposits it into the FCRA utilisation account "temporarily" intending to transfer it out next week. Or: FC-funded project runs short on cash, so the NGO "borrows" from domestic account and plans to "return" it.
+      </div>
+      <div style="margin-bottom:1rem;font-size:0.85rem;color:var(--muted);">
+        <strong style="color:var(--text);">Why even temporary mixing is a violation:</strong> The moment domestic funds touch the FCRA account or vice versa, it constitutes mixing of funds. There is no "I'll fix it next week" grace period. The violation exists at the moment of mixing.<br><br>
+        <strong style="color:var(--text);">Detection risk:</strong> MHA bank reconciliation reviews and CA audits almost always detect mixing. Bank statements are submitted with FC-4 annual returns. A single erroneous transaction is visible.
+      </div>
+      <div class="pitfall-fix">
+        <div class="pf-label">✅ The Fix</div>
+        Maintain completely separate banking from Day 1. Brief your entire accounts team. Set up bank system controls so domestic staff cannot inadvertently credit FCRA accounts. If mixing happens accidentally, reverse immediately, document the reversal with reason, and report to MHA if the amount is significant. Never "borrow" between FC and domestic — create a proper internal loan with board resolution if absolutely necessary (though even this has legal risk).
+      </div>
+    </div>
+  </div>
+
+  <div class="pitfall reveal" onclick="togglePitfall(this)">
+    <div class="pitfall-header">
+      <div class="pitfall-num">4</div>
+      <div class="pitfall-meta">
+        <div class="pitfall-title">Deadline Miss — FC-4 Not Filed by 31 December</div>
+        <div class="pitfall-teaser">Annual return missed, registration becomes liable for cancellation — even for "nil" years</div>
+      </div>
+      <span class="pitfall-severity serious">SERIOUS</span>
+      <span class="pitfall-chevron">▼</span>
+    </div>
+    <div class="pitfall-body">
+      <div class="pitfall-scenario">
+        <div class="ps-label">⚠️ The Pitfall</div>
+        Variant A: NGO received no FC during the year. Board believes "nothing to report, no need to file." Registration lapses for non-filing. Next year they receive FC — now it's illegal receipt on an invalid registration.<br><br>
+        Variant B: CA engagement was delayed, audit took longer than expected, and FC-4 was filed on 5 January instead of 31 December. Default is recorded.
+      </div>
+      <div style="margin-bottom:1rem;font-size:0.85rem;color:var(--muted);">
+        <strong style="color:var(--text);">The nil return trap is the most common:</strong> Even zero receipts require a nil FC-4 to be filed by 31 December. This is explicitly required under FCRA Rules. Thousands of small NGOs lose FCRA registration every year simply because they didn't know about the nil return requirement.
+      </div>
+      <div class="pitfall-fix">
+        <div class="pf-label">✅ The Fix</div>
+        Set a calendar reminder for 1 October every year: "Start FC-4 process." Engage CA by 30 September. Target to have draft ready by 30 November. File by 15 December to leave buffer. Even for nil years — file the nil return. Keep the acknowledgement as proof of timely filing.
+      </div>
+    </div>
+  </div>
+
+  <div class="pitfall reveal" onclick="togglePitfall(this)">
+    <div class="pitfall-header">
+      <div class="pitfall-num">5</div>
+      <div class="pitfall-meta">
+        <div class="pitfall-title">Sub-Granting After 2020 — "But They're Also FCRA Registered"</div>
+        <div class="pitfall-teaser">Pre-2020 practices of transferring FC to partner NGOs now constitute illegal transfers</div>
+      </div>
+      <span class="pitfall-severity serious">SERIOUS</span>
+      <span class="pitfall-chevron">▼</span>
+    </div>
+    <div class="pitfall-body">
+      <div class="pitfall-scenario">
+        <div class="ps-label">⚠️ The Pitfall</div>
+        Mid-size NGO "A" has a strong relationship with 10 smaller grassroots NGOs. Pre-2020, A would distribute grants to them after receiving FC. Post-2020, A's board is unaware of the amendment (or thinks "they're FCRA-registered, so it must be fine") and continues the practice.
+      </div>
+      <div style="margin-bottom:1rem;font-size:0.85rem;color:var(--muted);">
+        <strong style="color:var(--text);">Complete prohibition:</strong> Post-2020 amendment to §7, no FCRA-registered entity can transfer FC to ANY other entity — registered or not, domestic or foreign. Both the sender and receiver are in violation. "They have FCRA registration" is NOT a defence. The practice that was standard procedure before 2020 is now a criminal offence.
+      </div>
+      <div class="pitfall-fix">
+        <div class="pf-label">✅ The Fix</div>
+        All sub-granting must stop. Instead: larger NGO can engage smaller NGOs as service providers (contract them for specific deliverables and pay as vendors from utilisation account — this is a legitimate payment for services, not a transfer of FC). Or: help smaller NGOs get their own FCRA registrations and individual donor relationships. The vendor route requires careful documentation that the payments are for genuine services rendered.
+      </div>
+    </div>
+  </div>
+
+  <div class="pitfall reveal" onclick="togglePitfall(this)">
+    <div class="pitfall-header">
+      <div class="pitfall-num">6</div>
+      <div class="pitfall-meta">
+        <div class="pitfall-title">Admin Cap Breach — "We'll Adjust It in the Next Year"</div>
+        <div class="pitfall-teaser">Administrative expenses creep above 20% without the NGO realising until audit time</div>
+      </div>
+      <span class="pitfall-severity serious">SERIOUS</span>
+      <span class="pitfall-chevron">▼</span>
+    </div>
+    <div class="pitfall-body">
+      <div class="pitfall-scenario">
+        <div class="ps-label">⚠️ The Pitfall</div>
+        NGO received ₹40 lakh in FC. Max admin = ₹8 lakh. But by Q3, admin expenses have already crossed ₹9 lakh (rent went up, they hired an admin manager). They assume "we'll balance it at year end" or "we'll classify some things differently." CA audit reveals 23% admin — a violation.
+      </div>
+      <div style="margin-bottom:1rem;font-size:0.85rem;color:var(--muted);">
+        <strong style="color:var(--text);">The compounding problem:</strong> You can't "move" expenses retrospectively between admin and programme without falsifying account — that's a criminal offence under §38. The 20% cap is calculated on actual FC received in that year, and admin expense is what it is. The only real fix is prevention.
+      </div>
+      <div class="pitfall-fix">
+        <div class="pf-label">✅ The Fix</div>
+        Implement quarterly admin cap monitoring. After each quarter, calculate: total FC received in year-to-date, 20% of that, admin spent year-to-date. If trending over, either increase programme spend (receive more FC in Q4) or cut admin costs. Maintain accurate, real-time distinction between programme and admin expenses from Day 1 of the financial year.
+      </div>
+    </div>
+  </div>
+
+  <div class="pitfall reveal" onclick="togglePitfall(this)">
+    <div class="pitfall-header">
+      <div class="pitfall-num">7</div>
+      <div class="pitfall-meta">
+        <div class="pitfall-title">Renewal Missed — The "Set It and Forget It" Registration</div>
+        <div class="pitfall-teaser">Registration expires silently while the NGO doesn't realise it's near expiry</div>
+      </div>
+      <span class="pitfall-severity serious">SERIOUS</span>
+      <span class="pitfall-chevron">▼</span>
+    </div>
+    <div class="pitfall-body">
+      <div class="pitfall-scenario">
+        <div class="ps-label">⚠️ The Pitfall</div>
+        NGO got FCRA registration in 2017. It expires in 2022. Nobody tracked the expiry date. In October 2022, they receive a large FC grant. In November, the donor's compliance team notices the expired FCRA on the public MHA portal — the donation was illegal receipt. Now both donor and recipient have an issue.
+      </div>
+      <div style="margin-bottom:1rem;font-size:0.85rem;color:var(--muted);">
+        <strong style="color:var(--text);">The silent lapse:</strong> FCRA registration expires exactly 5 years from grant date with zero notification from MHA. The NGO's status changes from "Active" to "Expired" on the public database — visible to any donor doing due diligence. FC received after expiry (even if renewal application is filed late) is illegal receipt.
+      </div>
+      <div class="pitfall-fix">
+        <div class="pf-label">✅ The Fix</div>
+        Record your registration grant date and 5-year expiry date. Apply for renewal exactly 6 months before expiry (not 5 months, not 4 months — 6 months minimum). Set recurring calendar alerts at months -12, -9, -6 before expiry. If applied ≥6 months before expiry, continuation is automatic pending decision — so the timing is a hard compliance requirement.
+      </div>
+    </div>
+  </div>
+
+  <div class="pitfall reveal" onclick="togglePitfall(this)">
+    <div class="pitfall-header">
+      <div class="pitfall-num">8</div>
+      <div class="pitfall-meta">
+        <div class="pitfall-title">Purpose Deviation — "It's All Social Work Anyway"</div>
+        <div class="pitfall-teaser">Using FC received for "education" for healthcare activities — even if both are noble and legal purposes</div>
+      </div>
+      <span class="pitfall-severity common">COMMON</span>
+      <span class="pitfall-chevron">▼</span>
+    </div>
+    <div class="pitfall-body">
+      <div class="pitfall-scenario">
+        <div class="ps-label">⚠️ The Pitfall</div>
+        Foreign donor gives FC specifically for "school building Construction." Mid-year, a flood damages the community health centre and the NGO "temporarily" uses ₹3 lakh from the FC education fund to repair the health centre, planning to "reimburse it" when new donations come.
+      </div>
+      <div style="margin-bottom:1rem;font-size:0.85rem;color:var(--muted);">
+        <strong style="color:var(--text);">FC is ear-marked:</strong> FCRA requires FC to be used for the exact purpose for which it was accepted. "All social work" is not a single purpose. If a donor gave for education, spending on health (even temporarily, even with good intentions) is purpose deviation. The "reimbursement plan" does not cure the violation — the deviation occurred at the time of spending.
+      </div>
+      <div class="pitfall-fix">
+        <div class="pf-label">✅ The Fix</div>
+        Get the donor's written consent to re-allocate funds toward the health centre repair — this is usually the fastest fix. Maintain strict project-wise FC accounting. If domestic relief funds are available, use domestic funds for emergency situations and keep FC for its original purpose. Ensure donor grant agreements have a "force majeure/emergency reallocation" clause that allows limited purpose changes with donor approval.
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick quiz -->
+  <h2>Final: Quick Pitfall Quiz</h2>
+  <div class="quiz reveal">
+    <div class="q-item" id="pq1">
+      <div class="q-text">Which of the following is NOT a violation?</div>
+      <div class="q-opts">
+        <div class="q-opt" onclick="pAnswer(this,'pq1',false)">A. Filing nil FC-4 on 15 January instead of 31 December</div>
+        <div class="q-opt" onclick="pAnswer(this,'pq1',false)">B. Transferring ₹5 lakh FC to another FCRA-registered NGO for their project</div>
+        <div class="q-opt" onclick="pAnswer(this,'pq1',true)">C. Paying a vendor invoice from the FCRA utilisation account for project supplies</div>
+        <div class="q-opt" onclick="pAnswer(this,'pq1',false)">D. Receiving a US foundation's wire transfer into an HDFC current account</div>
+      </div>
+      <div class="q-exp" id="pq1-exp">✓ C is correct — Paying vendors for project supplies is a legitimate use of FC utilisation accounts. It is a payment for services (expenditure), not a "transfer" of FC. Options A (late filing), B (sub-granting post-2020), and D (wrong account) are all violations.</div>
+    </div>
+    <div class="q-item" id="pq2">
+      <div class="q-text">An NGO's admin expenses are 23% of FC received. Their CA suggests reclassifying 3% of admin expenses as "programme coordination costs." This will:</div>
+      <div class="q-opts">
+        <div class="q-opt" onclick="pAnswer(this,'pq2',false)">A. Solve the problem — programme coordination is a legitimate category</div>
+        <div class="q-opt" onclick="pAnswer(this,'pq2',true)">B. Create a bigger violation — false information in FC-4 is a criminal offence under §38</div>
+        <div class="q-opt" onclick="pAnswer(this,'pq2',false)">C. Be acceptable if board approves the reclassification</div>
+        <div class="q-opt" onclick="pAnswer(this,'pq2',false)">D. Work if supported by a resolution</div>
+      </div>
+      <div class="q-exp" id="pq2-exp">✓ B is correct. Artificially reclassifying admin expenses to avoid the 20% cap is falsification of accounts and false information in FC-4 — a criminal offence under §38 with imprisonment up to 6 months PLUS the underlying cap violation. A CA who knowingly certifies such accounts faces professional disciplinary action. The only real solution is to actually reduce admin expenses or increase FC receipts.</div>
+    </div>
+  </div>
+
+  <div class="callout reveal">
+    <div class="callout-title">🎯 The Master Pitfall Checklist</div>
+    <ol style="font-size:0.85rem;color:var(--muted);padding-left:1.2rem;">
+      <li style="margin-bottom:0.4rem;">Check if all incoming funds are from eligible (non-foreign-source) senders before depositing in domestic accounts</li>
+      <li style="margin-bottom:0.4rem;">Ensure FC receipt always goes to SBI NDMB account FIRST, then to utilisation accounts</li>
+      <li style="margin-bottom:0.4rem;">Never transfer FC to any other NGO, person, or organisation</li>
+      <li style="margin-bottom:0.4rem;">File FC-4 annual return by 31 December — even if nil</li>
+      <li style="margin-bottom:0.4rem;">Apply for renewal minimum 6 months before registration expiry</li>
+      <li style="margin-bottom:0.4rem;">Monitor admin cap quarterly — do not let it creep above 20%</li>
+      <li style="margin-bottom:0.4rem;">Keep FC and domestic funds in completely separate accounts with no mixing</li>
+      <li style="margin-bottom:0.4rem;">Intimate MHA within 15 days of any change in office bearers, bank, or address</li>
+      <li style="margin-bottom:0.4rem;">Review advocacy activities regularly for "political nature" risk indicators</li>
+      <li style="margin-bottom:0.4rem;">Maintain FC accounts in prescribed format; retain records for 6 years</li>
+    </ol>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="10_amendments.html" class="nav-btn">
+      <span class="direction">← Back to</span>
+      Key Amendments
+    </a>
+    <a href="12_exam_quick_ref.html" class="nav-btn">
+      <span class="direction">Next →</span>
+      Exam Quick Reference
+    </a>
+  </div>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement,b=document.body;
+  const st=h.scrollTop||b.scrollTop,sh=h.scrollHeight-h.clientHeight;
+  document.getElementById('progress').style.width=(st/sh*100)+'%';
+});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}}),{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+function togglePitfall(el){el.classList.toggle('open');}
+
+function pAnswer(opt,qId,isCorrect){
+  const qItem=document.getElementById(qId);
+  if(qItem.dataset.answered)return;
+  qItem.dataset.answered='1';
+  const opts=qItem.querySelectorAll('.q-opt');
+  opts.forEach(o=>o.style.pointerEvents='none');
+  if(isCorrect){opt.classList.add('correct');}
+  else{
+    opt.classList.add('wrong');
+    opts.forEach(o=>{if(o.getAttribute('onclick')&&o.getAttribute('onclick').includes(',true)'))o.classList.add('show-correct');});
+  }
+  document.getElementById(qId+'-exp').classList.add('show');
+}
+</script>
+</body>
+</html>

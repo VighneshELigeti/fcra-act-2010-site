@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Key Definitions — FCRA 2010</title>
+<style>
+  :root {
+    --bg:#0a0e1a; --card:#111827; --border:#1e2d47;
+    --accent:#10b981; --text:#e2e8f0; --muted:#94a3b8;
+    --blue:#3b82f6; --yellow:#f59e0b; --red:#ef4444; --purple:#8b5cf6;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.7;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(10,14,26,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;padding:0.8rem 2rem;}
+  nav a{color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.3rem 0.6rem;border-radius:6px;transition:all 0.2s;}
+  nav a:hover,nav a.active{color:var(--text);background:rgba(255,255,255,0.06);}
+  nav .home{font-weight:700;color:var(--accent);}
+  .nav-sep{color:var(--border);}
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--blue));z-index:999;transition:width 0.1s;}
+  .container{max-width:860px;margin:0 auto;padding:4rem 2rem;}
+  .chapter-label{color:var(--muted);font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.8rem;}
+  h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;line-height:1.1;margin-bottom:1rem;}
+  .lead{font-size:1.15rem;color:var(--muted);line-height:1.7;margin-bottom:3rem;border-left:3px solid var(--accent);padding-left:1.2rem;}
+  h2{font-size:1.6rem;font-weight:700;margin:3.5rem 0 1rem;}
+  h3{font-size:1.1rem;font-weight:700;margin:2rem 0 0.6rem;color:var(--accent);}
+  p{margin-bottom:1rem;color:#cbd5e1;}
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s,transform 0.7s;}
+  .reveal.visible{opacity:1;transform:none;}
+
+  /* definition card */
+  .def-card{
+    background:var(--card);border:1px solid var(--border);border-radius:16px;
+    margin-bottom:1.5rem;overflow:hidden;
+    transition:border-color 0.3s;
+  }
+  .def-card:hover{border-color:var(--def-color,var(--accent));}
+  .def-header{
+    padding:1.3rem 1.5rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;
+    border-bottom:1px solid var(--border);
+  }
+  .def-title-row{display:flex;align-items:center;gap:1rem;}
+  .def-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;background:rgba(255,255,255,0.04);border:1px solid var(--border);flex-shrink:0;}
+  .def-title{font-size:1.1rem;font-weight:700;}
+  .def-sub{font-size:0.8rem;color:var(--muted);}
+  .def-arrow{transition:transform 0.3s;color:var(--muted);}
+  .def-card.open .def-arrow{transform:rotate(180deg);}
+  .def-body{max-height:0;overflow:hidden;transition:max-height 0.5s ease;}
+  .def-card.open .def-body{max-height:2000px;}
+  .def-content{padding:1.5rem;}
+
+  /* legal text box */
+  .legal-quote{
+    background:linear-gradient(135deg,rgba(16,185,129,0.06),rgba(59,130,246,0.06));
+    border:1px solid rgba(16,185,129,0.25);border-radius:10px;padding:1.2rem 1.5rem;margin:1rem 0;
+    font-family:'Courier New',monospace;font-size:0.88rem;color:#a7f3d0;
+  }
+  .legal-quote .label{font-family:'Segoe UI',system-ui,sans-serif;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent);margin-bottom:0.5rem;font-style:normal;}
+
+  /* example cards */
+  .examples{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin:1rem 0;}
+  @media(max-width:600px){.examples{grid-template-columns:1fr;}}
+  .ex-card{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:1rem;}
+  .ex-card.yes{border-color:rgba(16,185,129,0.3);}
+  .ex-card.no{border-color:rgba(239,68,68,0.3);}
+  .ex-label{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.4rem;}
+  .ex-card.yes .ex-label{color:var(--accent);}
+  .ex-card.no .ex-label{color:var(--red);}
+  .ex-items{list-style:none;}
+  .ex-items li{font-size:0.85rem;color:var(--muted);padding:0.2rem 0;display:flex;gap:0.5rem;}
+  .ex-items li::before{flex-shrink:0;}
+  .ex-card.yes .ex-items li::before{content:'✓';color:var(--accent);}
+  .ex-card.no .ex-items li::before{content:'✗';color:var(--red);}
+
+  /* boundary case */
+  .boundary{background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.25);border-radius:10px;padding:1rem 1.2rem;margin:1rem 0;}
+  .boundary-title{color:var(--yellow);font-weight:700;font-size:0.85rem;margin-bottom:0.4rem;}
+
+  /* venn diagram */
+  .venn-container{text-align:center;margin:2rem 0;}
+  .venn-svg{max-width:500px;width:100%;}
+
+  /* interactive classifier */
+  .classifier{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;margin:2rem 0;}
+  .classifier h3{margin-top:0;margin-bottom:1.2rem;}
+  .clf-question{margin-bottom:1rem;}
+  .clf-question label{font-size:0.9rem;color:var(--muted);display:block;margin-bottom:0.4rem;}
+  .clf-question select, .clf-question input{
+    width:100%;background:#0d1421;border:1px solid var(--border);color:var(--text);
+    padding:0.6rem 0.8rem;border-radius:8px;font-size:0.9rem;outline:none;
+  }
+  .clf-question select:focus, .clf-question input:focus{border-color:var(--accent);}
+  .clf-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0.7rem 1.5rem;cursor:pointer;font-size:0.9rem;font-weight:600;margin-top:0.5rem;transition:opacity 0.2s;}
+  .clf-btn:hover{opacity:0.85;}
+  .clf-result{margin-top:1.2rem;padding:1rem;border-radius:10px;display:none;}
+  .clf-result.show{display:block;}
+  .clf-result.fc{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);}
+  .clf-result.notfc{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);}
+  .clf-result.maybe{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);}
+  .clf-result h4{margin-bottom:0.4rem;}
+  .clf-result.fc h4{color:var(--accent);}
+  .clf-result.notfc h4{color:var(--red);}
+  .clf-result.maybe h4{color:var(--yellow);}
+
+  table.narrow{width:100%;border-collapse:collapse;font-size:0.88rem;margin:1.5rem 0;}
+  table.narrow th{background:var(--card);border:1px solid var(--border);padding:0.7rem 1rem;text-align:left;font-weight:700;}
+  table.narrow td{border:1px solid var(--border);padding:0.7rem 1rem;color:var(--muted);}
+  .pill{display:inline-block;padding:0.2rem 0.6rem;border-radius:100px;font-size:0.72rem;font-weight:600;}
+  .pill.yes{background:rgba(16,185,129,0.15);color:var(--accent);}
+  .pill.no{background:rgba(239,68,68,0.15);color:var(--red);}
+  .pill.maybe{background:rgba(245,158,11,0.15);color:var(--yellow);}
+
+  .callout{background:var(--card);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;}
+  .callout.warn{border-color:var(--yellow);}
+  .callout.danger{border-color:var(--red);}
+  .callout-title{font-weight:700;font-size:0.85rem;text-transform:uppercase;margin-bottom:0.4rem;color:var(--accent);}
+  .callout.warn .callout-title{color:var(--yellow);}
+  .callout.danger .callout-title{color:var(--red);}
+
+  .bottom-nav{display:flex;justify-content:space-between;margin-top:5rem;padding-top:2rem;border-top:1px solid var(--border);}
+  .nav-btn{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.5rem;text-decoration:none;color:var(--text);transition:all 0.2s;font-size:0.9rem;}
+  .nav-btn:hover{border-color:var(--accent);}
+  .nav-btn .direction{font-size:0.75rem;color:var(--muted);display:block;margin-bottom:0.2rem;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progress"></div>
+<nav>
+  <a href="index.html" class="home">FCRA 2010</a>
+  <span class="nav-sep">›</span>
+  <a href="02_definitions.html" class="active">Key Definitions</a>
+</nav>
+
+<div class="container">
+  <p class="chapter-label">Module 02</p>
+  <h1>Key Definitions in FCRA</h1>
+  <p class="lead">
+    In law, definitions are everything. FCRA's scope — who it applies to, what it covers, who can receive what — all
+    flows from four foundational definitions. Get these right and everything else becomes logical.
+  </p>
+
+  <p>The four definitions that control FCRA's universe are:</p>
+  <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem;">
+    <span style="background:rgba(16,185,129,0.15);color:#34d399;padding:0.4rem 1rem;border-radius:100px;font-weight:700;font-size:0.9rem;">Foreign Contribution</span>
+    <span style="background:rgba(59,130,246,0.15);color:#60a5fa;padding:0.4rem 1rem;border-radius:100px;font-weight:700;font-size:0.9rem;">Foreign Source</span>
+    <span style="background:rgba(245,158,11,0.15);color:#fbbf24;padding:0.4rem 1rem;border-radius:100px;font-weight:700;font-size:0.9rem;">Person</span>
+    <span style="background:rgba(139,92,246,0.15);color:#a78bfa;padding:0.4rem 1rem;border-radius:100px;font-weight:700;font-size:0.9rem;">Association</span>
+  </div>
+
+  <!-- DEF 1: Foreign Contribution -->
+  <div class="def-card open reveal" style="--def-color:#10b981">
+    <div class="def-header" onclick="toggleDef(this)">
+      <div class="def-title-row">
+        <div class="def-icon">💰</div>
+        <div>
+          <div class="def-title">1. "Foreign Contribution" (FC)</div>
+          <div class="def-sub">Section 2(1)(h) — The most important definition</div>
+        </div>
+      </div>
+      <span class="def-arrow">▼</span>
+    </div>
+    <div class="def-body">
+      <div class="def-content">
+        <div class="legal-quote">
+          <div class="label">§ 2(1)(h) — Statutory Definition (simplified)</div>
+          "Foreign contribution" means the donation, delivery or transfer made by any foreign source of—
+          (i) any article, not being an article given to a person as a gift for personal use, whose market value at the time of importation exceeds [prescribed limit];
+          (ii) any currency, whether Indian or foreign;
+          (iii) any security as defined in the Securities Contracts (Regulation) Act.
+        </div>
+
+        <h3>Breaking it down — the THREE Forms of FC</h3>
+        <div class="examples">
+          <div style="background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.2);border-radius:10px;padding:1rem;">
+            <div style="font-weight:700;color:#34d399;margin-bottom:0.5rem;">💵 Currency (most common)</div>
+            <p style="font-size:0.85rem;color:var(--muted);margin:0;">Any donation of money — Indian rupees or foreign currency — from a foreign source. This is the most common form of FC. Bank transfers, cheques, drafts all count.</p>
+          </div>
+          <div style="background:rgba(59,130,246,0.05);border:1px solid rgba(59,130,246,0.2);border-radius:10px;padding:1rem;">
+            <div style="font-weight:700;color:#60a5fa;margin-bottom:0.5rem;">📦 Articles (goods)</div>
+            <p style="font-size:0.85rem;color:var(--muted);margin:0;">Donated goods from foreign sources — computers, medical equipment, vehicles. BUT: personal gifts below the market value threshold are excluded.</p>
+          </div>
+          <div style="background:rgba(139,92,246,0.05);border:1px solid rgba(139,92,246,0.2);border-radius:10px;padding:1rem;">
+            <div style="font-weight:700;color:#a78bfa;margin-bottom:0.5rem;">📈 Securities</div>
+            <p style="font-size:0.85rem;color:var(--muted);margin:0;">Shares, bonds, debentures donated by a foreign source. The market value transfer is treated as FC. Rare in practice but legally relevant.</p>
+          </div>
+          <div style="background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:1rem;">
+            <div style="font-weight:700;color:#f87171;margin-bottom:0.5rem;">❌ What is NOT FC</div>
+            <p style="font-size:0.85rem;color:var(--muted);margin:0;">Commercial payments for services at arm's length, salary from a foreign employer for legitimate work, payments under international contracts — generally NOT FC (FEMA governs instead).</p>
+          </div>
+        </div>
+
+        <h3>The "FC or Not FC?" Test — Interactive Examples</h3>
+        <div class="examples">
+          <div class="ex-card yes">
+            <div class="ex-label">✓ IS Foreign Contribution</div>
+            <ul class="ex-items">
+              <li>US foundation donates $50,000 to an Indian NGO for education</li>
+              <li>German church grants €30,000 to an Indian trust for tribal welfare</li>
+              <li>NRI sends ₹5 lakh "donation" to his village's charitable society</li>
+              <li>UK NGO donates 10 laptops to Indian school (above prescribed value)</li>
+              <li>Foreign company gives corporate social responsibility grant</li>
+            </ul>
+          </div>
+          <div class="ex-card no">
+            <div class="ex-label">✗ NOT Foreign Contribution (FEMA, not FCRA)</div>
+            <ul class="ex-items">
+              <li>Foreign company pays Indian IT firm for software services</li>
+              <li>Indian subsidiary receiving FDI from parent company</li>
+              <li>Payment to Indian lawyer for legal services by foreign client</li>
+              <li>Royalties from foreign publisher to Indian author for book</li>
+              <li>NRI sends money to family for household expenses</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="boundary">
+          <div class="boundary-title">⚡ Tricky Boundary Case: Scholarship / Fellowship</div>
+          <p style="font-size:0.88rem;color:var(--muted);margin:0;">
+            A foreign university giving a scholarship directly to an <strong>individual Indian student</strong> — not FC (it's for personal educational purpose).
+            BUT if it's channelled through an Indian NGO that "selects" and distributes scholars — it could be FC.
+            The nature of the transaction (who receives, for what purpose) matters enormously.
+          </p>
+        </div>
+
+        <div class="boundary" style="background:rgba(239,68,68,0.07);border-color:rgba(239,68,68,0.25);">
+          <div class="boundary-title" style="color:var(--red);">⚡ The NRI Trap</div>
+          <p style="font-size:0.88rem;color:var(--muted);margin:0;">
+            A Non-Resident Indian (NRI) sending money to an Indian association is treated as a <strong>foreign source</strong>.
+            So if your NGO's trustee who is an NRI donates ₹2 lakh to the trust — that is FC.
+            Many small organisations get caught by this. A person of Indian origin holding foreign citizenship is a foreign source.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEF 2: Foreign Source -->
+  <div class="def-card reveal" style="--def-color:#3b82f6">
+    <div class="def-header" onclick="toggleDef(this)">
+      <div class="def-title-row">
+        <div class="def-icon">🌐</div>
+        <div>
+          <div class="def-title">2. "Foreign Source"</div>
+          <div class="def-sub">Section 2(1)(j) — Who counts as a foreign source?</div>
+        </div>
+      </div>
+      <span class="def-arrow">▼</span>
+    </div>
+    <div class="def-body">
+      <div class="def-content">
+        <div class="legal-quote">
+          <div class="label">§ 2(1)(j) — Foreign Source includes:</div>
+          (i) the Government of any foreign country or territory and any agency of such Government;<br>
+          (ii) any international agency, not being the United Nations or any of its specialised bodies / the World Bank / IMF;<br>
+          (iii) a foreign company;<br>
+          (iv) a corporation company incorporated in a foreign country;<br>
+          (v) a multi-national corporation;<br>
+          (vi) a company within the meaning of the Companies Act 2013, where more than one-half of its nominal value of share capital is held by foreign sources;<br>
+          (vii) a foreign trust or foundation;<br>
+          (viii) a foreign citizen (including PIO/OCI);
+        </div>
+
+        <h3>The Foreign Source Matrix</h3>
+        <table class="narrow">
+          <thead>
+            <tr>
+              <th>Entity Type</th>
+              <th>Foreign Source?</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Foreign government / embassy</td><td><span class="pill yes">Yes</span></td><td>Includes bilateral aid agencies like USAID, GIZ</td></tr>
+            <tr><td>United Nations bodies (WHO, UNICEF, etc.)</td><td><span class="pill no">Generally Not</span></td><td>UN specialised bodies are explicitly excluded</td></tr>
+            <tr><td>World Bank / IMF</td><td><span class="pill no">No</span></td><td>Explicitly excluded from "foreign source"</td></tr>
+            <tr><td>Foreign NGO / Foundation</td><td><span class="pill yes">Yes</span></td><td>Ford Foundation, Gates Foundation, etc.</td></tr>
+            <tr><td>Foreign company (wholly foreign)</td><td><span class="pill yes">Yes</span></td><td>Including MNCs</td></tr>
+            <tr><td>Indian company with &gt;50% foreign shareholding</td><td><span class="pill yes">Yes</span></td><td>Controlled as foreign source since 2010</td></tr>
+            <tr><td>Indian company with ≤50% foreign shareholding</td><td><span class="pill no">Usually No</span></td><td>Verify specific facts</td></tr>
+            <tr><td>NRI (Indian citizen, non-resident)</td><td><span class="pill yes">Yes</span></td><td>Treated as foreign source under FCRA</td></tr>
+            <tr><td>PIO / OCI card holder</td><td><span class="pill yes">Yes</span></td><td>Foreign citizen = foreign source</td></tr>
+            <tr><td>Indian citizen resident in India</td><td><span class="pill no">No</span></td><td>Domestic donation, not FC</td></tr>
+          </tbody>
+        </table>
+
+        <!-- Venn diagram -->
+        <div class="venn-container">
+          <svg class="venn-svg" viewBox="0 0 500 280" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <clipPath id="clip1"><circle cx="170" cy="140" r="120"/></clipPath>
+              <clipPath id="clip2"><circle cx="330" cy="140" r="120"/></clipPath>
+            </defs>
+            <circle cx="170" cy="140" r="120" fill="rgba(59,130,246,0.1)" stroke="#3b82f6" stroke-width="1.5"/>
+            <circle cx="330" cy="140" r="120" fill="rgba(239,68,68,0.1)" stroke="#ef4444" stroke-width="1.5"/>
+            <!-- overlap fill -->
+            <circle cx="330" cy="140" r="120" fill="rgba(139,92,246,0.15)" clip-path="url(#clip1)"/>
+
+            <text x="100" y="90" text-anchor="middle" fill="#60a5fa" font-size="11" font-weight="bold">Foreign</text>
+            <text x="100" y="106" text-anchor="middle" fill="#60a5fa" font-size="11" font-weight="bold">Source</text>
+            <text x="100" y="130" text-anchor="middle" fill="#94a3b8" font-size="9">Foreign govt</text>
+            <text x="100" y="145" text-anchor="middle" fill="#94a3b8" font-size="9">Foreign NGO</text>
+            <text x="100" y="160" text-anchor="middle" fill="#94a3b8" font-size="9">Foreign company</text>
+            <text x="100" y="175" text-anchor="middle" fill="#94a3b8" font-size="9">Foreign citizen</text>
+
+            <text x="250" y="105" text-anchor="middle" fill="#a78bfa" font-size="10" font-weight="bold">FC from</text>
+            <text x="250" y="120" text-anchor="middle" fill="#a78bfa" font-size="10" font-weight="bold">Foreign Source</text>
+            <text x="250" y="140" text-anchor="middle" fill="#c4b5fd" font-size="9">= FCRA applies</text>
+            <text x="250" y="157" text-anchor="middle" fill="#94a3b8" font-size="9">NRI → NGO</text>
+            <text x="250" y="172" text-anchor="middle" fill="#94a3b8" font-size="9">Foreign company</text>
+            <text x="250" y="187" text-anchor="middle" fill="#94a3b8" font-size="9">donation to trust</text>
+
+            <text x="395" y="90" text-anchor="middle" fill="#f87171" font-size="11" font-weight="bold">Indian</text>
+            <text x="395" y="106" text-anchor="middle" fill="#f87171" font-size="11" font-weight="bold">Entities</text>
+            <text x="395" y="130" text-anchor="middle" fill="#94a3b8" font-size="9">Indian citizens</text>
+            <text x="395" y="145" text-anchor="middle" fill="#94a3b8" font-size="9">Indian companies</text>
+            <text x="395" y="160" text-anchor="middle" fill="#94a3b8" font-size="9">(≤50% foreign)</text>
+            <text x="395" y="175" text-anchor="middle" fill="#94a3b8" font-size="9">Indian trusts</text>
+
+            <text x="250" y="250" text-anchor="middle" fill="#64748b" font-size="10">Indian entity w/ &gt;50% foreign ownership = foreign source</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEF 3: Person -->
+  <div class="def-card reveal" style="--def-color:#f59e0b">
+    <div class="def-header" onclick="toggleDef(this)">
+      <div class="def-title-row">
+        <div class="def-icon">👤</div>
+        <div>
+          <div class="def-title">3. "Person"</div>
+          <div class="def-sub">Section 2(1)(p) — Broader than you think</div>
+        </div>
+      </div>
+      <span class="def-arrow">▼</span>
+    </div>
+    <div class="def-body">
+      <div class="def-content">
+        <div class="legal-quote">
+          <div class="label">§ 2(1)(p)</div>
+          "Person" includes—(i) an individual; (ii) a Hindu undivided family; (iii) an association; (iv) a company registered under section 8 of the Companies Act 2013.
+        </div>
+
+        <h3>Why does this matter?</h3>
+        <p>The broad definition of "person" means FCRA <strong>doesn't just apply to NGOs</strong>. An individual Indian citizen can also be caught by FCRA if foreign funds are routed to them in a donation capacity.</p>
+
+        <div class="examples" style="grid-template-columns:repeat(4,1fr);">
+          <div style="background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:0.8rem;text-align:center;">
+            <div style="font-size:1.5rem;margin-bottom:0.3rem;">👤</div>
+            <div style="font-size:0.8rem;font-weight:700;color:#fbbf24;">Individual</div>
+          </div>
+          <div style="background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:0.8rem;text-align:center;">
+            <div style="font-size:1.5rem;margin-bottom:0.3rem;">👨‍👩‍👧</div>
+            <div style="font-size:0.8rem;font-weight:700;color:#fbbf24;">HUF</div>
+          </div>
+          <div style="background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:0.8rem;text-align:center;">
+            <div style="font-size:1.5rem;margin-bottom:0.3rem;">🏢</div>
+            <div style="font-size:0.8rem;font-weight:700;color:#fbbf24;">Association</div>
+          </div>
+          <div style="background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:0.8rem;text-align:center;">
+            <div style="font-size:1.5rem;margin-bottom:0.3rem;">🏛️</div>
+            <div style="font-size:0.8rem;font-weight:700;color:#fbbf24;">Section 8 Co.</div>
+          </div>
+        </div>
+
+        <div class="callout warn">
+          <div class="callout-title">⚠️ Common Mistake</div>
+          <p style="margin:0;font-size:0.9rem;">People think FCRA only applies to "NGOs." Not true. Any person receving foreign contribution is regulated.
+          A Hindu Undivided Family receiving a donation from a non-resident relative, an academic individual receiving foreign research grants —these can all fall under FCRA's ambit.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEF 4: Association -->
+  <div class="def-card reveal" style="--def-color:#8b5cf6">
+    <div class="def-header" onclick="toggleDef(this)">
+      <div class="def-title-row">
+        <div class="def-icon">🏢</div>
+        <div>
+          <div class="def-title">4. "Association" &amp; "Political Nature"</div>
+          <div class="def-sub">Section 2(1)(b) &amp; 2(1)(f) — Who needs registration?</div>
+        </div>
+      </div>
+      <span class="def-arrow">▼</span>
+    </div>
+    <div class="def-body">
+      <div class="def-content">
+        <div class="legal-quote">
+          <div class="label">§ 2(1)(b) — "Association"</div>
+          "Association" means an association of individuals, whether incorporated or not, having an office in India and carrying on activities in India. Includes: trusts, societies, Section 8 companies, registered unregistered bodies.
+        </div>
+
+        <h3>Entity types that can register under FCRA</h3>
+        <table class="narrow">
+          <thead><tr><th>Entity Type</th><th>Legal Form</th><th>Can get FCRA Reg?</th></tr></thead>
+          <tbody>
+            <tr><td>Public Charitable Trust</td><td>Trust Deed + State Trust Act</td><td><span class="pill yes">Yes</span></td></tr>
+            <tr><td>Society</td><td>Societies Registration Act 1860</td><td><span class="pill yes">Yes</span></td></tr>
+            <tr><td>Section 8 Company</td><td>Companies Act 2013</td><td><span class="pill yes">Yes</span></td></tr>
+            <tr><td>Religious body / Church</td><td>Various Acts</td><td><span class="pill yes">Yes (if eligible)</span></td></tr>
+            <tr><td>University / Academic</td><td>University Act / Grants</td><td><span class="pill maybe">Case-by-case</span></td></tr>
+            <tr><td>Political party</td><td>Representation of People Act</td><td><span class="pill no">Prohibited</span></td></tr>
+          </tbody>
+        </table>
+
+        <h3>The "Political Nature" Trap — Section 2(1)(f)</h3>
+        <div class="legal-quote">
+          <div class="label">§ 2(1)(f)</div>
+          "Organisation of a political nature" means any organisation, other than a political party, which the Central Government may notify from time to time as an organisation of a political nature, having regard to its activities, objectives, the method of operation, and other relevant factors.
+        </div>
+        <p>The government has wide discretion to <strong>notify any organisation as "political nature"</strong> — which then disqualifies it from receiving foreign contributions. This is one of the most controversial aspects of FCRA and has been used against several civil society organisations.</p>
+
+        <div class="callout danger">
+          <div class="callout-title">🚨 Critical Pitfall</div>
+          <p style="margin:0;font-size:0.9rem;">An organisation doing advocacy, lobbying, or "political" activities (even if not a formal political party) can be notified as "political nature" and lose its FCRA eligibility. The boundary between "civic engagement" and "political activity" is not always clear, making this one of FCRA's most risky grey zones.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive FC Classifier -->
+  <h2 class="reveal">Interactive: Is This Foreign Contribution?</h2>
+  <p class="reveal">Use this quick classifier to test your understanding of what qualifies as FC under FCRA:</p>
+
+  <div class="classifier reveal">
+    <h3>🔬 FC Classifier</h3>
+    <div class="clf-question">
+      <label>Who is sending the money?</label>
+      <select id="sender">
+        <option value="">— Select sender type —</option>
+        <option value="foreign_govt">Foreign government / embassy</option>
+        <option value="foreign_ngo">Foreign NGO / Foundation</option>
+        <option value="foreign_company">Foreign company (wholly foreign)</option>
+        <option value="indian_foreign_50">Indian company (&gt;50% foreign shareholders)</option>
+        <option value="indian_company">Indian company (≤50% foreign)</option>
+        <option value="nri">NRI (Indian citizen, living abroad)</option>
+        <option value="indian_citizen">Indian citizen living in India</option>
+        <option value="un">UN / World Bank / IMF</option>
+      </select>
+    </div>
+    <div class="clf-question">
+      <label>What is the nature of payment?</label>
+      <select id="nature">
+        <option value="">— Select nature —</option>
+        <option value="donation">Donation / Grant (no service in return)</option>
+        <option value="service">Payment for services rendered (contract)</option>
+        <option value="scholarship">Scholarship for individual student</option>
+        <option value="gift_personal">Personal gift (for personal use)</option>
+        <option value="investment">Investment / Equity in company</option>
+      </select>
+    </div>
+    <button class="clf-btn" onclick="classify()">Classify This Transaction →</button>
+    <div class="clf-result" id="clfResult"></div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="01_overview.html" class="nav-btn">
+      <span class="direction">← Back to</span>
+      Overview &amp; Objectives
+    </a>
+    <a href="03_prohibited_persons.html" class="nav-btn">
+      <span class="direction">Next →</span>
+      Prohibited Persons
+    </a>
+  </div>
+</div>
+
+<script>
+// Progress bar
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement,b=document.body;
+  const st=h.scrollTop||b.scrollTop,sh=h.scrollHeight-h.clientHeight;
+  document.getElementById('progress').style.width=(st/sh*100)+'%';
+});
+
+// Reveal
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}}),{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// Def cards toggle
+function toggleDef(header){
+  const card=header.parentElement;
+  card.classList.toggle('open');
+}
+
+// Classifier
+function classify(){
+  const sender=document.getElementById('sender').value;
+  const nature=document.getElementById('nature').value;
+  const result=document.getElementById('clfResult');
+  result.className='clf-result';
+  if(!sender||!nature){result.className='clf-result maybe show';result.innerHTML='<h4>⚠️ Please select both options</h4><p>Select the sender type and nature of payment to get the classification.</p>';return;}
+
+  let html='',cls='';
+
+  // Not FC cases
+  if(sender==='indian_citizen'||(sender==='indian_company')&&nature!=='donation'){
+    cls='notfc';html='<h4>✗ Not Foreign Contribution</h4><p>This is a domestic transaction. FCRA does not apply. No FCRA compliance needed. Normal Indian law (Income Tax, Companies Act) applies.</p>';
+  } else if(sender==='un'){
+    cls='notfc';html='<h4>✗ Not Foreign Contribution (Typically)</h4><p>UN and its specialised bodies, World Bank, and IMF are explicitly excluded from the definition of "foreign source" under FCRA §2(1)(j). Funding from these bodies does not require FCRA registration.</p>';
+  } else if(nature==='service'){
+    cls='maybe';html='<h4>⚡ Possibly NOT FC — Verify!</h4><p>Arm\'s-length commercial payments for services are generally NOT "foreign contribution." They are governed by FEMA. However, be careful: if the payment has a donative element (above market value), the excess may still be FC. Get legal advice on specific facts.</p>';
+  } else if(nature==='scholarship'&&sender==='foreign_ngo'){
+    cls='maybe';html='<h4>⚡ Grey Zone — Depends on Route</h4><p>If the scholarship goes directly to an individual student for personal education = possibly NOT FC. But if it flows through an Indian NGO that screens/selects students = likely FC for the NGO. The routing matters critically.</p>';
+  } else if(nature==='gift_personal'){
+    cls='notfc';html='<h4>✗ Likely Not FC (if genuinely personal)</h4><p>Personal gifts for personal use (not for organisational activity) are excluded from FC, subject to value thresholds. Document the personal nature carefully.</p>';
+  } else if(nature==='investment'){
+    cls='notfc';html='<h4>✗ Not FC — Covered by FEMA</h4><p>Foreign direct investment (equity) is regulated by FEMA / RBI rules, not FCRA. FCRA applies to contributions (grants, donations), not equity investments.</p>';
+  } else if((sender==='foreign_govt'||sender==='foreign_ngo'||sender==='foreign_company'||sender==='nri'||sender==='indian_foreign_50')&&nature==='donation'){
+    cls='fc';html=`<h4>✓ FOREIGN CONTRIBUTION — FCRA Applies!</h4>
+    <p>This transaction involves a <strong>${senderLabel(sender)}</strong> making a <strong>donation/grant</strong> to an Indian entity. This is squarely within FCRA's definition of Foreign Contribution.</p>
+    <p><strong>What must the recipient do?</strong></p>
+    <ul style="font-size:0.88rem;color:var(--muted);padding-left:1.2rem;">
+      <li>Be registered under FCRA (or hold prior permission)</li>
+      <li>Receive funds only in the designated SBI FCRA account</li>
+      <li>Use funds only for permitted purposes</li>
+      <li>File annual returns (FC-4) by 31 December</li>
+      <li>Keep separate accounts for FC funds</li>
+    </ul>`;
+  } else {
+    cls='maybe';html='<h4>⚡ Needs Legal Analysis</h4><p>The specific facts of this combination require careful legal review. Consult FCRA counsel and verify against current MHA guidelines.</p>';
+  }
+  result.className=`clf-result ${cls} show`;
+  result.innerHTML=html;
+}
+
+function senderLabel(v){
+  const m={'foreign_govt':'Foreign Government','foreign_ngo':'Foreign NGO/Foundation','foreign_company':'Foreign Company','nri':'NRI (Non-Resident Indian)','indian_foreign_50':'Indian Company (>50% foreign-owned)'};
+  return m[v]||v;
+}
+</script>
+</body>
+</html>

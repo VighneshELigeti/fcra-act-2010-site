@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registration vs Prior Permission — FCRA 2010</title>
+<style>
+  :root{--bg:#0a0e1a;--card:#111827;--border:#1e2d47;--accent:#f59e0b;--text:#e2e8f0;--muted:#94a3b8;--blue:#3b82f6;--red:#ef4444;--green:#10b981;--purple:#8b5cf6;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.7;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(10,14,26,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;padding:0.8rem 2rem;}
+  nav a{color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.3rem 0.6rem;border-radius:6px;transition:all 0.2s;}
+  nav a:hover,nav a.active{color:var(--text);background:rgba(255,255,255,0.06);}
+  nav .home{font-weight:700;color:var(--accent);}
+  .nav-sep{color:var(--border);}
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--blue));z-index:999;transition:width 0.1s;}
+  .container{max-width:900px;margin:0 auto;padding:4rem 2rem;}
+  .chapter-label{color:var(--muted);font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.8rem;}
+  h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;line-height:1.1;margin-bottom:1rem;}
+  .lead{font-size:1.15rem;color:var(--muted);line-height:1.7;margin-bottom:3rem;border-left:3px solid var(--accent);padding-left:1.2rem;}
+  h2{font-size:1.5rem;font-weight:700;margin:3rem 0 1rem;}
+  p{margin-bottom:1rem;color:#cbd5e1;}
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s,transform 0.7s;}
+  .reveal.visible{opacity:1;transform:none;}
+
+  /* comparison cards */
+  .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:2rem 0;}
+  @media(max-width:640px){.compare-grid{grid-template-columns:1fr;}}
+  .route-card{border-radius:16px;overflow:hidden;border:1px solid;transition:transform 0.3s;}
+  .route-card:hover{transform:translateY(-4px);}
+  .route-card.reg{border-color:rgba(16,185,129,0.3);}
+  .route-card.pp{border-color:rgba(59,130,246,0.3);}
+  .route-header{padding:1.5rem;text-align:center;}
+  .route-card.reg .route-header{background:rgba(16,185,129,0.1);}
+  .route-card.pp .route-header{background:rgba(59,130,246,0.1);}
+  .route-icon{font-size:2.5rem;display:block;margin-bottom:0.5rem;}
+  .route-title{font-size:1.2rem;font-weight:800;margin-bottom:0.3rem;}
+  .route-card.reg .route-title{color:var(--green);}
+  .route-card.pp .route-title{color:var(--blue);}
+  .route-subtitle{font-size:0.85rem;color:var(--muted);}
+  .route-body{padding:1.5rem;background:var(--card);}
+  .route-row{display:flex;gap:0.8rem;margin-bottom:0.8rem;font-size:0.88rem;}
+  .route-label{color:var(--muted);width:110px;flex-shrink:0;}
+  .route-value{color:var(--text);font-weight:600;}
+
+  /* decision tree interactive */
+  .decision-tree{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;margin:2rem 0;}
+  .dt-q{font-size:1rem;font-weight:700;margin-bottom:1rem;color:var(--text);}
+  .dt-opts{display:flex;gap:0.8rem;flex-wrap:wrap;}
+  .dt-opt{
+    padding:0.6rem 1.2rem;border-radius:8px;cursor:pointer;font-size:0.88rem;font-weight:600;
+    border:1px solid var(--border);background:rgba(255,255,255,0.02);transition:all 0.2s;
+  }
+  .dt-opt:hover{background:rgba(255,255,255,0.06);}
+  .dt-opt.yes{border-color:var(--green);color:var(--green);}
+  .dt-opt.no{border-color:var(--blue);color:var(--blue);}
+  .dt-opt.pp{border-color:var(--accent);color:var(--accent);}
+  .dt-result{
+    margin-top:1.5rem;padding:1.2rem;border-radius:12px;display:none;
+    animation:fadeIn 0.4s ease;
+  }
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .dt-result.show{display:block;}
+  .dt-result.reg{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);}
+  .dt-result.pp{background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);}
+  .dt-result.no{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);}
+  .dt-result h4{margin-bottom:0.5rem;}
+  .dt-result.reg h4{color:var(--green);}
+  .dt-result.pp h4{color:var(--blue);}
+  .dt-result.no h4{color:var(--red);}
+  .dt-back{background:none;border:1px solid var(--border);color:var(--muted);padding:0.4rem 0.8rem;border-radius:6px;cursor:pointer;font-size:0.82rem;margin-top:0.8rem;}
+  .dt-back:hover{border-color:var(--muted);}
+
+  /* eligibility checklist */
+  .checklist{margin:1.5rem 0;}
+  .cl-item{
+    display:flex;align-items:flex-start;gap:0.8rem;padding:0.8rem 1rem;
+    background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:0.5rem;
+    transition:all 0.2s;cursor:pointer;
+  }
+  .cl-item:hover{border-color:var(--accent);}
+  .cl-item.checked{background:rgba(16,185,129,0.07);border-color:rgba(16,185,129,0.3);}
+  .cl-box{
+    width:22px;height:22px;border-radius:6px;border:2px solid var(--border);flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;transition:all 0.2s;margin-top:0.1rem;
+  }
+  .cl-item.checked .cl-box{background:var(--green);border-color:var(--green);}
+  .cl-check{display:none;color:white;font-size:0.8rem;font-weight:700;}
+  .cl-item.checked .cl-check{display:block;}
+  .cl-text{font-size:0.88rem;color:var(--muted);}
+  .cl-text strong{color:var(--text);}
+  .cl-score{text-align:center;padding:1rem;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-top:1rem;}
+
+  /* timeline steps */
+  .process-steps{position:relative;margin:2rem 0;}
+  .process-steps::before{content:'';position:absolute;left:20px;top:30px;bottom:0;width:2px;background:linear-gradient(180deg,var(--accent),var(--green));}
+  .step{display:flex;gap:1.2rem;margin-bottom:2rem;position:relative;}
+  .step-num{width:42px;height:42px;border-radius:50%;background:var(--accent);color:#000;font-weight:800;font-size:0.9rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;z-index:1;}
+  .step-num.green{background:var(--green);}
+  .step-num.blue{background:var(--blue);}
+  .step-body{flex:1;padding-top:0.5rem;}
+  .step-title{font-weight:700;font-size:0.95rem;margin-bottom:0.3rem;}
+  .step-desc{font-size:0.85rem;color:var(--muted);}
+
+  /* comparison table */
+  table.comp{width:100%;border-collapse:collapse;font-size:0.88rem;margin:1.5rem 0;}
+  table.comp th{background:var(--card);border:1px solid var(--border);padding:0.8rem 1rem;text-align:left;font-weight:700;}
+  table.comp td{border:1px solid var(--border);padding:0.8rem 1rem;color:var(--muted);}
+  table.comp .reg{color:var(--green);}
+  table.comp .pp{color:var(--blue);}
+
+  .callout{background:var(--card);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;}
+  .callout.warn{border-color:var(--accent);}
+  .callout.danger{border-color:var(--red);}
+  .callout-title{font-weight:700;font-size:0.85rem;text-transform:uppercase;margin-bottom:0.4rem;color:var(--accent);}
+  .callout.danger .callout-title{color:var(--red);}
+
+  .bottom-nav{display:flex;justify-content:space-between;margin-top:5rem;padding-top:2rem;border-top:1px solid var(--border);}
+  .nav-btn{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.5rem;text-decoration:none;color:var(--text);transition:all 0.2s;font-size:0.9rem;}
+  .nav-btn:hover{border-color:var(--accent);}
+  .nav-btn .direction{font-size:0.75rem;color:var(--muted);display:block;margin-bottom:0.2rem;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progress"></div>
+<nav>
+  <a href="index.html" class="home">FCRA 2010</a>
+  <span class="nav-sep">›</span>
+  <a href="04_registration.html" class="active">Registration vs Prior Permission</a>
+</nav>
+
+<div class="container">
+  <p class="chapter-label">Module 04</p>
+  <h1>Registration vs Prior Permission</h1>
+  <p class="lead">
+    Two legal gateways — one for organisations with a track record seeking ongoing access to foreign funding,
+    and one for first-timers or specific one-off projects. Choosing the right route is critical to compliance.
+  </p>
+
+  <!-- Two route cards -->
+  <div class="compare-grid reveal">
+    <div class="route-card reg">
+      <div class="route-header">
+        <span class="route-icon">📋</span>
+        <div class="route-title">FCRA Registration</div>
+        <div class="route-subtitle">Section 12 — The "Standing" Route</div>
+      </div>
+      <div class="route-body">
+        <div class="route-row"><span class="route-label">Form</span><span class="route-value">FC-3C (initially), now online</span></div>
+        <div class="route-row"><span class="route-label">For whom</span><span class="route-value">Established organisations, 3+ years old, ≥₹15 lakh in activities</span></div>
+        <div class="route-row"><span class="route-label">Validity</span><span class="route-value">5 years from grant date</span></div>
+        <div class="route-row"><span class="route-label">Renewal</span><span class="route-value">Apply ≥6 months before expiry</span></div>
+        <div class="route-row"><span class="route-label">Use</span><span class="route-value">Ongoing / repeated FC receipts allowed</span></div>
+        <div class="route-row"><span class="route-label">Donors</span><span class="route-value">Any eligible foreign source</span></div>
+        <div class="route-row"><span class="route-label">Best for</span><span class="route-value" style="color:var(--green);">Established NGOs with regular donors</span></div>
+      </div>
+    </div>
+    <div class="route-card pp">
+      <div class="route-header">
+        <span class="route-icon">📝</span>
+        <div class="route-title">Prior Permission</div>
+        <div class="route-subtitle">Section 11 — The "Single Project" Route</div>
+      </div>
+      <div class="route-body">
+        <div class="route-row"><span class="route-label">Form</span><span class="route-value">Online application on FCRA portal</span></div>
+        <div class="route-row"><span class="route-label">For whom</span><span class="route-value">New organisations OR unregistered persons needing specific FC</span></div>
+        <div class="route-row"><span class="route-label">Validity</span><span class="route-value">For the specific project / duration approved</span></div>
+        <div class="route-row"><span class="route-label">Renewal</span><span class="route-value">Not renewable — need fresh PP for next project</span></div>
+        <div class="route-row"><span class="route-label">Use</span><span class="route-value">One specific project, one specific donor amount</span></div>
+        <div class="route-row"><span class="route-label">Donors</span><span class="route-value">Specific donor must be identified upfront</span></div>
+        <div class="route-row"><span class="route-label">Best for</span><span class="route-value" style="color:var(--blue);">New orgs, specific projects, cautious approach</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mental model analogy -->
+  <div style="background:linear-gradient(135deg,rgba(16,185,129,0.06),rgba(59,130,246,0.06));border:1px solid rgba(139,92,246,0.2);border-radius:14px;padding:1.5rem;margin:2rem 0;" class="reveal">
+    <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--purple);font-weight:700;margin-bottom:0.5rem;">💡 Mental Model</div>
+    <p style="color:var(--text);margin:0;">
+      Think of <strong>Registration</strong> like a <em>multi-entry visa</em> — you get it once, it's valid for 5 years, and you can use it to receive FC from any foreign source as many times as needed.<br><br>
+      Think of <strong>Prior Permission</strong> like a <em>single-trip visa</em> — it's granted for one specific journey (project), with a specific host (donor), for a specific duration. Expired when the trip is done.
+    </p>
+  </div>
+
+  <!-- Interactive Decision Tree -->
+  <h2>Interactive: Which Route Should You Take?</h2>
+  <div class="decision-tree reveal">
+    <div id="dt-step1">
+      <div class="dt-q">Is your organisation legally constituted in India? (Registered trust / society / Section 8 company)</div>
+      <div class="dt-opts">
+        <div class="dt-opt yes" onclick="dtStep(2,'yes')">✓ Yes, we are registered</div>
+        <div class="dt-opt no" onclick="dtResult('no_entity')">✗ No / Not yet</div>
+      </div>
+    </div>
+    <div id="dt-step2" style="display:none;">
+      <div class="dt-q">Has your organisation been active for <strong>at least 3 years</strong> since registration?</div>
+      <div class="dt-opts">
+        <div class="dt-opt yes" onclick="dtStep(3,'yes')">✓ Yes, 3+ years old</div>
+        <div class="dt-opt no" onclick="dtStep('pp_new','no')">✗ Less than 3 years</div>
+      </div>
+    </div>
+    <div id="dt-step3" style="display:none;">
+      <div class="dt-q">Have you spent at least <strong>₹15 lakh</strong> on activities over the last 3 years?</div>
+      <div class="dt-opts">
+        <div class="dt-opt yes" onclick="dtStep(4,'yes')">✓ Yes, spent ≥₹15 lakh</div>
+        <div class="dt-opt no" onclick="dtStep('pp_new','no')">✗ Less than ₹15 lakh</div>
+      </div>
+    </div>
+    <div id="dt-step4" style="display:none;">
+      <div class="dt-q">Does your organisation have an ongoing relationship with multiple foreign donors, or is this a one-time project from a specific donor?</div>
+      <div class="dt-opts">
+        <div class="dt-opt yes" onclick="dtResult('reg')">🔄 Ongoing / Multiple donors</div>
+        <div class="dt-opt pp" onclick="dtResult('pp_optional')">📌 One-time / Specific project</div>
+      </div>
+    </div>
+    <div id="dt-pp_new" style="display:none;">
+      <div class="dt-q">You don't yet qualify for FCRA Registration. But you CAN apply for Prior Permission for a specific project. Do you have a specific foreign donor and project in mind?</div>
+      <div class="dt-opts">
+        <div class="dt-opt pp" onclick="dtResult('pp_yes')">✓ Yes, specific donor + project</div>
+        <div class="dt-opt no" onclick="dtResult('wait')">✗ Not yet / Multiple future donors</div>
+      </div>
+    </div>
+
+    <div id="dt-result" class="dt-result"></div>
+    <div id="dt-reset" style="display:none;"><button class="dt-back" onclick="dtReset()">← Start over</button></div>
+  </div>
+
+  <h2>Registration Eligibility — Self-Checklist</h2>
+  <p>Tick each item your organisation can confirm. The more boxes you can check, the stronger your application:</p>
+
+  <div class="checklist reveal" id="checklist">
+    <div class="cl-item" onclick="toggleCheck(this)">
+      <div class="cl-box"><span class="cl-check">✓</span></div>
+      <div class="cl-text"><strong>Legally constituted:</strong> Registered as a Trust, Society, or Section 8 Company under applicable law</div>
+    </div>
+    <div class="cl-item" onclick="toggleCheck(this)">
+      <div class="cl-box"><span class="cl-check">✓</span></div>
+      <div class="cl-text"><strong>3-year existence:</strong> Organisation has been in existence for at least 3 years since registration</div>
+    </div>
+    <div class="cl-item" onclick="toggleCheck(this)">
+      <div class="cl-box"><span class="cl-check">✓</span></div>
+      <div class="cl-text"><strong>₹15 lakh activity:</strong> Organisation has spent at least ₹15 lakh on its stated objectives in the past 3 years (excluding admin)</div>
+    </div>
+    <div class="cl-item" onclick="toggleCheck(this)">
+      <div class="cl-box"><span class="cl-check">✓</span></div>
+      <div class="cl-text"><strong>Definite objectives:</strong> Has clear, documented objectives related to cultural, economic, educational, religious, or social programmes</div>
+    </div>
+    <div class="cl-item" onclick="toggleCheck(this)">
+      <div class="cl-box"><span class="cl-check">✓</span></div>
+      <div class="cl-text"><strong>Genuine activity:</strong> Actually runs on-ground programmes (not a paper organisation)</div>
+    </div>
+    <div class="cl-item" onclick="toggleCheck(this)">
+      <div class="cl-box"><span class="cl-check">✓</span></div>
+      <div class="cl-text"><strong>Not prohibited:</strong> No office bearer is an election candidate, political party member, judge, or government servant</div>
+    </div>
+    <div class="cl-item" onclick="toggleCheck(this)">
+      <div class="cl-box"><span class="cl-check">✓</span></div>
+      <div class="cl-text"><strong>Not "political nature":</strong> Organisation has not been notified or likely to be notified as "political nature" under §5</div>
+    </div>
+    <div class="cl-item" onclick="toggleCheck(this)">
+      <div class="cl-box"><span class="cl-check">✓</span></div>
+      <div class="cl-text"><strong>Key functionary Aadhaar:</strong> All office bearers have valid Aadhaar (post-2020 requirement) and it's linked on the portal</div>
+    </div>
+    <div class="cl-item" onclick="toggleCheck(this)">
+      <div class="cl-box"><span class="cl-check">✓</span></div>
+      <div class="cl-text"><strong>No adverse intelligence:</strong> No adverse security/public interest inputs against the organisation or its key functionaries</div>
+    </div>
+    <div class="cl-item" onclick="toggleCheck(this)">
+      <div class="cl-box"><span class="cl-check">✓</span></div>
+      <div class="cl-text"><strong>Clean history:</strong> No prior FCRA violations, no cancellations, no pending prosecutions</div>
+    </div>
+    <div class="cl-score" id="cl-score">Click items to check your readiness (0 / 10)</div>
+  </div>
+
+  <h2>The Registration Application Process</h2>
+  <div class="process-steps reveal">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Prepare Documentation</div>
+        <div class="step-desc">Gather: registration certificate, trust deed/MOA, audited accounts for 3 years, activity reports, Aadhaar of all office bearers, PAN, bank details. All documents must be self-attested.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Open SBI FCRA Account</div>
+        <div class="step-desc">Post-2020, you must first open a designated FCRA receipt account at State Bank of India, New Delhi Main Branch (Branch code: 00691). This is a mandatory prerequisite.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">File Online on fcraonline.nic.in</div>
+        <div class="step-desc">Log in with Digital Signature Certificate. Fill Form FC-3C for registration (or FC-3D for prior permission). Upload all documents. Pay prescribed fee online.</div>
+      </div>
+    </div>
+    <div class="step green">
+      <div class="step-num green">4</div>
+      <div class="step-body">
+        <div class="step-title">Intelligence Bureau Verification</div>
+        <div class="step-desc">MHA forwards the application to Intelligence Bureau for security clearance. IB checks the organisation, its activities, and key functionaries. This is typically the longest stage — can take 3–12 months.</div>
+      </div>
+    </div>
+    <div class="step green">
+      <div class="step-num blue">5</div>
+      <div class="step-body">
+        <div class="step-title">MHA Decision</div>
+        <div class="step-desc">MHA grants or rejects the registration. If granted, a certificate is issued — valid for 5 years. If rejected, MHA must provide reasons and there is an appellate remedy.</div>
+      </div>
+    </div>
+    <div class="step green">
+      <div class="step-num green">6</div>
+      <div class="step-body">
+        <div class="step-title">Activate &amp; Maintain</div>
+        <div class="step-desc">Once registered: maintain separate FC accounts, file annual returns by 31 December, report changes in office bearers / bank / address within 15 days, apply for renewal 6 months before expiry.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comparison table -->
+  <h2>Registration vs Prior Permission — Full Comparison</h2>
+  <table class="comp reveal">
+    <thead>
+      <tr>
+        <th>Parameter</th>
+        <th class="reg">Registration (§12)</th>
+        <th class="pp">Prior Permission (§11)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Purpose</td><td class="reg">Ongoing permission for multiple, repeated FC</td><td class="pp">One-time permission for specific FC from specific donor</td></tr>
+      <tr><td>Donor flexibility</td><td class="reg">Any eligible foreign source</td><td class="pp">Must specify exact donor and amount</td></tr>
+      <tr><td>Amount flexibility</td><td class="reg">No limit (subject to utilisation rules)</td><td class="pp">Only the approved amount from specified donor</td></tr>
+      <tr><td>Minimum age of org</td><td class="reg">3 years</td><td class="pp">No minimum age — even new orgs can apply</td></tr>
+      <tr><td>Activity threshold</td><td class="reg">₹15 lakh in 3 years</td><td class="pp">Not required (but strength of application matters)</td></tr>
+      <tr><td>Validity</td><td class="reg">5 years</td><td class="pp">Project duration (as specified)</td></tr>
+      <tr><td>Renewable?</td><td class="reg">Yes — renewal before expiry</td><td class="pp">No — fresh application needed</td></tr>
+      <tr><td>Renewal deadline</td><td class="reg">Apply 6 months before expiry</td><td class="pp">N/A</td></tr>
+      <tr><td>Processing time</td><td class="reg">Typically 3–12+ months (IB check)</td><td class="pp">Typically 3–6 months</td></tr>
+      <tr><td>Can receive while pending?</td><td class="reg">No — must wait for grant</td><td class="pp">No — must wait for grant</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn reveal">
+    <div class="callout-title">⏰ Critical Timing: Renewal Window</div>
+    <p style="margin:0;font-size:0.9rem;">Registration is valid for 5 years. You must apply for renewal <strong>at least 6 months before expiry</strong>.
+    If your registration expires and you haven't renewed, you CANNOT receive any FC, even if your renewal application is pending.
+    Many organisations lose FCRA compliance simply by missing the renewal window. Set calendar reminders 9 months before expiry.</p>
+  </div>
+
+  <div class="callout danger reveal">
+    <div class="callout-title">🚨 Post-2020 Change: Aadhaar Mandatory</div>
+    <p style="margin:0;font-size:0.9rem;">The FCRA Amendment Act 2020 made Aadhaar-based KYC mandatory for all office bearers, key functionaries,
+    and members named in the FCRA application. Foreign nationals associated with the organisation must provide their passport
+    as the equivalent identification. This requirement applies to both new applications AND renewals. Missing Aadhaar for even
+    one key functionary will cause the application to be rejected.</p>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="03_prohibited_persons.html" class="nav-btn">
+      <span class="direction">← Back to</span>
+      Prohibited Persons
+    </a>
+    <a href="05_banking.html" class="nav-btn">
+      <span class="direction">Next →</span>
+      Banking Architecture
+    </a>
+  </div>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement,b=document.body;
+  const st=h.scrollTop||b.scrollTop,sh=h.scrollHeight-h.clientHeight;
+  document.getElementById('progress').style.width=(st/sh*100)+'%';
+});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}}),{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// Decision tree
+function dtStep(step,choice){
+  // hide all steps
+  for(let i=1;i<=4;i++) {const el=document.getElementById('dt-step'+i);if(el)el.style.display='none';}
+  document.getElementById('dt-pp_new') && (document.getElementById('dt-pp_new').style.display='none');
+  const stepEl = document.getElementById('dt-step'+step) || document.getElementById('dt-'+step);
+  if(stepEl) stepEl.style.display='block';
+  document.getElementById('dt-result').className='dt-result';
+  document.getElementById('dt-reset').style.display='none';
+}
+
+const dtResults = {
+  'reg':{cls:'reg',title:'✓ FCRA Registration is your route!',body:'Your organisation qualifies for FCRA Registration (§12). It has the track record, activity threshold, and legal standing. Registration will give you a 5-year standing permission to receive FC from any eligible foreign source. Apply online at fcraonline.nic.in with complete documentation.'},
+  'pp_optional':{cls:'pp',title:'📌 Both routes are available — Prior Permission recommended for now',body:'For a one-time or project-specific grant, you can apply for Prior Permission (§11) — it\'s faster and more targeted. You could also go for full Registration if you expect to need ongoing FC. Many organisations start with Prior Permission and graduate to Registration as their work grows.'},
+  'pp_yes':{cls:'pp',title:'📌 Apply for Prior Permission (§11)',body:'Since you have a specific donor and project, apply for Prior Permission. You\'ll need to identify: (a) exact donor name and country, (b) amount and currency, (c) purpose/project details, (d) project duration. Prior Permission is project-specific — once used, you\'ll need fresh PP for the next project.'},
+  'pp_new':{cls:'pp',title:'📌 Prior Permission is your only current route',body:'Your organisation doesn\'t yet meet the 3-year / ₹15 lakh threshold for Registration. But you CAN apply for Prior Permission for a specific project with a specific donor. Use this to build your track record, then apply for full Registration once you meet the eligibility criteria.'},
+  'no_entity':{cls:'no',title:'✗ First: Get legally constituted',body:'FCRA applies to "associations" — organisations must first be registered under applicable law (Trust Act, Societies Registration Act, Companies Act - Section 8). An unregistered entity cannot receive FC legally. First get your organisation legally registered, then apply for FCRA authorisation.'},
+  'wait':{cls:'no',title:'⏳ Wait and plan strategically',body:'Without a specific donor lined up, both Registration (need 3yr track record) and Prior Permission (need specific donor identified) are premature. Focus on: (1) building programmatic work with domestic funds, (2) cultivating relationships with specific foreign donors, (3) meeting the ₹15 lakh activity threshold. Then come back and apply.'},
+};
+
+function dtResult(key){
+  for(let i=1;i<=4;i++) {const el=document.getElementById('dt-step'+i);if(el)el.style.display='none';}
+  document.getElementById('dt-pp_new') && (document.getElementById('dt-pp_new').style.display='none');
+  const r=dtResults[key];
+  const el=document.getElementById('dt-result');
+  el.className=`dt-result ${r.cls} show`;
+  el.innerHTML=`<h4>${r.title}</h4><p style="margin:0;font-size:0.88rem;">${r.body}</p>`;
+  document.getElementById('dt-reset').style.display='block';
+}
+
+function dtReset(){
+  document.getElementById('dt-result').className='dt-result';
+  document.getElementById('dt-reset').style.display='none';
+  for(let i=2;i<=4;i++) {const el=document.getElementById('dt-step'+i);if(el)el.style.display='none';}
+  document.getElementById('dt-pp_new') && (document.getElementById('dt-pp_new').style.display='none');
+  document.getElementById('dt-step1').style.display='block';
+}
+
+// Checklist
+let checked=0;
+function toggleCheck(item){
+  item.classList.toggle('checked');
+  checked=document.querySelectorAll('.cl-item.checked').length;
+  const total=document.querySelectorAll('.cl-item').length;
+  const score=document.getElementById('cl-score');
+  let msg='';
+  if(checked<4) msg='⚠️ Not ready — address the gaps before applying';
+  else if(checked<7) msg='🟡 Partially ready — strengthen weak areas first';
+  else if(checked<9) msg='🟢 Mostly ready — review remaining items and apply';
+  else msg='✅ Strong application — you\'re well-positioned to apply for Registration!';
+  score.innerHTML=`${msg} (${checked} / ${total})`;
+}
+</script>
+</body>
+</html>

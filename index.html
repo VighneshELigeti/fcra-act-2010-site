@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FCRA 2010 — Complete Interactive Guide</title>
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --card: #111827;
+    --border: #1e2d47;
+    --accent1: #3b82f6;
+    --accent2: #10b981;
+    --accent3: #f59e0b;
+    --accent4: #ef4444;
+    --accent5: #8b5cf6;
+    --accent6: #06b6d4;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --highlight: #fbbf24;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Segoe UI',system-ui,sans-serif; overflow-x:hidden; }
+
+  /* hero */
+  .hero {
+    min-height:100vh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:2rem;
+    background: radial-gradient(ellipse at 50% 40%, #0d1f3c 0%, #0a0e1a 70%);
+    position:relative; overflow:hidden;
+  }
+  .hero-particles { position:absolute; inset:0; pointer-events:none; }
+  .particle {
+    position:absolute; width:3px; height:3px; border-radius:50%;
+    animation: float linear infinite;
+  }
+  @keyframes float {
+    from { transform:translateY(100vh) rotate(0deg); opacity:0; }
+    10% { opacity:1; }
+    90% { opacity:1; }
+    to { transform:translateY(-100px) rotate(720deg); opacity:0; }
+  }
+  .badge {
+    display:inline-block; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.4);
+    color:var(--accent1); padding:0.4rem 1.2rem; border-radius:100px; font-size:0.8rem;
+    letter-spacing:0.1em; text-transform:uppercase; margin-bottom:1.5rem;
+    animation: fadeDown 0.8s ease both;
+  }
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:none} }
+  .hero h1 {
+    font-size:clamp(2rem,6vw,4.5rem); font-weight:800; line-height:1.1;
+    background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #34d399 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    animation: fadeUp 0.8s 0.2s ease both;
+    max-width:900px;
+  }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:none} }
+  .hero-sub {
+    font-size:1.1rem; color:var(--muted); max-width:600px; margin-top:1.2rem; line-height:1.7;
+    animation: fadeUp 0.8s 0.4s ease both;
+  }
+  .hero-meta {
+    display:flex; gap:2rem; margin-top:2rem; flex-wrap:wrap; justify-content:center;
+    animation: fadeUp 0.8s 0.6s ease both;
+  }
+  .hero-meta span { color:var(--muted); font-size:0.9rem; display:flex; align-items:center; gap:0.4rem; }
+  .hero-meta .dot { width:8px;height:8px;border-radius:50%; display:inline-block; }
+  .scroll-hint {
+    position:absolute; bottom:2rem; left:50%; transform:translateX(-50%);
+    display:flex; flex-direction:column; align-items:center; gap:0.5rem;
+    color:var(--muted); font-size:0.8rem; animation:bounce 2s infinite;
+  }
+  @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(8px)} }
+  .scroll-arrow { width:24px;height:24px; border-right:2px solid var(--muted); border-bottom:2px solid var(--muted); transform:rotate(45deg); }
+
+  /* concept map */
+  section { padding:5rem 2rem; max-width:1200px; margin:0 auto; }
+  .section-title {
+    text-align:center; font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700; margin-bottom:0.5rem;
+  }
+  .section-sub { text-align:center; color:var(--muted); margin-bottom:3rem; }
+
+  /* central hub diagram */
+  .hub-container { display:flex; justify-content:center; margin:3rem 0 4rem; }
+  .hub-svg { width:100%; max-width:700px; height:auto; }
+
+  /* topic cards grid */
+  .cards-grid {
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1.5rem;
+    margin-top:2rem;
+  }
+  .topic-card {
+    background:var(--card); border:1px solid var(--border); border-radius:16px; padding:1.8rem;
+    text-decoration:none; color:var(--text); transition:all 0.3s ease;
+    position:relative; overflow:hidden; cursor:pointer;
+    opacity:0; transform:translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.3s, border-color 0.3s;
+  }
+  .topic-card.visible { opacity:1; transform:none; }
+  .topic-card::before {
+    content:''; position:absolute; inset:0; border-radius:16px; opacity:0;
+    transition:opacity 0.3s;
+    background: linear-gradient(135deg, var(--card-color, #3b82f6) 0%, transparent 70%);
+  }
+  .topic-card:hover::before { opacity:0.08; }
+  .topic-card:hover { border-color:var(--card-color, #3b82f6); box-shadow:0 0 30px rgba(59,130,246,0.15); transform:translateY(-4px); }
+  .card-num {
+    font-size:0.75rem; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.8rem;
+  }
+  .card-icon {
+    width:48px;height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+    font-size:1.5rem; margin-bottom:1rem; background:rgba(255,255,255,0.04);
+    border:1px solid var(--border);
+  }
+  .topic-card h3 { font-size:1.1rem; font-weight:700; margin-bottom:0.5rem; }
+  .topic-card p { color:var(--muted); font-size:0.88rem; line-height:1.6; }
+  .card-tags { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:1rem; }
+  .tag {
+    background:rgba(255,255,255,0.04); border:1px solid var(--border);
+    color:var(--muted); font-size:0.72rem; padding:0.2rem 0.6rem; border-radius:100px;
+  }
+  .card-arrow { position:absolute; top:1.5rem; right:1.5rem; opacity:0; transform:translateX(-8px); transition:all 0.3s; color:var(--muted);font-size:1.2rem; }
+  .topic-card:hover .card-arrow { opacity:1; transform:none; }
+
+  /* learning path */
+  .path-container { margin-top:4rem; }
+  .path-title { font-size:1.3rem; font-weight:700; margin-bottom:1.5rem; }
+  .path-steps {
+    display:flex; gap:0; flex-wrap:wrap; position:relative;
+  }
+  .path-step {
+    background:var(--card); border:1px solid var(--border); border-radius:12px;
+    padding:1rem 1.5rem; flex:1; min-width:140px; text-align:center;
+    text-decoration:none; color:var(--text); transition:all 0.3s;
+    position:relative;
+  }
+  .path-step:not(:last-child)::after {
+    content:'→'; position:absolute; right:-18px; top:50%; transform:translateY(-50%);
+    color:var(--muted); z-index:1; font-size:1.2rem;
+  }
+  .path-step:hover { border-color:var(--accent1); background:rgba(59,130,246,0.05); }
+  .path-step-num { font-size:0.7rem; color:var(--muted); display:block; margin-bottom:0.3rem; }
+  .path-step-label { font-size:0.85rem; font-weight:600; }
+
+  /* quick ref */
+  .quick-ref { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:2.5rem; margin-top:3rem; }
+  .quick-ref h3 { font-size:1.3rem; font-weight:700; margin-bottom:1.5rem; }
+  .ref-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1rem; }
+  .ref-item { padding:1rem; background:rgba(255,255,255,0.03); border-radius:10px; border:1px solid var(--border); }
+  .ref-item dt { font-size:0.8rem; color:var(--muted); margin-bottom:0.3rem; text-transform:uppercase; letter-spacing:0.05em; }
+  .ref-item dd { font-size:0.95rem; font-weight:600; }
+
+  /* what's covered */
+  .coverage-bar { display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:2rem; }
+  .cov-item {
+    padding:0.5rem 1rem; border-radius:8px; font-size:0.82rem; font-weight:600;
+    cursor:pointer; transition:all 0.2s;
+  }
+
+  /* footer */
+  footer {
+    text-align:center; padding:3rem 2rem; color:var(--muted); font-size:0.85rem;
+    border-top:1px solid var(--border); margin-top:4rem;
+  }
+
+  /* animated ring */
+  @keyframes spin { to{transform:rotate(360deg)} }
+
+  /* Responsive */
+  @media(max-width:600px) {
+    .path-step:not(:last-child)::after { display:none; }
+    .path-steps { gap:0.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-particles" id="particles"></div>
+  <div class="badge">Interactive Learning Guide</div>
+  <h1>Foreign Contribution (Regulation) Act, 2010</h1>
+  <p class="hero-sub">
+    India's law governing how foreign money flows into the country — who can receive it,
+    how it must be used, and what happens when the rules are broken.
+    Explore every concept visually and interactively.
+  </p>
+  <div class="hero-meta">
+    <span><span class="dot" style="background:#3b82f6"></span> 12 Core Topics</span>
+    <span><span class="dot" style="background:#10b981"></span> 50+ Subtopics</span>
+    <span><span class="dot" style="background:#f59e0b"></span> Interactive Diagrams</span>
+    <span><span class="dot" style="background:#8b5cf6"></span> Common Pitfalls</span>
+  </div>
+  <div class="scroll-hint">
+    <span>Explore below</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</div>
+
+<!-- Concept Map -->
+<section>
+  <div class="section-title">The FCRA Universe</div>
+  <div class="section-sub">Click any topic to dive deep into that concept</div>
+
+  <!-- SVG Hub Diagram -->
+  <div class="hub-container">
+    <svg class="hub-svg" viewBox="0 0 700 500" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="hubGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#1e3a5f"/>
+          <stop offset="100%" stop-color="#0d1f3c"/>
+        </radialGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- Central circle -->
+      <circle cx="350" cy="250" r="70" fill="url(#hubGrad)" stroke="#3b82f6" stroke-width="2" filter="url(#glow)"/>
+      <text x="350" y="240" text-anchor="middle" fill="#60a5fa" font-size="13" font-weight="bold">FCRA</text>
+      <text x="350" y="258" text-anchor="middle" fill="#94a3b8" font-size="10">2010</text>
+      <text x="350" y="273" text-anchor="middle" fill="#94a3b8" font-size="10">MHA</text>
+
+      <!-- Spokes & nodes -->
+      <g id="spokes" stroke="#1e2d47" stroke-width="1.5" stroke-dasharray="4 3">
+        <line x1="350" y1="180" x2="350" y2="75"/>
+        <line x1="350" y1="320" x2="350" y2="425"/>
+        <line x1="280" y1="250" x2="160" y2="250"/>
+        <line x1="420" y1="250" x2="540" y2="250"/>
+        <line x1="300" y1="205" x2="210" y2="120"/>
+        <line x1="400" y1="205" x2="490" y2="120"/>
+        <line x1="300" y1="295" x2="210" y2="380"/>
+        <line x1="400" y1="295" x2="490" y2="380"/>
+      </g>
+
+      <!-- Topic nodes -->
+      <g id="nodes" font-size="10" text-anchor="middle" dominant-baseline="middle">
+        <!-- Top -->
+        <a href="01_overview.html"><circle cx="350" cy="60" r="38" fill="#1a2744" stroke="#3b82f6" stroke-width="1.5"/><text x="350" y="55" fill="#60a5fa" font-weight="bold">Overview</text><text x="350" y="70" fill="#94a3b8">&amp; Purpose</text></a>
+        <!-- Bottom -->
+        <a href="11_pitfalls.html"><circle cx="350" cy="440" r="38" fill="#2d1a1a" stroke="#ef4444" stroke-width="1.5"/><text x="350" y="435" fill="#f87171" font-weight="bold">Common</text><text x="350" y="450" fill="#94a3b8">Pitfalls</text></a>
+        <!-- Left -->
+        <a href="03_prohibited_persons.html"><circle cx="140" cy="250" r="42" fill="#1a1a2d" stroke="#8b5cf6" stroke-width="1.5"/><text x="140" y="245" fill="#a78bfa" font-weight="bold">Prohibited</text><text x="140" y="260" fill="#94a3b8">Persons</text></a>
+        <!-- Right -->
+        <a href="07_reporting.html"><circle cx="560" cy="250" r="42" fill="#1a2d2d" stroke="#06b6d4" stroke-width="1.5"/><text x="560" y="245" fill="#22d3ee" font-weight="bold">Reporting</text><text x="560" y="260" fill="#94a3b8">&amp; Returns</text></a>
+        <!-- Top-left -->
+        <a href="02_definitions.html"><circle cx="195" cy="108" r="36" fill="#1a2533" stroke="#10b981" stroke-width="1.5"/><text x="195" y="103" fill="#34d399" font-weight="bold">Key</text><text x="195" y="118" fill="#94a3b8">Definitions</text></a>
+        <!-- Top-right -->
+        <a href="04_registration.html"><circle cx="505" cy="108" r="36" fill="#2d2210" stroke="#f59e0b" stroke-width="1.5"/><text x="505" y="103" fill="#fbbf24" font-weight="bold">Registration</text><text x="505" y="118" fill="#94a3b8">vs Perm.</text></a>
+        <!-- Bottom-left -->
+        <a href="05_banking.html"><circle cx="195" cy="392" r="36" fill="#1a2d1a" stroke="#10b981" stroke-width="1.5"/><text x="195" y="387" fill="#34d399" font-weight="bold">Banking</text><text x="195" y="402" fill="#94a3b8">Arch.</text></a>
+        <!-- Bottom-right -->
+        <a href="09_enforcement.html"><circle cx="505" cy="392" r="36" fill="#2d1a1a" stroke="#ef4444" stroke-width="1.5"/><text x="505" y="387" fill="#f87171" font-weight="bold">Enforce-</text><text x="505" y="402" fill="#94a3b8">ment</text></a>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Cards Grid -->
+  <div class="cards-grid" id="cardsGrid">
+
+    <a class="topic-card" href="01_overview.html" style="--card-color:#3b82f6; transition-delay:0s">
+      <div class="card-num">Module 01</div>
+      <div class="card-icon">🏛️</div>
+      <h3>Overview &amp; Objectives</h3>
+      <p>What is FCRA? Why did India need it? The big picture — sovereignty, security, public interest, and why foreign money gets special treatment.</p>
+      <div class="card-tags">
+        <span class="tag">History</span>
+        <span class="tag">Purpose</span>
+        <span class="tag">MHA</span>
+      </div>
+      <span class="card-arrow">→</span>
+    </a>
+
+    <a class="topic-card" href="02_definitions.html" style="--card-color:#10b981; transition-delay:0.05s">
+      <div class="card-num">Module 02</div>
+      <div class="card-icon">📖</div>
+      <h3>Key Definitions</h3>
+      <p>The precise legal meanings that determine everything: "Foreign Contribution", "Foreign Source", "Person", and more — with real-world examples.</p>
+      <div class="card-tags">
+        <span class="tag">Foreign Contribution</span>
+        <span class="tag">Foreign Source</span>
+        <span class="tag">Association</span>
+      </div>
+      <span class="card-arrow">→</span>
+    </a>
+
+    <a class="topic-card" href="03_prohibited_persons.html" style="--card-color:#8b5cf6; transition-delay:0.1s">
+      <div class="card-num">Module 03</div>
+      <div class="card-icon">🚫</div>
+      <h3>Prohibited Persons</h3>
+      <p>Who is absolutely barred from receiving foreign contributions — politicians, judges, government servants, media, and more. The hard NO list.</p>
+      <div class="card-tags">
+        <span class="tag">Political Parties</span>
+        <span class="tag">Judges</span>
+        <span class="tag">Govt. Servants</span>
+        <span class="tag">Legislature</span>
+      </div>
+      <span class="card-arrow">→</span>
+    </a>
+
+    <a class="topic-card" href="04_registration.html" style="--card-color:#f59e0b; transition-delay:0.15s">
+      <div class="card-num">Module 04</div>
+      <div class="card-icon">📋</div>
+      <h3>Registration vs Prior Permission</h3>
+      <p>The two legal gateways. How to decide which route to take, eligibility criteria, validity periods, and the renewal cycle — with an interactive decision tree.</p>
+      <div class="card-tags">
+        <span class="tag">FC-3A</span>
+        <span class="tag">FC-3B</span>
+        <span class="tag">5-Year Validity</span>
+      </div>
+      <span class="card-arrow">→</span>
+    </a>
+
+    <a class="topic-card" href="05_banking.html" style="--card-color:#06b6d4; transition-delay:0.2s">
+      <div class="card-num">Module 05</div>
+      <div class="card-icon">🏦</div>
+      <h3>Banking Architecture</h3>
+      <p>The ring-fenced money flow: designated FCRA receipt account → utilisation accounts. The SBI New Delhi Main Branch mandate and how to stay compliant.</p>
+      <div class="card-tags">
+        <span class="tag">SBI NDMB</span>
+        <span class="tag">Receipt A/c</span>
+        <span class="tag">Utilisation A/c</span>
+      </div>
+      <span class="card-arrow">→</span>
+    </a>
+
+    <a class="topic-card" href="06_utilisation.html" style="--card-color:#10b981; transition-delay:0.25s">
+      <div class="card-num">Module 06</div>
+      <div class="card-icon">💸</div>
+      <h3>Utilisation Rules</h3>
+      <p>How the money can be spent: purpose alignment, the 20% administrative expense cap, transfer restrictions, and prohibited investments.</p>
+      <div class="card-tags">
+        <span class="tag">20% Admin Cap</span>
+        <span class="tag">Transfer Ban</span>
+        <span class="tag">Purpose Alignment</span>
+      </div>
+      <span class="card-arrow">→</span>
+    </a>
+
+    <a class="topic-card" href="07_reporting.html" style="--card-color:#06b6d4; transition-delay:0.3s">
+      <div class="card-num">Module 07</div>
+      <div class="card-icon">📊</div>
+      <h3>Reporting &amp; Compliance</h3>
+      <p>Annual returns, event-based intimations, FC-6 forms, audit requirements, public disclosure, and the FCRA Online Portal — the compliance backbone.</p>
+      <div class="card-tags">
+        <span class="tag">Annual Return</span>
+        <span class="tag">FC-6</span>
+        <span class="tag">Online Portal</span>
+        <span class="tag">31 Dec Deadline</span>
+      </div>
+      <span class="card-arrow">→</span>
+    </a>
+
+    <a class="topic-card" href="08_lifecycle.html" style="--card-color:#f59e0b; transition-delay:0.35s">
+      <div class="card-num">Module 08</div>
+      <div class="card-icon">🔄</div>
+      <h3>Registration Lifecycle</h3>
+      <p>From application to renewal to suspension to cancellation — the full life cycle of an FCRA registration, with visual timeline and key triggers.</p>
+      <div class="card-tags">
+        <span class="tag">Renewal</span>
+        <span class="tag">Suspension</span>
+        <span class="tag">Cancellation</span>
+      </div>
+      <span class="card-arrow">→</span>
+    </a>
+
+    <a class="topic-card" href="09_enforcement.html" style="--card-color:#ef4444; transition-delay:0.4s">
+      <div class="card-num">Module 09</div>
+      <div class="card-icon">⚖️</div>
+      <h3>Enforcement &amp; Penalties</h3>
+      <p>Inspection powers, seizure, prosecution, compounding, appeals — and how penalties scale from minor reporting lapses to criminal prosecution.</p>
+      <div class="card-tags">
+        <span class="tag">Inspection</span>
+        <span class="tag">Seizure</span>
+        <span class="tag">Compounding</span>
+        <span class="tag">Prosecution</span>
+      </div>
+      <span class="card-arrow">→</span>
+    </a>
+
+    <a class="topic-card" href="10_amendments.html" style="--card-color:#8b5cf6; transition-delay:0.45s">
+      <div class="card-num">Module 10</div>
+      <div class="card-icon">📜</div>
+      <h3>Key Amendments</h3>
+      <p>How FCRA has gotten progressively stricter — 2010, 2016, 2020 amendments. What changed, what tightened, and why it matters for compliance.</p>
+      <div class="card-tags">
+        <span class="tag">2016 Amend.</span>
+        <span class="tag">2020 Amend.</span>
+        <span class="tag">Aadhaar KYC</span>
+      </div>
+      <span class="card-arrow">→</span>
+    </a>
+
+    <a class="topic-card" href="11_pitfalls.html" style="--card-color:#ef4444; transition-delay:0.5s">
+      <div class="card-num">Module 11</div>
+      <div class="card-icon">⚠️</div>
+      <h3>Common Pitfalls &amp; Traps</h3>
+      <p>The mistakes everyone makes — mixing funds, missing deadlines, misclassifying foreign sources, the "political nature" trap, and more. Learn from real cases.</p>
+      <div class="card-tags">
+        <span class="tag">Fund Mixing</span>
+        <span class="tag">Deadline Miss</span>
+        <span class="tag">Misclassification</span>
+      </div>
+      <span class="card-arrow">→</span>
+    </a>
+
+    <a class="topic-card" href="12_exam_quick_ref.html" style="--card-color:#3b82f6; transition-delay:0.55s">
+      <div class="card-num">Module 12</div>
+      <div class="card-icon">🎯</div>
+      <h3>Exam Quick Reference</h3>
+      <p>Everything in one dense, printable cheatsheet — all defined terms, key numbers, prohibited lists, timelines, and exam-friendly mnemonics.</p>
+      <div class="card-tags">
+        <span class="tag">Numbers</span>
+        <span class="tag">Dates</span>
+        <span class="tag">Mnemonics</span>
+        <span class="tag">Cheatsheet</span>
+      </div>
+      <span class="card-arrow">→</span>
+    </a>
+
+  </div>
+
+  <!-- Learning path -->
+  <div class="path-container">
+    <div class="path-title">Recommended Learning Path</div>
+    <div class="path-steps">
+      <a class="path-step" href="01_overview.html"><span class="path-step-num">Start here</span><span class="path-step-label">Overview</span></a>
+      <a class="path-step" href="02_definitions.html"><span class="path-step-num">Then</span><span class="path-step-label">Definitions</span></a>
+      <a class="path-step" href="03_prohibited_persons.html"><span class="path-step-num">Then</span><span class="path-step-label">Prohibitions</span></a>
+      <a class="path-step" href="04_registration.html"><span class="path-step-num">Then</span><span class="path-step-label">Registration</span></a>
+      <a class="path-step" href="05_banking.html"><span class="path-step-num">Then</span><span class="path-step-label">Banking</span></a>
+      <a class="path-step" href="06_utilisation.html"><span class="path-step-num">Then</span><span class="path-step-label">Utilisation</span></a>
+      <a class="path-step" href="07_reporting.html"><span class="path-step-num">Then</span><span class="path-step-label">Reporting</span></a>
+      <a class="path-step" href="11_pitfalls.html"><span class="path-step-num">Finally</span><span class="path-step-label">Pitfalls</span></a>
+    </div>
+  </div>
+
+  <!-- Quick reference numbers -->
+  <div class="quick-ref">
+    <h3>⚡ Key Numbers at a Glance</h3>
+    <div class="ref-grid">
+      <div class="ref-item"><dt>Admin Expense Cap</dt><dd>20% of FC received</dd></div>
+      <div class="ref-item"><dt>Registration Validity</dt><dd>5 years</dd></div>
+      <div class="ref-item"><dt>Annual Return Deadline</dt><dd>31 December</dd></div>
+      <div class="ref-item"><dt>Prior Permission Validity</dt><dd>Project duration</dd></div>
+      <div class="ref-item"><dt>FCRA Receipt Bank</dt><dd>SBI, New Delhi Main Branch</dd></div>
+      <div class="ref-item"><dt>Regulator</dt><dd>MHA, FCRA Division</dd></div>
+      <div class="ref-item"><dt>Renewal Application</dt><dd>6 months before expiry</dd></div>
+      <div class="ref-item"><dt>Transfer to other NGOs</dt><dd>Largely prohibited (2020)</dd></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>FCRA 2010 Interactive Guide · For educational purposes · Verify current rules at <strong>fcraonline.nic.in</strong> &amp; MHA notifications</p>
+</footer>
+
+<script>
+// Particles
+(function(){
+  const container = document.getElementById('particles');
+  const colors = ['#3b82f6','#10b981','#f59e0b','#8b5cf6','#06b6d4','#ef4444'];
+  for(let i=0;i<60;i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      width:${Math.random()*4+1}px;
+      height:${Math.random()*4+1}px;
+      animation-duration:${Math.random()*15+8}s;
+      animation-delay:${Math.random()*10}s;
+      opacity:0.6;
+    `;
+    container.appendChild(p);
+  }
+})();
+
+// Scroll reveal for cards
+const cards = document.querySelectorAll('.topic-card');
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); }
+  });
+},{threshold:0.1});
+cards.forEach(c=>io.observe(c));
+</script>
+</body>
+</html>

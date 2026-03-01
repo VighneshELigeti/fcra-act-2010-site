@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Key Amendments — FCRA 2010</title>
+<style>
+  :root{--bg:#0a0e1a;--card:#111827;--border:#1e2d47;--accent:#8b5cf6;--text:#e2e8f0;--muted:#94a3b8;--blue:#3b82f6;--red:#ef4444;--amber:#f59e0b;--green:#10b981;--cyan:#06b6d4;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.7;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(10,14,26,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;padding:0.8rem 2rem;}
+  nav a{color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.3rem 0.6rem;border-radius:6px;transition:all 0.2s;}
+  nav a:hover,nav a.active{color:var(--text);background:rgba(255,255,255,0.06);}
+  nav .home{font-weight:700;color:var(--accent);}
+  .nav-sep{color:var(--border);}
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--blue));z-index:999;transition:width 0.1s;}
+  .container{max-width:900px;margin:0 auto;padding:4rem 2rem;}
+  .chapter-label{color:var(--muted);font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.8rem;}
+  h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;line-height:1.1;margin-bottom:1rem;}
+  .lead{font-size:1.15rem;color:var(--muted);line-height:1.7;margin-bottom:3rem;border-left:3px solid var(--accent);padding-left:1.2rem;}
+  h2{font-size:1.5rem;font-weight:700;margin:3rem 0 1rem;}
+  p{margin-bottom:1rem;color:#cbd5e1;}
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s,transform 0.7s;}
+  .reveal.visible{opacity:1;transform:none;}
+
+  /* Amendment year tabs */
+  .year-tabs{display:flex;gap:0.6rem;margin-bottom:2rem;flex-wrap:wrap;}
+  .year-tab{
+    padding:0.5rem 1.2rem;border-radius:100px;border:1px solid var(--border);
+    cursor:pointer;font-size:0.88rem;font-weight:700;transition:all 0.2s;
+    background:rgba(255,255,255,0.02);color:var(--muted);
+  }
+  .year-tab:hover{background:rgba(255,255,255,0.06);}
+  .year-tab.active{background:rgba(139,92,246,0.15);border-color:rgba(139,92,246,0.4);color:var(--text);}
+  .year-tab.y2016.active{background:rgba(59,130,246,0.15);border-color:rgba(59,130,246,0.4);}
+  .year-tab.y2020.active{background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.4);}
+
+  .amendment-section{display:none;}
+  .amendment-section.active{display:block;}
+
+  /* Before/After comparison */
+  .before-after{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:1.5rem 0;border-radius:14px;overflow:hidden;border:1px solid var(--border);}
+  @media(max-width:600px){.before-after{grid-template-columns:1fr;}}
+  .ba-col{padding:1.5rem;}
+  .ba-col.before{background:rgba(59,130,246,0.05);border-right:1px solid var(--border);}
+  .ba-col.after{background:rgba(239,68,68,0.05);}
+  .ba-label{font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;font-weight:700;margin-bottom:0.8rem;padding:0.25rem 0.6rem;border-radius:100px;display:inline-block;}
+  .ba-col.before .ba-label{background:rgba(59,130,246,0.15);color:var(--blue);}
+  .ba-col.after .ba-label{background:rgba(239,68,68,0.15);color:var(--red);}
+  .ba-content{font-size:0.85rem;color:var(--muted);}
+
+  /* change cards */
+  .change-item{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.2rem;transition:all 0.2s;}
+  .change-item:hover{border-color:var(--accent);}
+  .change-head{display:flex;align-items:center;gap:0.8rem;padding:1rem 1.2rem;cursor:pointer;user-select:none;}
+  .change-severity{
+    font-size:0.68rem;text-transform:uppercase;letter-spacing:0.06em;font-weight:700;
+    padding:0.2rem 0.55rem;border-radius:100px;flex-shrink:0;
+  }
+  .change-severity.major{background:rgba(239,68,68,0.15);color:var(--red);}
+  .change-severity.moderate{background:rgba(245,158,11,0.15);color:var(--amber);}
+  .change-severity.minor{background:rgba(16,185,129,0.15);color:var(--green);}
+  .change-title{font-weight:700;font-size:0.9rem;flex:1;}
+  .change-section{font-size:0.75rem;color:var(--muted);}
+  .change-chevron{transition:transform 0.3s;color:var(--muted);}
+  .change-item.open .change-chevron{transform:rotate(180deg);}
+  .change-item.open .change-head{border-bottom:1px solid var(--border);}
+  .change-body{display:none;padding:1.2rem;}
+  .change-item.open .change-body{display:block;}
+
+  /* timeline */
+  .timeline{position:relative;margin:2rem 0;}
+  .tl-item{display:flex;gap:1.2rem;margin-bottom:2.5rem;position:relative;}
+  .tl-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:0.4rem;position:relative;z-index:1;}
+  .tl-item::before{content:'';position:absolute;left:6px;top:20px;bottom:-20px;width:2px;background:var(--border);z-index:0;}
+  .tl-item:last-child::before{display:none;}
+  .tl-year{font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;font-weight:700;margin-bottom:0.3rem;}
+  .tl-title{font-weight:700;font-size:0.95rem;margin-bottom:0.4rem;}
+  .tl-desc{font-size:0.83rem;color:var(--muted);}
+
+  .callout{background:var(--card);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;}
+  .callout.danger{border-color:var(--red);}
+  .callout.info{border-color:var(--blue);}
+  .callout-title{font-weight:700;font-size:0.85rem;text-transform:uppercase;margin-bottom:0.4rem;color:var(--accent);}
+  .callout.danger .callout-title{color:var(--red);}
+  .callout.info .callout-title{color:var(--blue);}
+
+  .bottom-nav{display:flex;justify-content:space-between;margin-top:5rem;padding-top:2rem;border-top:1px solid var(--border);}
+  .nav-btn{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.5rem;text-decoration:none;color:var(--text);transition:all 0.2s;font-size:0.9rem;}
+  .nav-btn:hover{border-color:var(--accent);}
+  .nav-btn .direction{font-size:0.75rem;color:var(--muted);display:block;margin-bottom:0.2rem;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progress"></div>
+<nav>
+  <a href="index.html" class="home">FCRA 2010</a>
+  <span class="nav-sep">›</span>
+  <a href="10_amendments.html" class="active">Key Amendments</a>
+</nav>
+
+<div class="container">
+  <p class="chapter-label">Module 10</p>
+  <h1>Key Amendments to FCRA 2010</h1>
+  <p class="lead">
+    FCRA has been significantly amended twice since 2010 — once in 2016 (focused on political party funding)
+    and again in 2020 (a sweeping restriction of NGO operations). Each amendment introduced changes that
+    fundamentally restructured how foreign money flows into Indian civil society.
+  </p>
+
+  <!-- Full timeline first -->
+  <h2>FCRA Legislative Timeline</h2>
+  <div class="timeline reveal">
+    <div class="tl-item">
+      <div class="tl-dot" style="background:#94a3b8;"></div>
+      <div>
+        <div class="tl-year" style="color:#94a3b8;">1976</div>
+        <div class="tl-title">FCRA 1976 — Original Act</div>
+        <div class="tl-desc">Enacted during the Emergency period under Indira Gandhi. First comprehensive law to regulate foreign contributions. Focused on preventing foreign interference in Indian politics and elections.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--blue);"></div>
+      <div>
+        <div class="tl-year" style="color:var(--blue);">2010</div>
+        <div class="tl-title">FCRA 2010 — Complete Recodification</div>
+        <div class="tl-desc">The 1976 Act was repealed and replaced with the Foreign Contribution (Regulation) Act, 2010. Key additions: mandatory SBI account (then any scheduled bank), 5-year validity, online portal, clearer definitions, enhanced enforcement powers, ban on political party FC.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--accent);"></div>
+      <div>
+        <div class="tl-year" style="color:var(--accent);">2016</div>
+        <div class="tl-title">FCRA Amendment Act 2016</div>
+        <div class="tl-desc">Focused on political party funding. Removed cap on foreign electoral bonds. Re-defined "foreign company" to retrospectively exempt banks with government equity. Allowed electoral bonds as vehicle for political party funding.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--red);"></div>
+      <div>
+        <div class="tl-year" style="color:var(--red);">2020</div>
+        <div class="tl-title">FCRA Amendment Act 2020 — Most Significant</div>
+        <div class="tl-desc">Sweeping changes affecting all FCRA-registered NGOs. Mandatory SBI NDMB account. Ban on sub-granting. Admin cap reduced to 20%. Aadhaar KYC mandatory. Definition of "foreign source" expanded. Supreme Court upheld all changes in Noel Harper (2022).</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--green);"></div>
+      <div>
+        <div class="tl-year" style="color:var(--green);">2022</div>
+        <div class="tl-title">Noel Harper vs. Union of India — SC Verdict</div>
+        <div class="tl-desc">Supreme Court upheld all 2020 Amendment provisions as constitutional. Held that receiving foreign contributions is not a fundamental right. Dismissed petitions from multiple civil society organisations challenging the amendments.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Year tabs -->
+  <h2>Explore Each Amendment</h2>
+  <div class="year-tabs">
+    <div class="year-tab y2016 active" onclick="showYear('2016',this)">2016 Amendment</div>
+    <div class="year-tab y2020" onclick="showYear('2020',this)">2020 Amendment</div>
+  </div>
+
+  <!-- 2016 Content -->
+  <div class="amendment-section active" id="amend-2016">
+    <p style="color:var(--muted);font-size:0.9rem;">The 2016 Amendment was smaller in scope — primarily addressing political party funding and retrospectively regularising banking-related issues:</p>
+
+    <div class="change-item reveal" onclick="toggleChange(this)">
+      <div class="change-head">
+        <span class="change-severity major">Major</span>
+        <span class="change-title">Redefinition of "foreign source" — Banks Exempted Retrospectively</span>
+        <span class="change-section">§2(1)(j)</span>
+        <span class="change-chevron">▼</span>
+      </div>
+      <div class="change-body">
+        <div class="before-after">
+          <div class="ba-col before">
+            <span class="ba-label">PRE-2016</span>
+            <div class="ba-content">A "foreign company" (which includes Indian companies with 50%+ foreign equity) was a "foreign source." Banks like SBI where the government holds &gt;50% stake are technically still Indian. But private banks with significant FII investment could be seen as foreign-owned. Donations to political parties through such banks were questioned.</div>
+          </div>
+          <div class="ba-col after">
+            <span class="ba-label">POST-2016</span>
+            <div class="ba-content">Amendment added a proviso excluding any company where the majority holding vests with the Indian government. More critically, the definition was amended retrospectively to exempt banks (specifically in the context of political party donations via electoral bonds) from the "foreign source" classification, preventing challenges to past political party donations.</div>
+          </div>
+        </div>
+        <div style="margin-top:1rem;padding:0.8rem;background:rgba(245,158,11,0.06);border-radius:8px;font-size:0.8rem;color:var(--muted);">
+          <strong style="color:var(--amber);">Controversy:</strong> The 2016 amendment was challenged before the Delhi HC and later the SC by the Association for Democratic Reforms and Bharatiya Janata Party / Congress controversy — both major parties had received funds from a company with &gt;50% foreign shareholding (Vedanta) before the 2016 amendment. The retrospective change was widely seen as self-serving by the ruling party.
+        </div>
+      </div>
+    </div>
+
+    <div class="change-item reveal" onclick="toggleChange(this)">
+      <div class="change-head">
+        <span class="change-severity major">Major</span>
+        <span class="change-title">Electoral Bonds — New Vehicle for Political FC</span>
+        <span class="change-section">Political Finance</span>
+        <span class="change-chevron">▼</span>
+      </div>
+      <div class="change-body">
+        <div class="ba-content" style="margin-bottom:1rem;">
+          Electoral bonds were introduced in 2018 as part of Budget amendments (not directly FCRA, but FCRA 2016 laid groundwork). The FCRA 2016 amendment removed the requirement that political parties disclose donations above ₹20,000 when received via electoral bonds.
+        </div>
+        <div style="padding:0.8rem;background:rgba(239,68,68,0.06);border-radius:8px;font-size:0.8rem;color:var(--muted);">
+          <strong style="color:var(--red);">2024 Update:</strong> The Supreme Court struck down electoral bonds in February 2024 (Association for Democratic Reforms case, 5-judge constitutional bench) as unconstitutional — violating the right to information of voters. SBI was ordered to disclose all electoral bond data. The FCRA-political party nexus via electoral bonds is now judicially invalidated.
+        </div>
+      </div>
+    </div>
+
+    <div class="change-item reveal" onclick="toggleChange(this)">
+      <div class="change-head">
+        <span class="change-severity minor">Admin</span>
+        <span class="change-title">Surrender of FCRA Registration — New Provision</span>
+        <span class="change-section">§14A (new)</span>
+        <span class="change-chevron">▼</span>
+      </div>
+      <div class="change-body">
+        <div class="ba-content">
+          2016 Amendment introduced §14A allowing an organisation to voluntarily surrender its FCRA registration. This creates an orderly exit mechanism — organisations that no longer need FC access or want to avoid compliance burden can surrender rather than simply stop filing.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2020 Content -->
+  <div class="amendment-section" id="amend-2020">
+    <p style="color:var(--muted);font-size:0.9rem;">The 2020 Amendment was the most significant overhaul since 2010. It made FCRA compliance dramatically more restrictive and operationally burdensome:</p>
+
+    <div class="change-item reveal" onclick="toggleChange(this)">
+      <div class="change-head">
+        <span class="change-severity major">Major</span>
+        <span class="change-title">Mandatory SBI New Delhi Main Branch Account</span>
+        <span class="change-section">§17 — New Proviso</span>
+        <span class="change-chevron">▼</span>
+      </div>
+      <div class="change-body">
+        <div class="before-after">
+          <div class="ba-col before">
+            <span class="ba-label">BEFORE 2020</span>
+            <div class="ba-content">FC could be received in a designated account at ANY scheduled commercial bank chosen by the organisation. An NGO in Chennai could use a Chennai-based bank branch.</div>
+          </div>
+          <div class="ba-col after">
+            <span class="ba-label">AFTER 2020</span>
+            <div class="ba-content">ALL FC must first come to State Bank of India, New Delhi Main Branch (Branch Code: 00691) — one single account for every FC. FC can then be transferred to utilisation accounts at any bank. This is mandatory regardless of where the NGO operates.</div>
+          </div>
+        </div>
+        <div style="margin-top:1rem;font-size:0.82rem;color:var(--muted);">
+          <strong>Operational impact:</strong> Small NGOs in remote areas had to travel to Delhi / establish SBI ties. Many NGOs had to restructure entire banking relationships. The government's stated rationale: centralised monitoring of all FC inflows.
+        </div>
+      </div>
+    </div>
+
+    <div class="change-item reveal" onclick="toggleChange(this)">
+      <div class="change-head">
+        <span class="change-severity major">Major</span>
+        <span class="change-title">Complete Ban on FC Transfer Between Organisations</span>
+        <span class="change-section">§7 — Amended</span>
+        <span class="change-chevron">▼</span>
+      </div>
+      <div class="change-body">
+        <div class="before-after">
+          <div class="ba-col before">
+            <span class="ba-label">BEFORE 2020</span>
+            <div class="ba-content">An FCRA-registered organisation could transfer up to 50% of its FC to another FCRA-registered organisation with prior MHA approval. This enabled apex NGOs to distribute grants to smaller implementing partners.</div>
+          </div>
+          <div class="ba-col after">
+            <span class="ba-label">AFTER 2020</span>
+            <div class="ba-content">ABSOLUTE PROHIBITION on transfer to any person or any association — whether registered or not. The "50% with approval" route is completely gone. No exceptions (except individuals for personal use, not for further FC purposes).</div>
+          </div>
+        </div>
+        <div style="margin-top:1rem;font-size:0.82rem;color:var(--muted);">
+          <strong>Impact:</strong> Organisations like Oxfam India, Aga Khan Foundation, CARE India — which operated as "intermediary" grant-makers — had to completely restructure. Hundreds of small grassroots NGOs that depended on sub-grants lost access to foreign funding. The Supreme Court in Noel Harper (2022) upheld this as a valid restriction.
+        </div>
+      </div>
+    </div>
+
+    <div class="change-item reveal" onclick="toggleChange(this)">
+      <div class="change-head">
+        <span class="change-severity major">Major</span>
+        <span class="change-title">Admin Expense Cap Reduced from 50% to 20%</span>
+        <span class="change-section">§8(1)(b) — Amended</span>
+        <span class="change-chevron">▼</span>
+      </div>
+      <div class="change-body">
+        <div class="before-after">
+          <div class="ba-col before">
+            <span class="ba-label">BEFORE 2020</span>
+            <div class="ba-content">Maximum 50% of FC could be used for administrative expenses. This was considered relatively generous, allowing NGOs to maintain adequate overhead for quality programme delivery.</div>
+          </div>
+          <div class="ba-col after">
+            <span class="ba-label">AFTER 2020</span>
+            <div class="ba-content">Maximum 20% — a 60% reduction (from 50% to 20%). For organisations with high overhead due to complex operations, this has forced difficult choices: reduce admin costs, reclassify expenses as programmatic, or face violations.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="change-item reveal" onclick="toggleChange(this)">
+      <div class="change-head">
+        <span class="change-severity major">Major</span>
+        <span class="change-title">Aadhaar KYC Mandatory for All Office Bearers</span>
+        <span class="change-section">§12(1A), §12A — New</span>
+        <span class="change-chevron">▼</span>
+      </div>
+      <div class="change-body">
+        <div class="ba-content" style="margin-bottom:1rem;">New §12A requires every office bearer, key functionary, and member to provide Aadhaar as identity proof. For foreign nationals: passport. This applies to all applications (new registration, prior permission, renewal). Any existing registration must update Aadhaar details for all office bearers.</div>
+        <div style="font-size:0.82rem;color:var(--muted);padding:0.8rem;background:rgba(245,158,11,0.05);border-radius:8px;">
+          <strong>Impact:</strong> Many legacy NGO trustees (elderly individuals, overseas trustees without Aadhaar) created compliance problems. NGOs had to remove or bring on board new trustees to comply. Applications with even one missing Aadhaar are rejected.
+        </div>
+      </div>
+    </div>
+
+    <div class="change-item reveal" onclick="toggleChange(this)">
+      <div class="change-head">
+        <span class="change-severity moderate">Moderate</span>
+        <span class="change-title">Expansion of "Foreign Source" Definition</span>
+        <span class="change-section">§2(1)(j) — Amended</span>
+        <span class="change-chevron">▼</span>
+      </div>
+      <div class="change-body">
+        <div class="ba-content" style="margin-bottom:1rem;">The definition of "foreign source" was expanded to include companies where even a minority stake is foreign — effectively lowering the threshold for triggering FCRA. This affects many Indian companies that have any degree of foreign institutional investment.</div>
+      </div>
+    </div>
+
+    <div class="change-item reveal" onclick="toggleChange(this)">
+      <div class="change-head">
+        <span class="change-severity moderate">Moderate</span>
+        <span class="change-title">SC Verdict: All 2020 Changes Upheld</span>
+        <span class="change-section">Noel Harper vs. UoI (2022)</span>
+        <span class="change-chevron">▼</span>
+      </div>
+      <div class="change-body">
+        <div class="ba-content">
+          In <em>Noel Harper vs. Union of India</em>, a 5-judge constitutional bench of the Supreme Court (April 2022) upheld all provisions of the FCRA Amendment Act 2020 as constitutionally valid. Key holdings:
+          <br><br>
+          • Receiving foreign contribution is NOT a fundamental right<br>
+          • FCRA is a regulatory measure, not a restriction on fundamental rights<br>
+          • The state has the right to control foreign money flows in civil society<br>
+          • Ban on sub-granting is a reasonable restriction<br>
+          • SBI mandate is operational, not unconstitutional<br><br>
+          The verdict effectively closed the door on constitutional challenges to FCRA's stringent provisions.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout danger reveal">
+    <div class="callout-title">🚨 Exam Focus: What Changed in 2020</div>
+    <p style="margin:0 0 0.5rem;font-size:0.9rem;"><strong>The 5 most-tested 2020 changes:</strong></p>
+    <ol style="font-size:0.85rem;color:var(--muted);padding-left:1.2rem;">
+      <li>SBI New Delhi Main Branch — mandatory FCRA receipt account</li>
+      <li>Sub-granting / transfer to other NGOs — completely prohibited</li>
+      <li>Admin cap — reduced from 50% to 20%</li>
+      <li>Aadhaar KYC — mandatory for all office bearers</li>
+      <li>Noel Harper (2022) — SC upheld all changes as constitutional</li>
+    </ol>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="09_enforcement.html" class="nav-btn">
+      <span class="direction">← Back to</span>
+      Enforcement & Penalties
+    </a>
+    <a href="11_pitfalls.html" class="nav-btn">
+      <span class="direction">Next →</span>
+      Common Pitfalls
+    </a>
+  </div>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement,b=document.body;
+  const st=h.scrollTop||b.scrollTop,sh=h.scrollHeight-h.clientHeight;
+  document.getElementById('progress').style.width=(st/sh*100)+'%';
+});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}}),{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+function showYear(year,tab){
+  document.querySelectorAll('.year-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.amendment-section').forEach(s=>s.classList.remove('active'));
+  tab.classList.add('active');
+  document.getElementById('amend-'+year).classList.add('active');
+}
+
+function toggleChange(el){el.classList.toggle('open');}
+</script>
+</body>
+</html>

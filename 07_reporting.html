@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reporting & Compliance — FCRA 2010</title>
+<style>
+  :root{--bg:#0a0e1a;--card:#111827;--border:#1e2d47;--accent:#06b6d4;--text:#e2e8f0;--muted:#94a3b8;--blue:#3b82f6;--red:#ef4444;--amber:#f59e0b;--green:#10b981;--purple:#8b5cf6;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.7;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(10,14,26,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;padding:0.8rem 2rem;}
+  nav a{color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.3rem 0.6rem;border-radius:6px;transition:all 0.2s;}
+  nav a:hover,nav a.active{color:var(--text);background:rgba(255,255,255,0.06);}
+  nav .home{font-weight:700;color:var(--accent);}
+  .nav-sep{color:var(--border);}
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--blue));z-index:999;transition:width 0.1s;}
+  .container{max-width:900px;margin:0 auto;padding:4rem 2rem;}
+  .chapter-label{color:var(--muted);font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.8rem;}
+  h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;line-height:1.1;margin-bottom:1rem;}
+  .lead{font-size:1.15rem;color:var(--muted);line-height:1.7;margin-bottom:3rem;border-left:3px solid var(--accent);padding-left:1.2rem;}
+  h2{font-size:1.5rem;font-weight:700;margin:3rem 0 1rem;}
+  p{margin-bottom:1rem;color:#cbd5e1;}
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s,transform 0.7s;}
+  .reveal.visible{opacity:1;transform:none;}
+
+  /* calendar deadline */
+  .calendar-wrap{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin:2rem 0;}
+  .cal-months{display:grid;grid-template-columns:repeat(6,1fr);gap:0;}
+  @media(max-width:640px){.cal-months{grid-template-columns:repeat(3,1fr);}}
+  .cal-month{padding:1rem;border-right:1px solid var(--border);border-bottom:1px solid var(--border);transition:background 0.2s;}
+  .cal-month:hover{background:rgba(255,255,255,0.03);}
+  .cal-month.highlight{background:rgba(6,182,212,0.08);border-color:rgba(6,182,212,0.2);}
+  .cal-month.deadline{background:rgba(239,68,68,0.1);border:2px solid rgba(239,68,68,0.4);position:relative;}
+  .cal-month.deadline::after{content:'📌';position:absolute;top:4px;right:6px;font-size:0.9rem;}
+  .cal-name{font-weight:700;font-size:0.88rem;margin-bottom:0.3rem;}
+  .cal-event{font-size:0.7rem;color:var(--muted);}
+  .cal-month.deadline .cal-event{color:var(--red);}
+  .cal-month.highlight .cal-event{color:var(--cyan);}
+
+  /* fc-4 breakdown */
+  .fc4-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem;margin:2rem 0;}
+  .fc4-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.3rem;transition:all 0.3s;}
+  .fc4-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+  .fc4-part{font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);font-weight:700;margin-bottom:0.4rem;}
+  .fc4-title{font-weight:700;font-size:0.9rem;margin-bottom:0.5rem;}
+  .fc4-items{font-size:0.8rem;color:var(--muted);}
+
+  /* intimation table */
+  table.tb{width:100%;border-collapse:collapse;font-size:0.87rem;margin:1.5rem 0;}
+  table.tb th{background:var(--card);border:1px solid var(--border);padding:0.8rem 1rem;text-align:left;font-weight:700;}
+  table.tb td{border:1px solid var(--border);padding:0.8rem 1rem;color:var(--muted);}
+  table.tb .hot{color:var(--red);font-weight:700;}
+  table.tb .ok{color:var(--green);}
+
+  /* portal steps */
+  .steps{counter-reset:step;margin:2rem 0;}
+  .portal-step{display:flex;gap:1.2rem;margin-bottom:1.5rem;padding:1.2rem;background:var(--card);border:1px solid var(--border);border-radius:12px;transition:all 0.2s;}
+  .portal-step:hover{border-color:var(--accent);}
+  .step-num{width:36px;height:36px;border-radius:50%;background:var(--accent);color:#000;font-weight:800;font-size:0.85rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .step-content .step-title{font-weight:700;font-size:0.95rem;margin-bottom:0.3rem;}
+  .step-content .step-desc{font-size:0.83rem;color:var(--muted);}
+
+  /* callouts */
+  .callout{background:var(--card);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;}
+  .callout.danger{border-color:var(--red);}
+  .callout.warn{border-color:var(--amber);}
+  .callout-title{font-weight:700;font-size:0.85rem;text-transform:uppercase;margin-bottom:0.4rem;color:var(--accent);}
+  .callout.danger .callout-title{color:var(--red);}
+  .callout.warn .callout-title{color:var(--amber);}
+
+  /* penalty boxes */
+  .penalty-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:2rem 0;}
+  .penalty-box{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:12px;padding:1.2rem;}
+  .p-offence{font-size:0.78rem;color:var(--red);font-weight:700;margin-bottom:0.4rem;}
+  .p-penalty{font-size:0.85rem;color:var(--text);}
+  .p-sub{font-size:0.75rem;color:var(--muted);margin-top:0.3rem;}
+
+  .bottom-nav{display:flex;justify-content:space-between;margin-top:5rem;padding-top:2rem;border-top:1px solid var(--border);}
+  .nav-btn{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.5rem;text-decoration:none;color:var(--text);transition:all 0.2s;font-size:0.9rem;}
+  .nav-btn:hover{border-color:var(--accent);}
+  .nav-btn .direction{font-size:0.75rem;color:var(--muted);display:block;margin-bottom:0.2rem;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progress"></div>
+<nav>
+  <a href="index.html" class="home">FCRA 2010</a>
+  <span class="nav-sep">›</span>
+  <a href="07_reporting.html" class="active">Reporting & Compliance</a>
+</nav>
+
+<div class="container">
+  <p class="chapter-label">Module 07</p>
+  <h1>Reporting &amp; Compliance</h1>
+  <p class="lead">
+    Compliance under FCRA is ongoing — not a one-time event. Annual returns, event-based intimations, 
+    and change notifications all have strict deadlines. Missing any of them has immediate consequences 
+    including registration suspension or cancellation.
+  </p>
+
+  <h2>The Compliance Calendar</h2>
+  <p>Key dates every FCRA-registered organisation must track throughout the year:</p>
+
+  <div class="calendar-wrap reveal">
+    <div class="cal-months">
+      <div class="cal-month">
+        <div class="cal-name">January</div>
+        <div class="cal-event">FC-4 filing period for previous year</div>
+      </div>
+      <div class="cal-month">
+        <div class="cal-name">February</div>
+        <div class="cal-event">Ensure all q1-q4 receipts documented</div>
+      </div>
+      <div class="cal-month">
+        <div class="cal-name">March</div>
+        <div class="cal-event">Year-end accounts preparation begins</div>
+      </div>
+      <div class="cal-month">
+        <div class="cal-name">April</div>
+        <div class="cal-event">Audit of previous FY accounts</div>
+      </div>
+      <div class="cal-month highlight">
+        <div class="cal-name">May–June</div>
+        <div class="cal-event">If renewal needed (check 6-month window)</div>
+      </div>
+      <div class="cal-month">
+        <div class="cal-name">July</div>
+        <div class="cal-event">Mid-year review; ensure admin cap on track</div>
+      </div>
+      <div class="cal-month">
+        <div class="cal-name">August</div>
+        <div class="cal-event">Auditor appointment / engagement letter</div>
+      </div>
+      <div class="cal-month">
+        <div class="cal-name">September</div>
+        <div class="cal-event">CA audit of FC accounts</div>
+      </div>
+      <div class="cal-month">
+        <div class="cal-name">October</div>
+        <div class="cal-event">Complete FC-4 draft, CA certification</div>
+      </div>
+      <div class="cal-month highlight">
+        <div class="cal-name">November</div>
+        <div class="cal-event">Final review of FC-4 before filing</div>
+      </div>
+      <div class="cal-month deadline">
+        <div class="cal-name">31 Dec</div>
+        <div class="cal-event">HARD DEADLINE — FC-4 Annual Return</div>
+      </div>
+      <div class="cal-month">
+        <div class="cal-name">Ongoing</div>
+        <div class="cal-event">15-day window for change intimations</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout danger reveal">
+    <div class="callout-title">🚨 31 December Is Non-Negotiable</div>
+    <p style="margin:0;font-size:0.9rem;">The annual return FC-4 must be filed online at fcraonline.nic.in by <strong>31 December</strong> for the financial year ending 31 March of that year. No grace period, no extension (in normal circumstances). Missing this deadline automatically triggers: (1) registration becoming liable for cancellation, (2) the default appearing in MHA's public database (visible to foreign donors), (3) possible prosecution. The government does not send reminders.</p>
+  </div>
+
+  <h2>Form FC-4 — The Annual Return</h2>
+  <p>FC-4 is the master annual compliance document. It's filed online and must be certified by a Chartered Accountant:</p>
+
+  <div class="fc4-grid reveal">
+    <div class="fc4-card">
+      <div class="fc4-part">Part A</div>
+      <div class="fc4-title">Basic Organisation Details</div>
+      <div class="fc4-items">Name, registration number, address, registered purposes, key functionary details, Aadhaar/passport numbers of office bearers</div>
+    </div>
+    <div class="fc4-card">
+      <div class="fc4-part">Part B</div>
+      <div class="fc4-title">FC Receipt Details</div>
+      <div class="fc4-items">Source-wise list of all FC received: donor name, country, amount, purpose, date. All receipts must be accounted — no omissions even for small amounts</div>
+    </div>
+    <div class="fc4-card">
+      <div class="fc4-part">Part C</div>
+      <div class="fc4-title">FC Utilisation Details</div>
+      <div class="fc4-items">Purpose-wise utilisation: how much was spent on each activity/programme. Admin cap calculation. Closing balance carry-forward details</div>
+    </div>
+    <div class="fc4-card">
+      <div class="fc4-part">Part D</div>
+      <div class="fc4-title">Self-Certification &amp; CA Certification</div>
+      <div class="fc4-items">Chief Functionary's declaration. Chartered Accountant's certificate. CA's membership number, UDIN required. Digital signature of both</div>
+    </div>
+    <div class="fc4-card">
+      <div class="fc4-part">Part E (if applicable)</div>
+      <div class="fc4-title">Immovable Property</div>
+      <div class="fc4-items">Details of any immovable property acquired from FC funds: location, area, cost, purpose. Must be reported even if under construction</div>
+    </div>
+    <div class="fc4-card">
+      <div class="fc4-part">Annexures</div>
+      <div class="fc4-title">Supporting Documents</div>
+      <div class="fc4-items">Audited balance sheet, income-expenditure statement, FC account bank statements, list of projects, activity report — all uploaded as PDFs</div>
+    </div>
+  </div>
+
+  <h2>Event-Based Intimations — The 15-Day Window</h2>
+  <p>Beyond the annual return, FCRA requires real-time reporting of any changes. All must be done within <strong>15 days</strong>:</p>
+
+  <table class="tb reveal">
+    <thead>
+      <tr><th>Event</th><th>Deadline</th><th>Form / Mode</th><th>Consequence if Missed</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Change in office bearers / key functionaries</td><td class="hot">15 days</td><td>Online on fcraonline.nic.in</td><td>Old officer remains on record; liability confusion</td></tr>
+      <tr><td>Change in FCRA utilisation bank account</td><td class="hot">15 days</td><td>Online form + new account details</td><td>FC received in unregistered account = violation</td></tr>
+      <tr><td>Change in registered address</td><td class="hot">15 days</td><td>Online update</td><td>Service of notices to old address; missed communications</td></tr>
+      <tr><td>Change in stated objectives / constitution</td><td class="hot">Prior MHA approval required</td><td>Application to MHA</td><td>Operation outside approved purposes = violation</td></tr>
+      <tr><td>Receiving FC from a new foreign source not previously used</td><td class="ok">No pre-intimation needed</td><td>Reported in annual FC-4</td><td>Must be disclosed in FC-4; source must be eligible</td></tr>
+      <tr><td>FC received in an unintended account (wrong account)</td><td class="hot">Immediate</td><td>Report to MHA + return/transfer</td><td>Delay = confirmation of violation; criminal risk</td></tr>
+      <tr><td>Opening of additional utilisation accounts</td><td class="hot">15 days</td><td>Intimate MHA with bank details</td><td>Unregistered account = compliance gap</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Filing FC-4 Online — Step by Step</h2>
+  <div class="steps reveal">
+    <div class="portal-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Log In to fcraonline.nic.in</div>
+        <div class="step-desc">Use the organisation's login credentials. The Chief Functionary must have their Digital Signature Certificate (DSC) ready — the CA also needs their DSC + UDIN.</div>
+      </div>
+    </div>
+    <div class="portal-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Navigate to Annual Returns → FC-4</div>
+        <div class="step-desc">Select the relevant financial year (April–March). The system will show pending return status. Begin filling all parts sequentially.</div>
+      </div>
+    </div>
+    <div class="portal-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Fill Part A — Organisation Basics</div>
+        <div class="step-desc">Confirm all auto-populated details. Update any changes in office bearers. Ensure Aadhaar/passport for all key functionaries is current.</div>
+      </div>
+    </div>
+    <div class="portal-step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Fill Parts B, C, D — FC Receipts &amp; Utilisation</div>
+        <div class="step-desc">Enter every receipt transaction with donor details. Enter utilisation by purpose/project. Calculate admin %. The system flags cap breaches.</div>
+      </div>
+    </div>
+    <div class="portal-step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-title">CA Review &amp; Digital Certification</div>
+        <div class="step-desc">The Chartered Accountant reviews the filed data, generates UDIN on ICAI portal, and certifies the form with DSC. CA name and membership number auto-populate.</div>
+      </div>
+    </div>
+    <div class="portal-step">
+      <div class="step-num">6</div>
+      <div class="step-content">
+        <div class="step-title">Chief Functionary Signs &amp; Submits</div>
+        <div class="step-desc">Chief Functionary digitally signs the final form using DSC. Click Submit. An acknowledgement receipt is generated — save this as proof of timely filing.</div>
+      </div>
+    </div>
+    <div class="portal-step">
+      <div class="step-num">7</div>
+      <div class="step-content">
+        <div class="step-title">Retain All Supporting Documents</div>
+        <div class="step-desc">Audited accounts, bank statements, vouchers, contracts — retain for minimum 6 years post-filing. MHA can inspect records up to 6 years retrospectively.</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Penalties for Reporting Defaults</h2>
+  <div class="penalty-grid reveal">
+    <div class="penalty-box">
+      <div class="p-offence">Non-filing of FC-4</div>
+      <div class="p-penalty">Registration liable for cancellation</div>
+      <div class="p-sub">+ Criminal prosecution under §35 possible</div>
+    </div>
+    <div class="penalty-box">
+      <div class="p-offence">Late filing of FC-4</div>
+      <div class="p-penalty">Late fee + compliance default on record</div>
+      <div class="p-sub">Affects renewal application adversely</div>
+    </div>
+    <div class="penalty-box">
+      <div class="p-offence">False information in FC-4</div>
+      <div class="p-penalty">Prosecution + fine + imprisonment up to 5 years</div>
+      <div class="p-sub">Chief Functionary personally liable</div>
+    </div>
+    <div class="penalty-box">
+      <div class="p-offence">Failure to intimate changes</div>
+      <div class="p-penalty">Fine up to ₹1 lakh + compliance default</div>
+      <div class="p-sub">Repeated defaults → cancellation risk</div>
+    </div>
+    <div class="penalty-box">
+      <div class="p-offence">Failure to maintain records</div>
+      <div class="p-penalty">Fine under FCRA Rules; adverse inference during inspection</div>
+      <div class="p-sub">No records = presumption of misuse</div>
+    </div>
+    <div class="penalty-box">
+      <div class="p-offence">Missing renewal application</div>
+      <div class="p-penalty">Registration lapses; FC received after lapse = illegal receipt</div>
+      <div class="p-sub">Retrospective regularisation not guaranteed</div>
+    </div>
+  </div>
+
+  <div class="callout warn reveal">
+    <div class="callout-title">⚠️ The "Nil Return" Obligation</div>
+    <p style="margin:0;font-size:0.9rem;">Even if your organisation received <strong>zero</strong> foreign contributions during the year, you must still file a <strong>nil FC-4 return</strong> by 31 December. Failure to file a nil return is treated identically to failure to file a substantive return — it results in a compliance default and can trigger registration cancellation. Many organisations are unaware of this and lose their registration because they thought "nothing to report = no need to file."</p>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="06_utilisation.html" class="nav-btn">
+      <span class="direction">← Back to</span>
+      Utilisation Rules
+    </a>
+    <a href="08_lifecycle.html" class="nav-btn">
+      <span class="direction">Next →</span>
+      Registration Lifecycle
+    </a>
+  </div>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement,b=document.body;
+  const st=h.scrollTop||b.scrollTop,sh=h.scrollHeight-h.clientHeight;
+  document.getElementById('progress').style.width=(st/sh*100)+'%';
+});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}}),{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

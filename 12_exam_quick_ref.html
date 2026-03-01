@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exam Quick Reference — FCRA 2010</title>
+<style>
+  :root{--bg:#0a0e1a;--card:#111827;--border:#1e2d47;--accent:#3b82f6;--text:#e2e8f0;--muted:#94a3b8;--red:#ef4444;--amber:#f59e0b;--green:#10b981;--cyan:#06b6d4;--purple:#8b5cf6;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.7;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(10,14,26,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;padding:0.8rem 2rem;}
+  nav a{color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.3rem 0.6rem;border-radius:6px;transition:all 0.2s;}
+  nav a:hover,nav a.active{color:var(--text);background:rgba(255,255,255,0.06);}
+  nav .home{font-weight:700;color:var(--accent);}
+  .nav-sep{color:var(--border);}
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--cyan));z-index:999;transition:width 0.1s;}
+  @media print{nav,.progress-bar,.bottom-nav,.print-btn{display:none!important;}body{background:white;color:black;}.card,.number-box,.def-row{background:white!important;border-color:#ddd!important;color:black!important;}.muted{color:#666!important;}}
+  .container{max-width:1000px;margin:0 auto;padding:3rem 2rem;}
+  .chapter-label{color:var(--muted);font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.8rem;}
+  h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;line-height:1.1;margin-bottom:0.5rem;}
+  .sub{font-size:1rem;color:var(--muted);margin-bottom:2rem;}
+  h2{font-size:1.15rem;font-weight:700;margin:2.5rem 0 0.8rem;border-bottom:1px solid var(--border);padding-bottom:0.4rem;}
+
+  /* numbers grid */
+  .numbers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:0.8rem;margin:1.2rem 0;}
+  .number-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;text-align:center;transition:all 0.2s;}
+  .number-box:hover{border-color:var(--accent);}
+  .nb-num{font-size:1.8rem;font-weight:800;line-height:1;}
+  .nb-label{font-size:0.72rem;color:var(--muted);margin-top:0.3rem;}
+
+  /* definitions table */
+  .def-table{width:100%;border-collapse:collapse;font-size:0.82rem;margin:1rem 0;}
+  .def-table th{background:rgba(59,130,246,0.08);border:1px solid var(--border);padding:0.6rem 0.8rem;text-align:left;font-weight:700;font-size:0.78rem;}
+  .def-table td{border:1px solid var(--border);padding:0.6rem 0.8rem;color:var(--muted);vertical-align:top;}
+  .def-table td:first-child{color:var(--text);font-weight:600;white-space:nowrap;}
+  .def-table tr:hover td{background:rgba(255,255,255,0.02);}
+
+  /* flashcards */
+  .flashcard-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0.8rem;margin:1rem 0;}
+  .flashcard{
+    background:var(--card);border:1px solid var(--border);border-radius:12px;
+    padding:1rem;cursor:pointer;transition:all 0.3s;min-height:80px;
+    display:flex;flex-direction:column;justify-content:center;
+    position:relative;overflow:hidden;
+  }
+  .flashcard:hover{border-color:var(--accent);}
+  .flashcard .fc-q{font-size:0.82rem;font-weight:700;color:var(--text);}
+  .flashcard .fc-a{
+    font-size:0.8rem;color:var(--green);margin-top:0.5rem;
+    display:none;padding-top:0.5rem;border-top:1px dashed var(--border);
+  }
+  .flashcard.flipped .fc-a{display:block;}
+  .flashcard.flipped{background:rgba(16,185,129,0.05);border-color:rgba(16,185,129,0.3);}
+
+  /* sections quick ref */
+  .section-pills{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1rem 0;}
+  .sp{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.4rem 0.8rem;font-size:0.78rem;}
+  .sp .sn{color:var(--accent);font-weight:700;}
+  .sp .st{color:var(--muted);}
+
+  /* comparison table */
+  table.comp{width:100%;border-collapse:collapse;font-size:0.8rem;margin:1rem 0;}
+  table.comp th{background:var(--card);border:1px solid var(--border);padding:0.6rem 0.8rem;text-align:left;font-weight:700;}
+  table.comp td{border:1px solid var(--border);padding:0.6rem 0.8rem;color:var(--muted);}
+  table.comp .g{color:var(--green);}
+  table.comp .b{color:var(--blue);}
+
+  /* prohibited list */
+  .banned-pills{display:flex;flex-wrap:wrap;gap:0.5rem;margin:0.8rem 0;}
+  .bp{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:100px;padding:0.3rem 0.8rem;font-size:0.78rem;color:#fca5a5;}
+
+  /* timeline mini */
+  .mini-tl{border-left:2px solid var(--border);padding-left:1rem;margin:1rem 0;}
+  .mtl-item{margin-bottom:0.6rem;font-size:0.82rem;}
+  .mtl-year{color:var(--accent);font-weight:700;margin-right:0.5rem;}
+
+  /* print button */
+  .print-btn{
+    display:inline-flex;align-items:center;gap:0.5rem;
+    background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);
+    color:var(--blue);padding:0.6rem 1.2rem;border-radius:8px;cursor:pointer;
+    font-size:0.85rem;font-weight:700;margin-bottom:2rem;transition:all 0.2s;
+  }
+  .print-btn:hover{background:rgba(59,130,246,0.2);}
+
+  .bottom-nav{display:flex;justify-content:space-between;margin-top:4rem;padding-top:2rem;border-top:1px solid var(--border);}
+  .nav-btn{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.5rem;text-decoration:none;color:var(--text);transition:all 0.2s;font-size:0.9rem;}
+  .nav-btn:hover{border-color:var(--accent);}
+  .nav-btn .direction{font-size:0.75rem;color:var(--muted);display:block;margin-bottom:0.2rem;}
+
+  .tag{display:inline-block;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.06em;font-weight:700;padding:0.15rem 0.45rem;border-radius:100px;margin-left:0.4rem;vertical-align:middle;}
+  .tag.red{background:rgba(239,68,68,0.15);color:#f87171;}
+  .tag.green{background:rgba(16,185,129,0.15);color:#34d399;}
+  .tag.amber{background:rgba(245,158,11,0.15);color:var(--amber);}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progress"></div>
+<nav>
+  <a href="index.html" class="home">FCRA 2010</a>
+  <span class="nav-sep">›</span>
+  <a href="12_exam_quick_ref.html" class="active">Quick Reference</a>
+</nav>
+
+<div class="container">
+  <p class="chapter-label">Module 12 — Exam Quick Reference</p>
+  <h1>FCRA 2010 — Complete Cheatsheet</h1>
+  <p class="sub">Click flashcards to reveal answers. Print this page for a one-sheet reference.</p>
+
+  <button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+
+  <!-- Critical Numbers -->
+  <h2>🔢 Critical Numbers</h2>
+  <div class="numbers-grid">
+    <div class="number-box"><div class="nb-num" style="color:var(--red)">20%</div><div class="nb-label">Max admin expense cap (post-2020, was 50%)</div></div>
+    <div class="number-box"><div class="nb-num" style="color:var(--amber)">5 yrs</div><div class="nb-label">FCRA registration validity period</div></div>
+    <div class="number-box"><div class="nb-num" style="color:var(--green)">6 mo</div><div class="nb-label">Minimum advance for renewal application</div></div>
+    <div class="number-box"><div class="nb-num" style="color:var(--cyan)">31 Dec</div><div class="nb-label">Annual FC-4 return deadline</div></div>
+    <div class="number-box"><div class="nb-num" style="color:var(--purple)">15 days</div><div class="nb-label">Window for intimating changes to MHA</div></div>
+    <div class="number-box"><div class="nb-num" style="color:var(--blue)">3 yrs</div><div class="nb-label">Min NGO age for FCRA registration</div></div>
+    <div class="number-box"><div class="nb-num" style="color:var(--accent)">₹15L</div><div class="nb-label">Min 3-yr activity spend for registration</div></div>
+    <div class="number-box"><div class="nb-num" style="color:var(--red)">3 yrs</div><div class="nb-label">Bar on re-registration after cancellation</div></div>
+    <div class="number-box"><div class="nb-num" style="color:var(--amber)">180 d</div><div class="nb-label">Max suspension duration (§13)</div></div>
+    <div class="number-box"><div class="nb-num" style="color:var(--green)">5 yrs</div><div class="nb-label">Max imprisonment for FCRA offence (§35)</div></div>
+    <div class="number-box"><div class="nb-num" style="color:var(--purple)">00691</div><div class="nb-label">SBI NDMB Branch Code (FCRA receipt)</div></div>
+    <div class="number-box"><div class="nb-num" style="color:var(--cyan)">6 yrs</div><div class="nb-label">Period to retain FC records post-filing</div></div>
+  </div>
+
+  <!-- Key Sections -->
+  <h2>📌 Key Sections at a Glance</h2>
+  <div class="section-pills">
+    <div class="sp"><span class="sn">§2(1)(h)</span> <span class="st">Definition: Foreign Contribution (currency/articles/securities)</span></div>
+    <div class="sp"><span class="sn">§2(1)(j)</span> <span class="st">Definition: Foreign Source (12 categories)</span></div>
+    <div class="sp"><span class="sn">§2(1)(p)</span> <span class="st">Definition: "Person" (individual/HUF/company/trust/society)</span></div>
+    <div class="sp"><span class="sn">§3</span> <span class="st">Absolute prohibition — categories banned from receiving FC</span></div>
+    <div class="sp"><span class="sn">§4</span> <span class="st">Persons who may accept FC (eligible categories)</span></div>
+    <div class="sp"><span class="sn">§5</span> <span class="st">MHA power to notify "political nature" organisations</span></div>
+    <div class="sp"><span class="sn">§7</span> <span class="st">Prohibition on transfer of FC (post-2020 amendment)</span></div>
+    <div class="sp"><span class="sn">§8</span> <span class="st">Utilisation of FC — purposes + 20% admin cap</span></div>
+    <div class="sp"><span class="sn">§11</span> <span class="st">Prior Permission — one-time specific project route</span></div>
+    <div class="sp"><span class="sn">§12</span> <span class="st">Registration — 5-year general permission route</span></div>
+    <div class="sp"><span class="sn">§12A</span> <span class="st">Aadhaar KYC — mandatory post-2020</span></div>
+    <div class="sp"><span class="sn">§13</span> <span class="st">Suspension (up to 180 days)</span></div>
+    <div class="sp"><span class="sn">§14</span> <span class="st">Cancellation — grounds and consequences</span></div>
+    <div class="sp"><span class="sn">§14A</span> <span class="st">Voluntary surrender of registration (2016)</span></div>
+    <div class="sp"><span class="sn">§17</span> <span class="st">Mandatory SBI NDMB account (post-2020)</span></div>
+    <div class="sp"><span class="sn">§22</span> <span class="st">Inspection powers</span></div>
+    <div class="sp"><span class="sn">§23</span> <span class="st">Search and seizure</span></div>
+    <div class="sp"><span class="sn">§26</span> <span class="st">Confiscation of FC</span></div>
+    <div class="sp"><span class="sn">§28</span> <span class="st">Vesting of FC/assets in Central Government</span></div>
+    <div class="sp"><span class="sn">§33</span> <span class="st">Failure to maintain accounts — penalty</span></div>
+    <div class="sp"><span class="sn">§34</span> <span class="st">Cognizance of offences — Sessions Court</span></div>
+    <div class="sp"><span class="sn">§35</span> <span class="st">General penalty — up to 5 years imprisonment</span></div>
+    <div class="sp"><span class="sn">§37</span> <span class="st">Personal liability of office bearers</span></div>
+    <div class="sp"><span class="sn">§38</span> <span class="st">False information — up to 6 months imprisonment</span></div>
+    <div class="sp"><span class="sn">§40A</span> <span class="st">Compounding of offences</span></div>
+  </div>
+
+  <!-- Definitions Table -->
+  <h2>📚 Core Definitions</h2>
+  <table class="def-table">
+    <thead><tr><th>Term</th><th>Section</th><th>Quick Definition</th></tr></thead>
+    <tbody>
+      <tr><td>Foreign Contribution (FC)</td><td>§2(1)(h)</td><td>Any donation/delivery/transfer of currency (Indian or foreign), articles (above prescribed value), or securities by a foreign source to an Indian person/association</td></tr>
+      <tr><td>Foreign Source</td><td>§2(1)(j)</td><td>12 categories: foreign government, foreign company (incl. Indian companies where 50%+ foreign-owned), international NGO, foreign citizen, multi-national corporation, foreign trust, foreign foundation, NRI (Indian citizen abroad), foreign political party, etc.</td></tr>
+      <tr><td>Person</td><td>§2(1)(p)</td><td>Individual, HUF, company, firm, trust, society, other association of persons — HUF and individuals are not typical FCRA registrants but can receive FC as relatives</td></tr>
+      <tr><td>Association</td><td>§2(1)(b)</td><td>Any association of individuals formed in India for cultural/economic/educational/religious/social purposes — the typical FCRA applicant</td></tr>
+      <tr><td>Political Nature</td><td>§2(1)(f) + §5</td><td>Organisations notified by MHA under §5 as being of a political nature based on their actual activities — regardless of stated objectives</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Prohibited categories -->
+  <h2>🚫 Absolutely Prohibited Persons (§3)</h2>
+  <div class="banned-pills">
+    <div class="bp">🗳️ Candidates for Election</div>
+    <div class="bp">🏛️ Political Parties</div>
+    <div class="bp">👤 Office Bearers of Political Parties</div>
+    <div class="bp">🏛️ Members of Legislature</div>
+    <div class="bp">⚖️ Judges &amp; Magistrates</div>
+    <div class="bp">👨‍💼 Government Servants</div>
+    <div class="bp">📺 Specified Media Persons &amp; Entities</div>
+    <div class="bp">🏢 "Political Nature" Organisations</div>
+  </div>
+  <p style="font-size:0.8rem;color:var(--muted);">Mnemonic: <strong style="color:var(--amber);">CPOLMGMP</strong> — Candidates, Political parties, Office-bearers of political parties, Legislature members, Magistrates/Judges, Government servants, Media, Political nature orgs</p>
+
+  <!-- Reg vs PP -->
+  <h2>⚖️ Registration vs Prior Permission</h2>
+  <table class="comp">
+    <thead><tr><th>Feature</th><th class="g">Registration (§12)</th><th class="b">Prior Permission (§11)</th></tr></thead>
+    <tbody>
+      <tr><td>Min org age</td><td class="g">3 years</td><td class="b">No minimum</td></tr>
+      <tr><td>Activity threshold</td><td class="g">₹15 lakh in 3 years</td><td class="b">Not required</td></tr>
+      <tr><td>Validity</td><td class="g">5 years</td><td class="b">Project duration</td></tr>
+      <tr><td>Donors</td><td class="g">Any eligible source</td><td class="b">Specific donor only</td></tr>
+      <tr><td>Renewable</td><td class="g">Yes</td><td class="b">No</td></tr>
+      <tr><td>Use</td><td class="g">Multiple, ongoing receipts</td><td class="b">One specific project</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Amendment summary -->
+  <h2>📅 Key Amendments</h2>
+  <div class="mini-tl">
+    <div class="mtl-item"><span class="mtl-year">1976</span>Original FCRA enacted (Emergency era)</div>
+    <div class="mtl-item"><span class="mtl-year">2010</span>FCRA 2010 — complete recodification, replaces 1976 Act</div>
+    <div class="mtl-item"><span class="mtl-year">2016 <span class="tag amber">Amendment</span></span> Redefine "foreign source" (banks retroactively exempted); §14A voluntary surrender; electoral bond groundwork</div>
+    <div class="mtl-item"><span class="mtl-year">2020 <span class="tag red">Major Amendment</span></span> SBI NDMB mandatory; Sub-granting banned; Admin cap 50%→20%; Aadhaar KYC; "Foreign source" definition expanded</div>
+    <div class="mtl-item"><span class="mtl-year">2022 <span class="tag green">SC Verdict</span></span> Noel Harper vs. UoI — All 2020 changes upheld as constitutional</div>
+    <div class="mtl-item"><span class="mtl-year">2024 <span class="tag amber">SC Order</span></span> Electoral bonds struck down in Association for Democratic Reforms case</div>
+  </div>
+
+  <!-- Flashcards -->
+  <h2>🃏 Flashcards — Click to Reveal Answer</h2>
+  <div class="flashcard-grid">
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">What bank and branch must ALL FCRA receipts go through first?</div>
+      <div class="fc-a">State Bank of India, New Delhi Main Branch (NDMB) — Branch Code 00691. Mandatory since 2020 Amendment.</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">Admin expense cap on FC utilisation?</div>
+      <div class="fc-a">20% of total FC received in that year (reduced from 50% by 2020 Amendment)</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">Deadline for annual FCRA return FC-4?</div>
+      <div class="fc-a">31st December each year — even if zero FC received (nil return required)</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">How early must renewal application be filed?</div>
+      <div class="fc-a">Minimum 6 months before expiry date. If filed on time, registration continues pending decision.</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">Can an FCRA NGO transfer FC to another FCRA NGO?</div>
+      <div class="fc-a">NO — absolutely prohibited since 2020 Amendment to §7. Both sender and receiver face violation.</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">Is an NRI a "foreign source" under FCRA?</div>
+      <div class="fc-a">YES — NRI (Indian citizen residing abroad) is explicitly a "foreign source" under §2(1)(j). Donations by NRIs to NGOs = FC.</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">What does "Noel Harper" case decide?</div>
+      <div class="fc-a">SC upheld all 2020 FCRA Amendment provisions as constitutional. Receiving FC is NOT a fundamental right. (April 2022)</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">What is "political nature" under §5?</div>
+      <div class="fc-a">MHA can notify any organisation as "political nature" based on actual activities (protests, policy opposition, election influence). Once notified, organisation becomes §3-prohibited.</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">How long can FCRA registration be suspended?</div>
+      <div class="fc-a">Up to 180 days under §13. Can be extended. Converted to cancellation after inquiry if violations confirmed.</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">What is maximum imprisonment under FCRA §35?</div>
+      <div class="fc-a">5 years imprisonment + fine + forfeiture of FC. Individual office bearers personally liable under §37.</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">After FCRA cancellation, how long is the bar on re-registration?</div>
+      <div class="fc-a">3 years from date of cancellation — applies to the organisation AND its office bearers.</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">Which court has jurisdiction over FCRA offences?</div>
+      <div class="fc-a">Sessions Court (§34). MHA or authorised officer files the complaint. Approved by officer not below Joint Secretary rank.</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">Interest earned on FC deposits — is it FC?</div>
+      <div class="fc-a">YES — treated as FC. Must stay in FCRA account chain and be used for stated purposes.</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">What is the minimum activity spend for FCRA registration?</div>
+      <div class="fc-a">₹15 lakh spent on stated objectives in the preceding 3 years (excluding admin). Verified from audited accounts.</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">Can FC be invested in mutual funds or stocks?</div>
+      <div class="fc-a">NO — speculative investments prohibited. FC can only earn interest in bank FDs/savings accounts.</div>
+    </div>
+    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="fc-q">Where must FCRA violations be tried — HC or SC?</div>
+      <div class="fc-a">Sessions Court (trial court). No internal FCRA appeal mechanism — judicial remedy is writ petition to High Court challenging MHA's administrative order.</div>
+    </div>
+  </div>
+
+  <!-- Top 10 pitfalls quick summary -->
+  <h2>⚡ Top Pitfalls — One Line Each</h2>
+  <div style="display:flex;flex-direction:column;gap:0.4rem;margin:1rem 0;">
+    <div style="display:flex;gap:0.8rem;font-size:0.82rem;padding:0.5rem 0.8rem;background:var(--card);border:1px solid var(--border);border-radius:8px;"><span style="color:var(--red);font-weight:700;min-width:24px;">✗1</span><span style="color:var(--muted);">NRI sending money to NGO = FC — regardless of ethnicity or relationship (except blood relatives)</span></div>
+    <div style="display:flex;gap:0.8rem;font-size:0.82rem;padding:0.5rem 0.8rem;background:var(--card);border:1px solid var(--border);border-radius:8px;"><span style="color:var(--red);font-weight:700;min-width:24px;">✗2</span><span style="color:var(--muted);">Advocacy NGO organising protests risks "political nature" notification — losing FCRA registration</span></div>
+    <div style="display:flex;gap:0.8rem;font-size:0.82rem;padding:0.5rem 0.8rem;background:var(--card);border:1px solid var(--border);border-radius:8px;"><span style="color:var(--red);font-weight:700;min-width:24px;">✗3</span><span style="color:var(--muted);">Mixing domestic funds with FC accounts (even temporarily) = violation from the moment of mixing</span></div>
+    <div style="display:flex;gap:0.8rem;font-size:0.82rem;padding:0.5rem 0.8rem;background:var(--card);border:1px solid var(--border);border-radius:8px;"><span style="color:var(--red);font-weight:700;min-width:24px;">✗4</span><span style="color:var(--muted);">Not filing nil FC-4 return = same violation as not filing when FC was received</span></div>
+    <div style="display:flex;gap:0.8rem;font-size:0.82rem;padding:0.5rem 0.8rem;background:var(--card);border:1px solid var(--border);border-radius:8px;"><span style="color:var(--red);font-weight:700;min-width:24px;">✗5</span><span style="color:var(--muted);">Transferring FC to another FCRA-registered NGO (sub-granting) = illegal since 2020</span></div>
+    <div style="display:flex;gap:0.8rem;font-size:0.82rem;padding:0.5rem 0.8rem;background:var(--card);border:1px solid var(--border);border-radius:8px;"><span style="color:var(--red);font-weight:700;min-width:24px;">✗6</span><span style="color:var(--muted);">Admin expenses &gt;20% of FC received = cap breach — cannot be "fixed" by reclassification</span></div>
+    <div style="display:flex;gap:0.8rem;font-size:0.82rem;padding:0.5rem 0.8rem;background:var(--card);border:1px solid var(--border);border-radius:8px;"><span style="color:var(--red);font-weight:700;min-width:24px;">✗7</span><span style="color:var(--muted);">Missing the 6-month renewal window = registration lapses; FC received after lapse = illegal</span></div>
+    <div style="display:flex;gap:0.8rem;font-size:0.82rem;padding:0.5rem 0.8rem;background:var(--card);border:1px solid var(--border);border-radius:8px;"><span style="color:var(--red);font-weight:700;min-width:24px;">✗8</span><span style="color:var(--muted);">Using FC received for "education" on healthcare activities = purpose deviation</span></div>
+    <div style="display:flex;gap:0.8rem;font-size:0.82rem;padding:0.5rem 0.8rem;background:var(--card);border:1px solid var(--border);border-radius:8px;"><span style="color:var(--red);font-weight:700;min-width:24px;">✗9</span><span style="color:var(--muted);">Receiving FC in HDFC/ICICI etc. (non-NDMB account) post-2020 = violation even with valid registration</span></div>
+    <div style="display:flex;gap:0.8rem;font-size:0.82rem;padding:0.5rem 0.8rem;background:var(--card);border:1px solid var(--border);border-radius:8px;"><span style="color:var(--red);font-weight:700;min-width:24px;">✗10</span><span style="color:var(--muted);">Prohibited person (judge/MLA/candidate) receiving FC — no registration/permission is possible</span></div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="11_pitfalls.html" class="nav-btn">
+      <span class="direction">← Back to</span>
+      Common Pitfalls
+    </a>
+    <a href="index.html" class="nav-btn">
+      <span class="direction">↩ Return to</span>
+      Main Concept Map
+    </a>
+  </div>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement,b=document.body;
+  const st=h.scrollTop||b.scrollTop,sh=h.scrollHeight-h.clientHeight;
+  document.getElementById('progress').style.width=(st/sh*100)+'%';
+});
+</script>
+</body>
+</html>

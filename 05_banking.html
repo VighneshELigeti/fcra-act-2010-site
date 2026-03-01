@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banking Architecture — FCRA 2010</title>
+<style>
+  :root{--bg:#0a0e1a;--card:#111827;--border:#1e2d47;--accent:#06b6d4;--text:#e2e8f0;--muted:#94a3b8;--blue:#3b82f6;--red:#ef4444;--green:#10b981;--amber:#f59e0b;--purple:#8b5cf6;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.7;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(10,14,26,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;padding:0.8rem 2rem;}
+  nav a{color:var(--muted);text-decoration:none;font-size:0.85rem;padding:0.3rem 0.6rem;border-radius:6px;transition:all 0.2s;}
+  nav a:hover,nav a.active{color:var(--text);background:rgba(255,255,255,0.06);}
+  nav .home{font-weight:700;color:var(--accent);}
+  .nav-sep{color:var(--border);}
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--blue));z-index:999;transition:width 0.1s;}
+  .container{max-width:900px;margin:0 auto;padding:4rem 2rem;}
+  .chapter-label{color:var(--muted);font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.8rem;}
+  h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;line-height:1.1;margin-bottom:1rem;}
+  .lead{font-size:1.15rem;color:var(--muted);line-height:1.7;margin-bottom:3rem;border-left:3px solid var(--accent);padding-left:1.2rem;}
+  h2{font-size:1.5rem;font-weight:700;margin:3rem 0 1rem;}
+  p{margin-bottom:1rem;color:#cbd5e1;}
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s,transform 0.7s;}
+  .reveal.visible{opacity:1;transform:none;}
+
+  /* Bank flow diagram - animated */
+  .bank-flow{position:relative;padding:2rem;background:var(--card);border:1px solid var(--border);border-radius:16px;margin:2rem 0;overflow:hidden;}
+  .bank-flow::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:3px;
+    background:linear-gradient(90deg,var(--accent),var(--blue),var(--purple));
+  }
+  .flow-row{display:flex;align-items:center;gap:0;margin:1rem 0;flex-wrap:wrap;}
+  .flow-box{
+    background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;
+    padding:1rem 1.2rem;text-align:center;min-width:160px;flex:1;
+    transition:all 0.3s;cursor:pointer;position:relative;
+  }
+  .flow-box:hover{background:rgba(255,255,255,0.06);border-color:var(--accent);}
+  .flow-box.sbi{border-color:rgba(6,182,212,0.4);background:rgba(6,182,212,0.05);}
+  .flow-box.util{border-color:rgba(16,185,129,0.4);background:rgba(16,185,129,0.05);}
+  .flow-box.foreign{border-color:rgba(139,92,246,0.4);background:rgba(139,92,246,0.05);}
+  .flow-box .fb-icon{font-size:1.8rem;margin-bottom:0.3rem;}
+  .flow-box .fb-title{font-size:0.85rem;font-weight:700;}
+  .flow-box .fb-sub{font-size:0.72rem;color:var(--muted);margin-top:0.2rem;}
+  .flow-arrow{padding:0 0.8rem;color:var(--accent);font-size:1.2rem;font-weight:700;white-space:nowrap;}
+  .flow-label{font-size:0.7rem;color:var(--muted);text-align:center;margin-top:0.3rem;}
+
+  /* tooltip on hover */
+  .flow-box-tooltip{
+    position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:#1e293b;border:1px solid var(--border);border-radius:8px;padding:0.8rem;
+    font-size:0.78rem;color:var(--text);width:220px;
+    opacity:0;pointer-events:none;transition:opacity 0.2s;z-index:10;text-align:left;
+    box-shadow:0 8px 24px rgba(0,0,0,0.4);
+  }
+  .flow-box:hover .flow-box-tooltip{opacity:1;}
+
+  /* animated money flow */
+  .money-animation{position:relative;height:80px;overflow:hidden;margin:1rem 0;background:rgba(6,182,212,0.03);border-radius:10px;border:1px solid rgba(6,182,212,0.1);}
+  .money-coin{
+    position:absolute;width:28px;height:28px;border-radius:50%;
+    background:linear-gradient(135deg,var(--amber),#f97316);
+    display:flex;align-items:center;justify-content:center;font-size:0.75rem;
+    animation:moneymove 3s linear infinite;top:50%;transform:translateY(-50%);
+    box-shadow:0 0 12px rgba(245,158,11,0.4);
+  }
+  .money-coin:nth-child(2){animation-delay:1s;}
+  .money-coin:nth-child(3){animation-delay:2s;}
+  @keyframes moneymove{from{left:-30px;opacity:0.5}20%{opacity:1}80%{opacity:1}to{left:calc(100% + 30px);opacity:0}}
+
+  /* rules grid */
+  .rules-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin:2rem 0;}
+  .rule-card{
+    background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.3rem;
+    transition:all 0.3s;
+  }
+  .rule-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+  .rule-icon{font-size:1.8rem;margin-bottom:0.6rem;}
+  .rule-title{font-weight:700;font-size:0.9rem;margin-bottom:0.5rem;}
+  .rule-desc{font-size:0.82rem;color:var(--muted);}
+
+  /* violation scenarios */
+  .scenario{margin:1rem 0;}
+  .scen-header{
+    display:flex;align-items:center;gap:0.8rem;cursor:pointer;
+    padding:1rem;background:var(--card);border:1px solid var(--border);border-radius:10px;
+    transition:all 0.2s;user-select:none;
+  }
+  .scen-header:hover{border-color:var(--accent);}
+  .scen-icon{font-size:1.3rem;}
+  .scen-title{font-weight:600;font-size:0.9rem;flex:1;}
+  .scen-badge{font-size:0.72rem;padding:0.2rem 0.6rem;border-radius:100px;font-weight:700;}
+  .scen-badge.ok{background:rgba(16,185,129,0.15);color:var(--green);}
+  .scen-badge.bad{background:rgba(239,68,68,0.15);color:var(--red);}
+  .scen-badge.grey{background:rgba(148,163,184,0.15);color:var(--muted);}
+  .scen-chevron{transition:transform 0.3s;color:var(--muted);}
+  .scen-body{
+    display:none;padding:1rem;background:rgba(255,255,255,0.02);
+    border:1px solid var(--border);border-top:none;border-radius:0 0 10px 10px;
+    font-size:0.84rem;color:var(--muted);
+  }
+  .scenario.open .scen-body{display:block;}
+  .scenario.open .scen-chevron{transform:rotate(180deg);}
+  .scenario.open .scen-header{border-radius:10px 10px 0 0;}
+
+  /* callout */
+  .callout{background:var(--card);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:1.2rem 1.5rem;margin:1.5rem 0;}
+  .callout.danger{border-color:var(--red);}
+  .callout.warn{border-color:var(--amber);}
+  .callout.info{border-color:var(--blue);}
+  .callout-title{font-weight:700;font-size:0.85rem;text-transform:uppercase;margin-bottom:0.4rem;color:var(--accent);}
+  .callout.danger .callout-title{color:var(--red);}
+  .callout.warn .callout-title{color:var(--amber);}
+  .callout.info .callout-title{color:var(--blue);}
+
+  /* interactive transfer simulator */
+  .simulator{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;margin:2rem 0;}
+  .sim-step{margin-bottom:1.5rem;}
+  .sim-label{font-size:0.85rem;color:var(--muted);margin-bottom:0.6rem;font-weight:600;}
+  .sim-row{display:flex;gap:0.6rem;flex-wrap:wrap;}
+  .sim-btn{
+    padding:0.5rem 1rem;border-radius:8px;border:1px solid var(--border);
+    background:rgba(255,255,255,0.02);color:var(--muted);cursor:pointer;
+    font-size:0.83rem;transition:all 0.2s;
+  }
+  .sim-btn:hover{background:rgba(255,255,255,0.06);}
+  .sim-btn.selected{background:rgba(6,182,212,0.12);border-color:var(--accent);color:var(--text);}
+  .sim-result{margin-top:1.5rem;padding:1.2rem;border-radius:10px;display:none;animation:fadeIn2 0.4s ease;}
+  @keyframes fadeIn2{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .sim-result.show{display:block;}
+  .sim-result.ok{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);}
+  .sim-result.bad{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);}
+  .sim-result h4{margin-bottom:0.4rem;}
+  .sim-result.ok h4{color:var(--green);}
+  .sim-result.bad h4{color:var(--red);}
+
+  table.tb{width:100%;border-collapse:collapse;font-size:0.87rem;margin:1.5rem 0;}
+  table.tb th{background:var(--card);border:1px solid var(--border);padding:0.8rem 1rem;text-align:left;font-weight:700;}
+  table.tb td{border:1px solid var(--border);padding:0.8rem 1rem;color:var(--muted);}
+
+  .bottom-nav{display:flex;justify-content:space-between;margin-top:5rem;padding-top:2rem;border-top:1px solid var(--border);}
+  .nav-btn{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.5rem;text-decoration:none;color:var(--text);transition:all 0.2s;font-size:0.9rem;}
+  .nav-btn:hover{border-color:var(--accent);}
+  .nav-btn .direction{font-size:0.75rem;color:var(--muted);display:block;margin-bottom:0.2rem;}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progress"></div>
+<nav>
+  <a href="index.html" class="home">FCRA 2010</a>
+  <span class="nav-sep">›</span>
+  <a href="05_banking.html" class="active">Banking Architecture</a>
+</nav>
+
+<div class="container">
+  <p class="chapter-label">Module 05</p>
+  <h1>Banking Architecture Under FCRA</h1>
+  <p class="lead">
+    The 2020 amendments fundamentally restructured how FCRA money must flow. Today, every rupee of foreign contribution 
+    must enter India through one specific bank branch — SBI's New Delhi Main Branch — before moving anywhere else.
+    This is the most operationally critical aspect of FCRA compliance.
+  </p>
+
+  <h2>The Mandatory Three-Account Structure</h2>
+  <p>FCRA mandates a specific, segregated banking architecture. Hover over each account to understand its role:</p>
+
+  <div class="bank-flow reveal">
+    <div class="flow-row">
+      <div class="flow-box foreign">
+        <div class="fb-icon">🌍</div>
+        <div class="fb-title">Foreign Donor</div>
+        <div class="fb-sub">Anywhere in the world</div>
+        <div class="flow-box-tooltip">The foreign source sends FC directly only to the FCRA Receipt Account at SBI NDMB. It cannot send to any other Indian bank account, even if the NGO has other accounts.</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box sbi">
+        <div class="fb-icon">🏦</div>
+        <div class="fb-title">FCRA Receipt Account</div>
+        <div class="fb-sub">SBI, New Delhi Main Branch (NDMB)<br>Branch Code: 00691</div>
+        <div class="flow-box-tooltip"><strong>The Mandatory Entry Point (post-2020)</strong><br><br>All FC must arrive here first. Opening this account is a prerequisite for FCRA registration. Zero domestic funds can mix here. This account can ONLY receive FC — no domestic deposits allowed.</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box util">
+        <div class="fb-icon">💼</div>
+        <div class="fb-title">FCRA Utilisation Account(s)</div>
+        <div class="fb-sub">Scheduled bank of your choice<br>(Same city or anywhere)</div>
+        <div class="flow-box-tooltip"><strong>Where you actually operate from</strong><br><br>After FC arrives in SBI NDMB receipt account, it can be transferred to one or more utilisation accounts at any scheduled bank. Day-to-day project expenses are paid from here. MUST be a separate account — no domestic funds allowed.</div>
+      </div>
+    </div>
+    <div class="money-animation">
+      <div class="money-coin">₹</div>
+      <div class="money-coin">₹</div>
+      <div class="money-coin">₹</div>
+    </div>
+    <div style="text-align:center;font-size:0.75rem;color:var(--muted);">FC flow: Foreign donor → SBI NDMB Receipt Account → FCRA Utilisation Account → Programme expenses</div>
+  </div>
+
+  <div class="callout warn reveal">
+    <div class="callout-title">⚠️ Why SBI New Delhi Main Branch Specifically?</div>
+    <p style="margin:0;font-size:0.9rem;">The 2020 amendment designated SBI NDMB as the <strong>single choke point</strong> for all foreign contributions into India. This allows MHA and intelligence agencies to monitor all FCRA inflows in real time from one centralised location. Prior to 2020, organisations could designate any scheduled bank as their FCRA account — this decentralised model made monitoring difficult. The change was contentious as it increased operational inconvenience for organisations in remote areas.</p>
+  </div>
+
+  <h2>Core Banking Rules — Don't Mix!</h2>
+  <div class="rules-grid reveal">
+    <div class="rule-card">
+      <div class="rule-icon">🚫</div>
+      <div class="rule-title">No Domestic Funds in FC Account</div>
+      <div class="rule-desc">The FCRA receipt account and utilisation accounts must contain ONLY foreign contributions. Domestic funds (Indian donations, grants, service income) must never be deposited into FCRA accounts. Mixing = violation.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-icon">🚫</div>
+      <div class="rule-title">No FC in Domestic Account</div>
+      <div class="rule-desc">Conversely, FC must never be deposited into the organisation's regular domestic bank accounts. If a foreign donor mistakenly sends money to a non-FCRA account, you must report it to MHA immediately and return or regularise the funds.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-icon">📊</div>
+      <div class="rule-title">Separate Books for FC</div>
+      <div class="rule-desc">Accounting records for foreign contributions must be maintained separately. Even if your accounting software handles both, FC transactions must be 100% identifiable and traceable. FC accounts must be in prescribed format under FCRA Rules 2011.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-icon">🔒</div>
+      <div class="rule-title">No Sub-Granting (Post-2020)</div>
+      <div class="rule-desc">Since the 2020 Amendment, an FCRA-registered organisation CANNOT transfer FC to any other organisation, even if the recipient is also FCRA-registered. This effectively killed the "sub-granting" or "pass-through" model. (Limited exceptions for relatives and specific cases.)</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-icon">📈</div>
+      <div class="rule-title">No Speculative Investments</div>
+      <div class="rule-desc">FC funds cannot be invested in stocks, shares, mutual funds, or any speculative activity. Idle FC funds can only earn interest in bank accounts. The interest earned on FC is itself treated as FC and must be used for the same purposes.</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-icon">⚖️</div>
+      <div class="rule-title">Interest is Also FC</div>
+      <div class="rule-desc">Interest earned on FC deposits is itself treated as foreign contribution and must be accounted for and used accordingly. It cannot be treated as general income and moved to domestic accounts. This applies from the moment interest is credited.</div>
+    </div>
+  </div>
+
+  <!-- Scenario explorer -->
+  <h2>Scenario Explorer — Legal or Violation?</h2>
+  <p>Click each scenario to understand whether it's permitted:</p>
+
+  <div class="scenario reveal" onclick="toggleScenario(this)">
+    <div class="scen-header">
+      <span class="scen-icon">💸</span>
+      <span class="scen-title">NGO uses FC utilisation account to pay rent for its Delhi office</span>
+      <span class="scen-badge ok">LEGAL ✓</span>
+      <span class="scen-chevron">▼</span>
+    </div>
+    <div class="scen-body">✓ <strong>Permitted.</strong> Programme-related expenses (office rent for FC-funded projects, staff salaries working on FC projects, project materials) can be paid from FCRA utilisation accounts. As long as the rent is genuinely for FCRA programme activities, this is fine. The 20% admin cap must, however, be monitored.</div>
+  </div>
+
+  <div class="scenario reveal" onclick="toggleScenario(this)">
+    <div class="scen-header">
+      <span class="scen-icon">🏦</span>
+      <span class="scen-title">NGO asks US donor to wire transfer directly to its HDFC current account (non-FCRA)</span>
+      <span class="scen-badge bad">VIOLATION ✗</span>
+      <span class="scen-chevron">▼</span>
+    </div>
+    <div class="scen-body">✗ <strong>Serious violation.</strong> Post-2020, all FC must arrive ONLY at the SBI NDMB designated FCRA receipt account. Receiving FC in any other account — even if the organisation has a valid FCRA registration — is a violation. The organisation must immediately report such receipt to MHA and return the funds. Criminal prosecution is possible.</div>
+  </div>
+
+  <div class="scenario reveal" onclick="toggleScenario(this)">
+    <div class="scen-header">
+      <span class="scen-icon">🤝</span>
+      <span class="scen-title">FCRA-registered NGO "A" transfers ₹20 lakh to FCRA-registered NGO "B" for a joint project</span>
+      <span class="scen-badge bad">VIOLATION ✗ (Post-2020)</span>
+      <span class="scen-chevron">▼</span>
+    </div>
+    <div class="scen-body">✗ <strong>Violation since 2020 Amendment.</strong> Pre-2020, transfer between two FCRA-registered organisations was permitted with prior approval. The 2020 Amendment deleted this provision entirely. Today, no FCRA-registered entity can transfer FC to ANY other person/organisation. Both NGO A and B could face action. This change completely disrupted the Indian NGO ecosystem where larger NGOs would distribute grants to smaller field-level organisations.</div>
+  </div>
+
+  <div class="scenario reveal" onclick="toggleScenario(this)">
+    <div class="scen-header">
+      <span class="scen-icon">💰</span>
+      <span class="scen-title">NGO deposits ₹5 lakh from Indian donors into FCRA utilisation account to cover urgent project costs</span>
+      <span class="scen-badge bad">VIOLATION ✗</span>
+      <span class="scen-chevron">▼</span>
+    </div>
+    <div class="scen-body">✗ <strong>Mixing of funds — clear violation.</strong> Domestic funds (from Indian donors, grants, or income) can NEVER be deposited into FCRA accounts. FCRA accounts must contain only foreign contributions and interest earned on them. To cover both FC and domestic project costs, you need two parallel account systems. If the domestic project costs are also FC-purpose activities, use the correct FCRA account chain.</div>
+  </div>
+
+  <div class="scenario reveal" onclick="toggleScenario(this)">
+    <div class="scen-header">
+      <span class="scen-icon">📈</span>
+      <span class="scen-title">NGO invests idle FC funds in a fixed deposit at a scheduled bank to earn higher returns</span>
+      <span class="scen-badge ok">GREY AREA / Partly OK</span>
+      <span class="scen-chevron">▼</span>
+    </div>
+    <div class="scen-body">⚠️ <strong>Permitted for FDs — speculative investments prohibited.</strong> FC funds can be placed in fixed deposits at scheduled banks to earn interest. This is not "speculative investment." However, investing FC in stocks, mutual funds, corporate bonds, or any market instrument is prohibited. The interest earned on FDs is itself treated as FC. The FD must be in the name of the FCRA-registered entity, and the interest must flow through the FCRA account chain.</div>
+  </div>
+
+  <div class="scenario reveal" onclick="toggleScenario(this)">
+    <div class="scen-header">
+      <span class="scen-icon">👤</span>
+      <span class="scen-title">FCRA NGO transfers FC to a staff member's personal account to pay their salary</span>
+      <span class="scen-badge ok">LEGAL ✓</span>
+      <span class="scen-chevron">▼</span>
+    </div>
+    <div class="scen-body">✓ <strong>Permitted — this is normal payroll.</strong> Salary payments to staff working on FCRA-funded projects from FCRA utilisation accounts are completely normal and legal. The restriction on "transfer" means donor-like re-grants to other organisations — not operational payments for services rendered. However, salaries must genuinely relate to FC-funded activities, and the 20% admin cap must be respected.</div>
+  </div>
+
+  <!-- Interactive transfer simulator -->
+  <h2>Interactive: Is This Transfer Legal?</h2>
+  <div class="simulator reveal">
+    <div class="sim-step">
+      <div class="sim-label">What kind of entity is the SENDER?</div>
+      <div class="sim-row" id="sim-from">
+        <div class="sim-btn" onclick="simSelect('from','fcra_ngo',this)">FCRA-registered NGO</div>
+        <div class="sim-btn" onclick="simSelect('from','unreg_ngo',this)">Unregistered NGO</div>
+        <div class="sim-btn" onclick="simSelect('from','foreign',this)">Foreign donor</div>
+        <div class="sim-btn" onclick="simSelect('from','individual',this)">Individual person</div>
+      </div>
+    </div>
+    <div class="sim-step">
+      <div class="sim-label">What kind of entity is the RECIPIENT?</div>
+      <div class="sim-row" id="sim-to">
+        <div class="sim-btn" onclick="simSelect('to','fcra_ngo',this)">FCRA-registered NGO</div>
+        <div class="sim-btn" onclick="simSelect('to','unreg_ngo',this)">Unregistered NGO</div>
+        <div class="sim-btn" onclick="simSelect('to','vendor',this)">Vendor / Supplier</div>
+        <div class="sim-btn" onclick="simSelect('to','employee',this)">Employee / Staff</div>
+      </div>
+    </div>
+    <div id="sim-result" class="sim-result"></div>
+  </div>
+
+  <!-- Critical numbers -->
+  <h2>Critical Numbers to Know</h2>
+  <table class="tb reveal">
+    <thead>
+      <tr><th>Item</th><th>The Number / Rule</th><th>Consequence of Violation</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Designated receipt bank</td><td>SBI, New Delhi Main Branch (Branch Code 00691)</td><td>Any FC received in other accounts = violation</td></tr>
+      <tr><td>FC accounts required</td><td>Minimum 2: receipt (SBI NDMB) + utilisation (any bank)</td><td>Mixing domestic + FC funds = major violation</td></tr>
+      <tr><td>FC transfer between NGOs</td><td>Prohibited since 2020 Amendment</td><td>Both sender + receiver face action</td></tr>
+      <tr><td>Admin expense cap</td><td>20% of total FC received in that year</td><td>Excess admin = violation; potential prosecution</td></tr>
+      <tr><td>Speculative investments</td><td>Completely prohibited</td><td>Seizure of funds + prosecution</td></tr>
+      <tr><td>Interest on FC</td><td>Treated as FC — must stay in FCRA account chain</td><td>Moving interest to domestic accounts = mixing violation</td></tr>
+      <tr><td>Change in bank account</td><td>Intimate MHA within 15 days of change</td><td>Non-reporting = compliance default</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout danger reveal">
+    <div class="callout-title">🚨 Biggest Trap: The Mixing Violation</div>
+    <p style="margin:0;font-size:0.9rem;">The most common FCRA banking violation is <strong>inadvertent mixing</strong> — a domestic donor sends money to the FCRA utilisation account by mistake, or the organisation pays a common vendor from both domestic and FCRA accounts. Every instance of mixing — even accidental — is a legal violation. The remedy is to reverse the transaction immediately, maintain documentary evidence of the reversal, and report to MHA if the amount is significant. Prevention: maintain absolutely strict separation in your accounting and brief all staff on never depositing anything into FCRA accounts from domestic sources.</p>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="04_registration.html" class="nav-btn">
+      <span class="direction">← Back to</span>
+      Registration vs Prior Permission
+    </a>
+    <a href="06_utilisation.html" class="nav-btn">
+      <span class="direction">Next →</span>
+      Utilisation Rules
+    </a>
+  </div>
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement,b=document.body;
+  const st=h.scrollTop||b.scrollTop,sh=h.scrollHeight-h.clientHeight;
+  document.getElementById('progress').style.width=(st/sh*100)+'%';
+});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}}),{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+function toggleScenario(el){el.classList.toggle('open');}
+
+// Simulator
+const simState={from:null,to:null};
+const simLogic={
+  'foreign_fcra_ngo':'ok|Foreign donor → FCRA receipt account at SBI NDMB. This is the PRIMARY intended flow. The foreign donor must wire directly to the SBI NDMB designated FCRA receipt account. Completely legal and the correct path.',
+  'foreign_unreg_ngo':'bad|Foreign donor → NGO without FCRA registration. The receiving NGO has no authorisation to receive FC. This is illegal. The unregistered NGO needs to either get FCRA registration or prior permission first.',
+  'foreign_vendor':'bad|Foreign donor → Indian vendor directly. This bypasses the entire FCRA framework. If a foreign entity pays an Indian vendor on behalf of an NGO (in-kind), this is still FC. Must flow through the FCRA account chain.',
+  'foreign_individual':'bad|Foreign donor → Individual without FCRA authorisation. Individuals can receive FC only if they have a personal FCRA registration or prior permission. "Foreign friend gifting money" doesn\'t make it non-FC.',
+  'fcra_ngo_fcra_ngo':'bad|FCRA-NGO → Another FCRA-NGO. This was permitted before 2020 but is now PROHIBITED by the 2020 Amendment. Both organisations face risk. No sub-granting between even registered organisations is allowed.',
+  'fcra_ngo_unreg_ngo':'bad|FCRA-NGO → Unregistered NGO. Doubly prohibited — both as a "transfer" (even pre-2020 required approval) and because the receiver has no FCRA authorisation. Serious violation for both parties.',
+  'fcra_ngo_vendor':'ok|FCRA-NGO → Vendor/Supplier payment. Paying vendors for goods and services for FC-funded projects is legal and normal. This is not a "transfer" of FC — it\'s expenditure from FCRA utilisation accounts. Subject to 20% admin cap.',
+  'fcra_ngo_employee':'ok|FCRA-NGO → Employee salary. Paying staff salaries from FCRA utilisation accounts for work on FC-funded projects is completely legal. Not a "transfer" — it\'s an operational expense. Subject to 20% admin cap.',
+  'unreg_ngo_fcra_ngo':'bad|Unregistered NGO → FCRA-NGO. Even if the unregistered NGO received domestic donations, it cannot transfer FC. If it\'s trying to route foreign money through itself first then to a registered NGO, this is a circumvention scheme — serious violation.',
+  'unreg_ngo_unreg_ngo':'bad|Unregistered NGO → Another unregistered NGO. Neither has FC authorisation. If any FC is involved, both are receiving/routing FC illegally.',
+  'unreg_ngo_vendor':'grey|Unknown — depends on dometic funds. If the unregistered NGO is moving purely domestic (Indian) funds to a vendor, that\'s outside FCRA scope. If FC was mixed in those funds at any point, it becomes an FCRA violation.',
+  'unreg_ngo_employee':'grey|Depends on source of funds. If purely domestic payroll, outside FCRA. If FC funds were ever mixed in, FCRA applies.',
+  'individual_fcra_ngo':'grey|Individual → FCRA-NGO. If the individual is donating Indian rupees earned in India, this is a domestic donation — FCRA doesn\'t apply. If the individual is an NRI or foreign national and the money is from a foreign source, it may constitute FC — analysis needed.',
+  'individual_unreg_ngo':'grey|Depends on source. Domestic funds from a resident Indian individual to any NGO = domestic donation, outside FCRA. FC from an NRI/foreign individual to any NGO = FCRA applies.',
+  'individual_vendor':'grey|Depends entirely on whether FC is involved. Purely domestic individual paying a vendor is outside FCRA scope.',
+  'individual_employee':'grey|Outside FCRA scope if domestic funds. No FC analysis needed for purely domestic individual-to-individual payments.',
+};
+
+function simSelect(type, val, btn){
+  document.querySelectorAll(`#sim-${type} .sim-btn`).forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  simState[type]=val;
+  if(simState.from&&simState.to){
+    const key=`${simState.from}_${simState.to}`;
+    const r=simLogic[key]||'grey|Situation needs detailed legal analysis based on specific facts. Consult an FCRA specialist.';
+    const[cls,msg]=r.split('|');
+    const el=document.getElementById('sim-result');
+    if(cls==='ok'){
+      el.className='sim-result ok show';
+      el.innerHTML=`<h4>✓ Generally Permitted</h4><p style="font-size:0.85rem;margin:0">${msg}</p>`;
+    } else if(cls==='bad'){
+      el.className='sim-result bad show';
+      el.innerHTML=`<h4>✗ Likely Violation</h4><p style="font-size:0.85rem;margin:0">${msg}</p>`;
+    } else {
+      el.className='sim-result show';
+      el.style.background='rgba(245,158,11,0.08)';el.style.border='1px solid rgba(245,158,11,0.3)';
+      el.innerHTML=`<h4 style="color:#f59e0b">⚠️ Grey Area — Depends on Facts</h4><p style="font-size:0.85rem;margin:0">${msg}</p>`;
+    }
+  }
+}
+</script>
+</body>
+</html>
